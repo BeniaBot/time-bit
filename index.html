@@ -65,6 +65,7 @@ button{font:inherit;cursor:pointer}
 .hdr{color:#fff;padding:18px 20px 96px;display:flex;align-items:center;justify-content:space-between}
 .mark{display:flex;align-items:center}
 .logo{direction:ltr;unicode-bidi:isolate;display:inline-block;font-family:Rubik,system-ui,sans-serif;font-weight:800;font-size:21px;line-height:1;letter-spacing:-1px;color:var(--g3);background:#fff;border-radius:12px;padding:4px 10px 6px;box-shadow:0 4px 12px rgba(0,40,90,.12)}
+.logo .bit{font-size:1.25em;letter-spacing:-1.5px}
 .logo b{font-weight:800;letter-spacing:-.5px;color:#ff7a7a;background:linear-gradient(160deg,#ffb36b,#ff5f8f);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .clock{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.18);border-radius:999px;padding:6px 12px;font-size:13px;font-variant-numeric:tabular-nums}
 .clock b{font-weight:700;min-width:38px;text-align:center}
@@ -81,9 +82,19 @@ button{font:inherit;cursor:pointer}
 .name-in{margin-top:4px;border:0;border-bottom:2px solid var(--line);background:transparent;font:inherit;font-weight:700;font-size:19px;text-align:center;color:var(--ink);padding:3px 8px;width:230px;max-width:100%;outline:none;border-radius:0}
 .name-in:focus{border-color:var(--g2)}
 .name-in::placeholder{color:#b3bfd0;font-weight:500}
-.sugg{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:8px}
-.sugg button{border:1px solid var(--line);background:#fff;border-radius:999px;font-size:12px;padding:4px 10px;color:var(--ink)}
-.sugg button:hover{border-color:var(--g2)}
+.pick{position:relative;width:100%;display:flex;flex-direction:column;align-items:center}
+.pick .name-in{width:260px}
+.ac{position:absolute;top:calc(100% + 6px);left:0;right:0;z-index:6;list-style:none;margin:0;padding:6px;background:#fff;border-radius:18px;border:1px solid var(--line);box-shadow:0 18px 40px rgba(11,40,80,.22);max-height:330px;overflow-y:auto;scrollbar-width:thin;text-align:right}
+.ac li{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:12px;cursor:pointer}
+.ac li.on{background:var(--soft)}
+.ac .ava{width:32px;height:32px;border-radius:50%;color:#fff;font-weight:700;font-size:14px;display:grid;place-items:center;flex:none}
+.ac .an{flex:1;min-width:0;font-size:14.5px;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ac .an mark{background:none;color:var(--g3);font-weight:800}
+.ac .ab{font-size:11.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.ac .hint{font-size:12px;color:var(--muted);padding:4px 10px 6px;cursor:default}
+.neg{color:#e5484d}
+.pos{color:#13a46b}
+.zero{color:var(--muted)}
 
 /* amount */
 .amt{text-align:center;margin:14px 0 2px;display:flex;justify-content:center;align-items:baseline;gap:8px;direction:rtl}
@@ -235,7 +246,7 @@ button{font:inherit;cursor:pointer}
 
   <!-- desktop landing column -->
   <section class="hero">
-    <div class="mark"><span class="logo" aria-label="biTime">bi<b>T</b>ime</span></div>
+    <div class="mark"><span class="logo" aria-label="biTime"><span class="bit">bi<b>T</b></span>ime</span></div>
     <h1>העברת זמן,<br><span>בלחיצה אחת.</span></h1>
     <p class="lead">יש לך זמן פנוי? יש מי שאין לו. עם biTime מעבירים דקות, שעות ואפילו ימים שלמים, לכל אחד ובלי פרטי בנק.</p>
     <div class="feats">
@@ -258,7 +269,7 @@ button{font:inherit;cursor:pointer}
   <!-- the app -->
   <div class="app">
     <div class="hdr">
-      <div class="mark"><span class="logo" aria-label="biTime">bi<b>T</b>ime</span></div>
+      <div class="mark"><span class="logo" aria-label="biTime"><span class="bit">bi<b>T</b></span>ime</span></div>
       <div class="hbtns">
         <button class="pill" id="askBtn">＋ בקשת זמן</button>
         <div class="clock" title="זמן בדף">⏱ <b id="live">00:00</b></div>
@@ -272,9 +283,11 @@ button{font:inherit;cursor:pointer}
           <div class="avatar" id="av">?</div>
           <div class="req" id="req">העברת זמן אל</div>
           <div class="name" id="toName"></div>
-          <input class="name-in hidden" id="toInput" maxlength="30" placeholder="למי להעביר?" aria-label="שם הנמען">
-          <div class="sugg hidden" id="sugg"><button>הבוס</button><button>החבר שתמיד ממהר</button><button>קהילת מתמחים טופ</button></div>
-          <div class="sub" id="whoSub">בגירעון של <span id="debt">4</span> שעות · משתמש מאז <span id="since">2019</span></div>
+          <div class="pick hidden" id="pick">
+            <input class="name-in" id="toInput" maxlength="40" placeholder="למי להעביר?" aria-label="חיפוש נמען" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="ac">
+            <ul class="ac hidden" id="ac" role="listbox" aria-label="נמענים"></ul>
+          </div>
+          <div class="sub" id="whoSub"></div>
         </div>
 
         <div class="amt"><span class="num" id="num">60</span><span class="unit" id="unitShort">דק׳</span></div>
@@ -422,6 +435,7 @@ button{font:inherit;cursor:pointer}
   </div>
 </div>
 
+<script src="db.js"></script>
 <script>
 (function(){
   var t0 = Date.now();
@@ -437,30 +451,149 @@ button{font:inherit;cursor:pointer}
     if (to) { name = to.replace(/[-_]/g,' ').slice(0,40); isReq = true; }
     reqMin = Math.max(0, Math.min(9999*1440, parseInt(qs.get('t'),10) || 0));
   } catch(e){}
-  // recipient card: from the request link, or typed in on the home page
-  function updateWho(){
-    $('av').textContent = name.trim().charAt(0) || '＋';
-    $('whoSub').classList.toggle('hidden', !name);
-    for (var hsh = 0, q = 0; q < name.length; q++) hsh = (hsh * 31 + name.charCodeAt(q)) >>> 0;
-    $('since').textContent = 2012 + hsh % 12;
-    $('debt').textContent = 3 + (hsh >>> 4) % 9;
-    // the community gets its own line: they are the ones giving time, not short of it
-    var giver = /מתמחים/.test(name);
-    $('whoSub').firstChild.textContent = giver ? '🏆 תורמי הזמן של השנה · משתמש מאז ' : 'בגירעון של ';
-    $('debt').style.display = giver ? 'none' : '';
-    $('debt').nextSibling.textContent = giver ? '' : ' שעות · משתמש מאז ';
+  // ---- recipients: a fixed directory (db.js + generated contacts); the home page can only pick from it ----
+  function hashOf(s){ for (var h = 0, i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0; return h; }
+  // same length as the input, so match positions can be mapped back for highlighting
+  function normLite(s){
+    return s.toLowerCase().replace(/[״׳"'`.,!?()\-–־:;\/]/g, ' ')
+      .replace(/ך/g,'כ').replace(/ם/g,'מ').replace(/ן/g,'נ').replace(/ף/g,'פ').replace(/ץ/g,'צ');
   }
-  if (isReq) $('toName').textContent = name;
-  else {
-    $('toName').classList.add('hidden');
-    $('toInput').classList.remove('hidden'); $('sugg').classList.remove('hidden');
-    $('toInput').addEventListener('input', function(){ name = this.value.trim(); updateWho(); });
-    $('sugg').addEventListener('click', function(e){
-      var b = e.target.closest('button'); if (!b) return;
-      $('toInput').value = name = b.textContent; updateWho();
+  function norm(s){ return normLite(s.replace(/[֑-ׇ]/g, '')).replace(/\s+/g, ' ').trim(); }
+  function hoursWord(n){ n = Math.abs(n); return n === 1 ? 'שעה אחת' : n === 2 ? 'שעתיים' : n.toLocaleString('he-IL') + ' שעות'; }
+  function balLong(h){ return h < 0 ? 'בגירעון של ' + hoursWord(h) : h > 0 ? 'ביתרה של ' + hoursWord(h) : 'יתרה מאוזנת בדיוק'; }
+  function balShort(h){ var a = Math.abs(h).toLocaleString('he-IL'); return h < 0 ? 'גירעון ' + a + ' ש׳' : h > 0 ? 'יתרה ' + a + ' ש׳' : 'מאוזן'; }
+  function balClass(h){ return h < 0 ? 'neg' : h > 0 ? 'pos' : 'zero'; }
+  function hue(s){ return 'hsl(' + (hashOf(s) % 360) + ',62%,60%)'; }
+  function initial(s){ return (s.replace(/[^\u05d0-\u05eaA-Za-z0-9]/g, '').charAt(0)) || '?'; }
+
+  var DB = [], seenK = {};
+  function addEntry(e, curated){
+    var k = norm(e.n || ''); if (!k || seenK[k]) return; seenK[k] = 1;
+    DB.push({ n: e.n, h: e.h | 0, y: e.y | 0 || 2020, c: curated, k: k, w: k.split(' ') });
+  }
+  try { var SRC = window.BT_DB || {}; Object.keys(SRC).forEach(function(cat){ (SRC[cat] || []).forEach(function(e){ addEntry(e, true); }); }); } catch(e){}
+  (function contacts(){
+    var F = ['משה','יוסף','אברהם','יעקב','שמואל','דוד','אליהו','חיים','שלמה','מנחם','ישראל','אהרן','בנימין','מרדכי','יהודה','אליעזר','שמעון','נחמן',
+             'נפתלי','זאב','מאיר','יצחק','ברוך','צבי','אריה','דניאל','יונתן','אפרים','עמרם','גבריאל','רפאל','שלום','עזרא','פנחס','יחזקאל','אלחנן'];
+    var L = ['כהן','לוי','מזרחי','פרץ','ביטון','פרידמן','גולדברג','שפירא','רוזנברג','קליין','וייס','שוורץ','גרוס','הלפרין','ברגר','פישר','וולף','אדלר',
+             'הורוביץ','רבינוביץ','קפלן','אשכנזי','דהן','אוחיון','אזולאי','חדד','עמר','אלמליח','סויסה','ששון','פולק','רוט','שטרן','לנדאו','זילברמן',
+             'טננבוים','גרינברג','אורבך','ברקוביץ','קרליבך'];
+    F.forEach(function(f){ L.forEach(function(l){
+      var n = f + ' ' + l, h = hashOf(n), r = h % 100;
+      var hrs = r < 46 ? -(1 + (h >>> 7) % 38) : r < 86 ? 1 + (h >>> 7) % 55 : 0;
+      if ((h >>> 3) % 29 === 0) hrs *= 35;
+      addEntry({ n: n, h: hrs, y: 2009 + (h >>> 11) % 18 }, false);
+    }); });
+  })();
+
+  function lev(a, b){
+    var m = a.length, n = b.length, prev = [], cur, i, j;
+    for (j = 0; j <= n; j++) prev[j] = j;
+    for (i = 1; i <= m; i++) {
+      cur = [i];
+      for (j = 1; j <= n; j++) cur[j] = Math.min(prev[j] + 1, cur[j-1] + 1, prev[j-1] + (a[i-1] === b[j-1] ? 0 : 1));
+      prev = cur;
+    }
+    return prev[n];
+  }
+  function popular(){
+    var cur = DB.filter(function(e){ return e.c; }), out = [];
+    for (var i = 0; i < 7 && cur.length; i++) out.push(cur.splice(Math.floor(Math.random() * cur.length), 1)[0]);
+    return out;
+  }
+  function search(q){
+    var nq = norm(q);
+    if (!nq) return { list: popular(), mode: 'popular' };
+    var qw = nq.split(' '), hits = [];
+    DB.forEach(function(e){
+      var s = 0;
+      if (e.k === nq) s = 1000;
+      else if (e.k.indexOf(nq) === 0) s = 900;
+      else if (qw.every(function(w){ return e.w.some(function(x){ return x.indexOf(w) === 0; }); })) s = 700;
+      else if (e.k.indexOf(nq) > 0) s = 500;
+      if (s) hits.push([s + (e.c ? 60 : 0) - e.k.length * .5, e]);
+    });
+    if (hits.length) return { list: hits.sort(function(a, b){ return b[0] - a[0]; }).slice(0, 8).map(function(x){ return x[1]; }), mode: 'match' };
+    // nothing contains the text: suggest the closest spellings instead
+    DB.forEach(function(e){
+      var d = lev(nq, e.k.slice(0, nq.length));
+      e.w.forEach(function(x){ d = Math.min(d, lev(nq, x.slice(0, nq.length)), lev(nq, x)); });
+      hits.push([d - (e.c ? .3 : 0) + e.k.length * .01, e]);
+    });
+    hits.sort(function(a, b){ return a[0] - b[0]; });
+    var best = hits.length ? hits[0][0] : 0;
+    return { list: hits.filter(function(x){ return x[0] <= best + 1; }).slice(0, 6).map(function(x){ return x[1]; }), mode: 'fuzzy' };
+  }
+
+  var chosen = null, acList = [], acOn = -1;
+  function showWho(e){
+    $('av').textContent = e ? initial(e.n) : '＋';
+    var sub = $('whoSub');
+    sub.textContent = '';
+    sub.classList.toggle('hidden', !e);
+    if (!e) return;
+    var b = document.createElement('span'); b.className = balClass(e.h); b.textContent = balLong(e.h);
+    sub.appendChild(b); sub.appendChild(document.createTextNode(' · משתמש מאז ' + e.y));
+  }
+  function renderAc(res){
+    var ul = $('ac'), nq = norm($('toInput').value);
+    ul.textContent = ''; acList = res.list; acOn = res.mode === 'popular' ? -1 : 0;
+    if (res.mode !== 'match') {
+      var hint = document.createElement('li'); hint.className = 'hint'; hint.setAttribute('aria-hidden', 'true');
+      hint.textContent = res.mode === 'fuzzy' ? 'לא נמצא בדיוק. אולי התכוונתם ל:' : 'הצעות';
+      ul.appendChild(hint);
+    }
+    acList.forEach(function(e, i){
+      var li = document.createElement('li'); li.setAttribute('role', 'option'); li.dataset.i = i;
+      var a = document.createElement('div'); a.className = 'ava'; a.style.background = hue(e.n); a.textContent = initial(e.n);
+      var nm = document.createElement('div'); nm.className = 'an';
+      var at = res.mode === 'match' && nq ? normLite(e.n).indexOf(nq) : -1;
+      if (at >= 0 && e.n.length === normLite(e.n).length) {
+        nm.appendChild(document.createTextNode(e.n.slice(0, at)));
+        var mk = document.createElement('mark'); mk.textContent = e.n.slice(at, at + nq.length); nm.appendChild(mk);
+        nm.appendChild(document.createTextNode(e.n.slice(at + nq.length)));
+      } else nm.textContent = e.n;
+      var bl = document.createElement('div'); bl.className = 'ab ' + balClass(e.h); bl.textContent = balShort(e.h);
+      li.appendChild(a); li.appendChild(nm); li.appendChild(bl);
+      li.addEventListener('mousedown', function(ev){ ev.preventDefault(); pick(e); });
+      ul.appendChild(li);
+    });
+    markOn();
+    ul.classList.toggle('hidden', !acList.length);
+    $('toInput').setAttribute('aria-expanded', acList.length ? 'true' : 'false');
+  }
+  function markOn(){
+    [].forEach.call($('ac').querySelectorAll('li[role=option]'), function(li){
+      var on = +li.dataset.i === acOn; li.classList.toggle('on', on); li.setAttribute('aria-selected', on);
+      if (on) li.scrollIntoView({ block: 'nearest' });
     });
   }
-  updateWho();
+  function closeAc(){ $('ac').classList.add('hidden'); $('toInput').setAttribute('aria-expanded', 'false'); }
+  function pick(e){
+    chosen = e; name = e.n; $('toInput').value = e.n; closeAc(); showWho(e); $('toInput').blur();
+  }
+
+  if (isReq) {
+    $('toName').textContent = name;
+    // whoever sends a request link is, by definition, short on time
+    var rh = hashOf(name);
+    showWho({ n: name, h: -(3 + (rh >>> 4) % 9), y: 2012 + rh % 12 });
+  } else {
+    $('toName').classList.add('hidden');
+    $('pick').classList.remove('hidden');
+    var inp = $('toInput');
+    showWho(null);
+    inp.addEventListener('input', function(){ chosen = null; name = ''; showWho(null); renderAc(search(this.value)); });
+    inp.addEventListener('focus', function(){ if (chosen) this.select(); renderAc(search(chosen ? '' : this.value)); });
+    inp.addEventListener('blur', function(){ setTimeout(closeAc, 120); });
+    inp.addEventListener('keydown', function(ev){
+      if ($('ac').classList.contains('hidden')) { if (ev.key === 'ArrowDown') renderAc(search(this.value)); return; }
+      if (ev.key === 'ArrowDown') { ev.preventDefault(); acOn = Math.min(acList.length - 1, acOn + 1); markOn(); }
+      else if (ev.key === 'ArrowUp') { ev.preventDefault(); acOn = Math.max(0, acOn - 1); markOn(); }
+      else if (ev.key === 'Enter') { ev.preventDefault(); if (acList.length) pick(acList[Math.max(0, acOn)]); }
+      else if (ev.key === 'Escape') { closeAc(); }
+    });
+  }
   if (isReq) { $('req').textContent = 'בקשת העברת זמן מאת'; document.title = name + ' מבקש זמן · biTime'; }
 
   var val = '60', unit = 'm', all = false;
@@ -565,7 +698,7 @@ button{font:inherit;cursor:pointer}
   });
 
   $('next').addEventListener('click', function(){
-    if (!name) { toast('למי להעביר? צריך לבחור נמען.'); $('toInput').focus(); return; }
+    if (!name) { toast('למי להעביר? בחרו נמען מהרשימה.'); $('toInput').focus(); return; }
     var m = minutes();
     $('bsLead').textContent = 'אל ' + name;
     $('cAmt').textContent = all ? 'כל מה שהתפנה' : fmtMin(m);
