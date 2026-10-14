@@ -39,7 +39,7 @@ button{font:inherit;cursor:pointer}
   .hero{display:block;max-width:440px}
 }
 .hero .mark{margin-bottom:22px}
-.hero .logo{font-size:34px;background:none;padding:0;box-shadow:none}
+.hero .logo{background:none;padding:0;box-shadow:none}
 .hero h1{font-size:42px;line-height:1.1;margin:0 0 12px;letter-spacing:-1px}
 .hero h1 span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 .hero p.lead{font-size:16.5px;color:#4a5876;line-height:1.6;margin:0 0 20px}
@@ -64,8 +64,9 @@ button{font:inherit;cursor:pointer}
 }
 .hdr{color:#fff;padding:18px 20px 96px;display:flex;align-items:center;justify-content:space-between}
 .mark{display:flex;align-items:center}
-.logo{direction:ltr;unicode-bidi:isolate;display:inline-block;font-family:Fredoka,Rubik,system-ui,sans-serif;font-weight:700;font-size:21px;line-height:1;letter-spacing:-.3px;color:var(--g3);background:#fff;border-radius:12px;padding:4px 10px 6px;box-shadow:0 4px 12px rgba(0,40,90,.12)}
-.logo .bit{font-size:1.25em;letter-spacing:-.6px}
+.logo{direction:ltr;unicode-bidi:isolate;display:inline-block;font-family:Fredoka,Rubik,system-ui,sans-serif;font-weight:700;font-size:21px;line-height:1;letter-spacing:-.3px;color:var(--g3);background:#fff;border-radius:12px;padding:6px 11px;box-shadow:0 4px 12px rgba(0,40,90,.12)}
+.logo svg{display:block;height:25px;width:auto}
+.hero .logo svg{height:40px}
 .logo b{font-weight:700;letter-spacing:0;color:#ff7a7a;background:linear-gradient(160deg,#ffb36b,#ff5f8f);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .clock{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.18);border-radius:999px;padding:6px 12px;font-size:13px;font-variant-numeric:tabular-nums}
 .clock b{font-weight:700;min-width:38px;text-align:center}
@@ -246,7 +247,7 @@ button{font:inherit;cursor:pointer}
 
   <!-- desktop landing column -->
   <section class="hero">
-    <div class="mark"><span class="logo" aria-label="biTime"><span class="bit">bi<b>T</b></span>ime</span></div>
+    <div class="mark"><span class="logo"><svg viewBox="4 2 346 112" role="img" aria-label="biTime"><defs><linearGradient id="tg1" gradientUnits="userSpaceOnUse" x1="92" y1="0" x2="170" y2="110"><stop offset="0" stop-color="#ffb36b"/><stop offset="1" stop-color="#ff5f8f"/></linearGradient></defs><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="13"><g stroke="#0b7fd0"><path d="M18 12 V76"/><circle cx="42" cy="76" r="24"/><path d="M66 56 V76"/><path d="M66 22 h0"/></g><path stroke="url(#tg1)" d="M92 16 H170 M131 16 V74 Q131 100 157 100 H166"/><g stroke="#0b7fd0" transform="translate(190 100) scale(.84) translate(-190 -100)"><path d="M200 24 h0 M200 56 V100"/><path d="M228 100 V72 A16 16 0 0 1 260 72 V100 M260 72 A16 16 0 0 1 292 72 V100"/><path d="M320 78 H364 A22 22 0 1 0 356 95"/></g></g></svg></span></div>
     <h1>העברת זמן,<br><span>בלחיצה אחת.</span></h1>
     <p class="lead">יש לך זמן פנוי? יש מי שאין לו. עם biTime מעבירים דקות, שעות ואפילו ימים שלמים, לכל אחד ובלי פרטי בנק.</p>
     <div class="feats">
@@ -269,7 +270,7 @@ button{font:inherit;cursor:pointer}
   <!-- the app -->
   <div class="app">
     <div class="hdr">
-      <div class="mark"><span class="logo" aria-label="biTime"><span class="bit">bi<b>T</b></span>ime</span></div>
+      <div class="mark"><span class="logo"><svg viewBox="4 2 346 112" role="img" aria-label="biTime"><defs><linearGradient id="tg2" gradientUnits="userSpaceOnUse" x1="92" y1="0" x2="170" y2="110"><stop offset="0" stop-color="#ffb36b"/><stop offset="1" stop-color="#ff5f8f"/></linearGradient></defs><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="13"><g stroke="#0b7fd0"><path d="M18 12 V76"/><circle cx="42" cy="76" r="24"/><path d="M66 56 V76"/><path d="M66 22 h0"/></g><path stroke="url(#tg2)" d="M92 16 H170 M131 16 V74 Q131 100 157 100 H166"/><g stroke="#0b7fd0" transform="translate(190 100) scale(.84) translate(-190 -100)"><path d="M200 24 h0 M200 56 V100"/><path d="M228 100 V72 A16 16 0 0 1 260 72 V100 M260 72 A16 16 0 0 1 292 72 V100"/><path d="M320 78 H364 A22 22 0 1 0 356 95"/></g></g></svg></span></div>
       <div class="hbtns">
         <button class="pill" id="askBtn">＋ בקשת זמן</button>
         <div class="clock" title="זמן בדף">⏱ <b id="live">00:00</b></div>
@@ -486,15 +487,17 @@ button{font:inherit;cursor:pointer}
     }); });
   })();
 
+  // edit distance where swapping two neighbouring letters (מושיי / מוישי) counts as one typo
   function lev(a, b){
-    var m = a.length, n = b.length, prev = [], cur, i, j;
-    for (j = 0; j <= n; j++) prev[j] = j;
-    for (i = 1; i <= m; i++) {
-      cur = [i];
-      for (j = 1; j <= n; j++) cur[j] = Math.min(prev[j] + 1, cur[j-1] + 1, prev[j-1] + (a[i-1] === b[j-1] ? 0 : 1));
-      prev = cur;
+    var m = a.length, n = b.length, d = [], i, j;
+    for (i = 0; i <= m; i++) { d[i] = [i]; }
+    for (j = 0; j <= n; j++) d[0][j] = j;
+    for (i = 1; i <= m; i++) for (j = 1; j <= n; j++) {
+      var c = a[i-1] === b[j-1] ? 0 : 1;
+      d[i][j] = Math.min(d[i-1][j] + 1, d[i][j-1] + 1, d[i-1][j-1] + c);
+      if (i > 1 && j > 1 && a[i-1] === b[j-2] && a[i-2] === b[j-1]) d[i][j] = Math.min(d[i][j], d[i-2][j-2] + 1);
     }
-    return prev[n];
+    return d[m][n];
   }
   // Suggestions must be visibly related to what was typed:
   // word-prefix matches first, then a 3+ letter run inside a word, then only small typos (1 letter, 2 in long words).
