@@ -253,6 +253,23 @@ a.logo{display:inline-block}
 .share-msg{background:var(--soft);border-radius:14px;padding:12px 14px;font-size:14px;line-height:1.6;color:var(--ink);margin-bottom:12px;white-space:pre-wrap;word-break:break-word}
 .share-mail{display:block;text-align:center;text-decoration:none;margin-top:8px}
 .share-url{display:block;direction:ltr;unicode-bidi:isolate;text-align:left;margin-top:6px;font-size:12.5px;color:var(--g3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sh-row{display:flex;gap:8px;align-items:stretch}
+.sh-row .cta{flex:1}
+.ico-btn{width:50px;min-height:50px;flex:none;border:2px solid var(--line);background:#fff;border-radius:999px;color:var(--g3);display:grid;place-items:center;cursor:pointer;font:inherit;font-size:16px}
+.ico-btn:hover{border-color:var(--g2);color:var(--ink)}
+.rc-card{position:relative;width:100%;max-width:600px;max-height:calc(100vh - 32px);overflow:auto;background:#fff;border-radius:22px;padding:12px;box-shadow:0 40px 100px rgba(0,20,60,.35);transform:translateY(20px) scale(.97);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.modal.on .rc-card{transform:none}
+.rc-tools{display:flex;gap:8px;margin-bottom:8px}
+.rc-tools .ico-btn{width:42px;min-height:42px}
+#rcptDoc svg{display:block;width:100%;height:auto;border-radius:12px}
+@media print{
+  body *{visibility:hidden!important}
+  #rcptModal,#rcptModal .rc-card,#rcptDoc,#rcptDoc *{visibility:visible!important}
+  #rcptModal{position:absolute;inset:0;background:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;padding:0;display:block}
+  #rcptModal .rc-card{box-shadow:none;max-height:none;overflow:visible;transform:none;padding:0;max-width:none}
+  .rc-tools{display:none!important}
+  @page{margin:12mm}
+}
 </style>
 </head>
 <body>
@@ -393,14 +410,18 @@ a.logo{display:inline-block}
       <div class="fine" style="margin-top:10px">בקשות זמן נענות בממוצע תוך 3–5 שנים</div>
     </div>
 
-    <!-- share sheet (desktop) -->
+    <!-- share sheet -->
     <div class="bs" id="shareSheet" role="dialog" aria-label="שיתוף אישור">
       <div class="grab"></div>
       <h3>שיתוף אישור</h3>
-      <div class="lead">ההודעה שתישלח:</div>
+      <div class="lead">ההודעה לשיתוף:</div>
       <div class="share-msg" id="shareMsg"></div>
-      <button class="cta" id="shareCopy">העתקת ההודעה</button>
-      <a class="cta ghost share-mail" id="shareMail" href="#">שליחה במייל</a>
+      <div class="sh-row">
+        <button class="cta" id="rcptBtn">אסמכתא</button>
+        <button class="ico-btn" id="rcptPrint" aria-label="הדפסה" title="הדפסה"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z"/></svg></button>
+        <button class="ico-btn" id="rcptDl" aria-label="הורדה" title="הורדה"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="M7 10l5 5 5-5"/><path d="M5 20h14"/></svg></button>
+        <button class="ico-btn hidden" id="nativeShare" aria-label="שיתוף" title="שיתוף"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.8l7.6-4.4M8.2 13.2l7.6 4.4"/></svg></button>
+      </div>
       <div class="fine" style="margin-top:10px">שיתוף האישור אינו מנכה זמן נוסף, מלבד הזמן שלקח לקרוא שורה זו.</div>
     </div>
 
@@ -428,6 +449,18 @@ a.logo{display:inline-block}
       <div class="dots" id="dots"></div>
       <div class="ov-note">נא לא לסגור את הדף. הזמן כבר בתנועה.</div>
     </div>
+  </div>
+</div>
+
+<!-- receipt document -->
+<div class="modal" id="rcptModal" role="dialog" aria-modal="true" aria-label="אסמכתא">
+  <div class="rc-card">
+    <div class="rc-tools">
+      <button class="ico-btn" id="rcPrint2" aria-label="הדפסה" title="הדפסה"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z"/></svg></button>
+      <button class="ico-btn" id="rcDl2" aria-label="הורדה" title="הורדה"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="M7 10l5 5 5-5"/><path d="M5 20h14"/></svg></button>
+      <button class="ico-btn" id="rcX" aria-label="סגירה" title="סגירה">✕</button>
+    </div>
+    <div id="rcptDoc"></div>
   </div>
 </div>
 
@@ -796,8 +829,10 @@ a.logo{display:inline-block}
     $('rAsked').textContent = asked();
     $('rSrc').textContent = $('src').value;
     $('rReal').textContent = fmt(s);
-    lastTx = { asked: asked(), name: name, real: fmt(s) };
-    $('ref').textContent = String(Date.now()).slice(-8);
+    var ref = String(Date.now()).slice(-8), m = minutes();
+    $('ref').textContent = ref;
+    lastTx = { asked: asked(), name: name, real: fmt(s), ref: ref, src: $('src').value, memo: $('memo').value.trim(),
+               tax: all ? '∞ × 0.18' : fmtMin(m * 0.18), total: all ? 'כל מה שהתפנה, ועוד קצת' : fmtMin(m * 1.18 + 3), at: new Date() };
     rain();
     $('twist').innerHTML = '<b>הודעה על ביצוע חלקי:</b> עקב עומס במערכת הועברו בפועל ' + fmt(s) +
       ' בלבד, הזמן ששהית בדף זה. הסכום נוכה מחייך ולא ניתן להחזרה, כמו כל זמן אחר.<br>תודה שבחרת ב־biTime.';
@@ -827,28 +862,121 @@ a.logo{display:inline-block}
     var sp = special(tx.name), shortOnTime = isReq && (!sp || sp.cls === 'neg');
     var txt = 'העברתי ' + tx.asked + ' אל ' + tx.name + ' ב־biTime (בפועל הועברו ' + tx.real + '). ' +
               (isReq ? (shortOnTime ? 'עדיין בגירעון, אפשר לעזור כאן:' : 'אפשר להצטרף כאן:') : 'גם אתם יכולים להעביר זמן:');
-    // phones: the device's own share sheet; computers: our sheet (the desktop OS one shows only the link)
     var touch = window.matchMedia && matchMedia('(pointer: coarse)').matches;
-    if (touch && navigator.share) { navigator.share({ title: 'biTime', text: txt, url: url }).catch(function(){}); return; }
-    var full = txt + String.fromCharCode(10) + url;
+    $('nativeShare').classList.toggle('hidden', !(touch && navigator.share));
+    nativeShareData = { title: 'biTime', text: txt, url: url };
     var box = $('shareMsg'); box.textContent = txt;
     var u = document.createElement('span'); u.className = 'share-url';
     try { u.textContent = decodeURI(url).replace(/^https?:[/][/]/, ''); } catch(e){ u.textContent = url; }
     box.appendChild(u);
-    $('shareMail').href = 'mailto:?subject=' + encodeURIComponent('העברת זמן ב־biTime') + '&body=' + encodeURIComponent(full);
-    shareText = full;
     openSheet('shareSheet');
   });
-  var shareText = '';
-  $('shareCopy').addEventListener('click', function(){
-    var done = function(){ openSheet(null); toast('ההודעה הועתקה. ההעתקה ארכה 0.4 שניות, שנוכו מהיתרה.'); };
-    try { navigator.clipboard.writeText(shareText).then(done, function(){ fallbackCopy(shareText); done(); }); }
-    catch(e){ fallbackCopy(shareText); done(); }
-  });
-  function fallbackCopy(t){
-    var ta = document.createElement('textarea'); ta.value = t; ta.style.position = 'fixed'; ta.style.opacity = '0';
-    document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch(e){} ta.remove();
+  var nativeShareData = null;
+  $('nativeShare').addEventListener('click', function(){ if (nativeShareData) navigator.share(nativeShareData).catch(function(){}); });
+
+  // ---- the receipt document (אסמכתא): one SVG used on screen, for printing and for the PNG download ----
+  var LOGO = '';
+  try { fetch('logo.svg').then(function(r){ return r.text(); }).then(function(t){ LOGO = t; }).catch(function(){}); } catch(e){}
+  function xe(v){ return String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  // number -> Hebrew numerals with geresh / gershayim (3 -> ג׳, 787 -> תשפ״ז, 15 -> ט״ו)
+  function gem(n){
+    var out = '', H = ['', 'ק', 'ר', 'ש', 'ת'], T = ['', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע', 'פ', 'צ'], U = ['', 'א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט'];
+    while (n >= 400) { out += 'ת'; n -= 400; }
+    if (n >= 100) { out += H[Math.floor(n / 100)]; n %= 100; }
+    if (n === 15) out += 'טו'; else if (n === 16) out += 'טז'; else { out += T[Math.floor(n / 10)] + U[n % 10]; }
+    return out.length === 1 ? out + '׳' : out.slice(0, -1) + '״' + out.slice(-1);
   }
+  function receiptSVG(tx){
+    var W = 760, H = 1010, R = 720, L = 40, F = 'font-family="Arial, \'Segoe UI\', sans-serif"';
+    var d = tx.at || new Date(), heb = '';
+    try {
+      var parts = new Intl.DateTimeFormat('he-IL-u-ca-hebrew', { day: 'numeric', month: 'long', year: 'numeric' }).formatToParts(d), pv = {};
+      parts.forEach(function(p){ pv[p.type] = p.value; });
+      heb = gem(+pv.day) + ' ב' + pv.month.replace(/^ב/, '') + ' ' + gem(+pv.year % 1000);
+    } catch(e){}
+    var greg = d.toLocaleDateString('he-IL') + ' בשעה ' + d.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
+    var t = function(x, y, txt, size, fill, weight, anchor){
+      return '<text x="' + x + '" y="' + y + '" ' + F + ' font-size="' + size + '" fill="' + fill + '"' + (weight ? ' font-weight="' + weight + '"' : '') +
+             ' direction="rtl" text-anchor="' + (anchor || 'start') + '">' + xe(txt) + '</text>';
+    };
+    var o = ['<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '">',
+             '<rect width="' + W + '" height="' + H + '" fill="#fff"/>',
+             '<rect x="14" y="14" width="' + (W - 28) + '" height="' + (H - 28) + '" rx="18" fill="none" stroke="#d6e0ea" stroke-width="2"/>',
+             '<rect x="14" y="14" width="' + (W - 28) + '" height="10" rx="5" fill="#0ab6cf"/>'];
+    if (LOGO) o.push('<rect x="' + L + '" y="44" width="200" height="70" rx="14" fill="#0f6573"/>' +
+                     LOGO.replace(/^[\s\S]*?<svg/, '<svg x="' + (L + 12) + '" y="52" width="176" height="54"').replace(/<\?xml[^>]*>/, ''));
+    o.push(t(R, 82, 'אסמכתא על העברת זמן', 30, '#16243f', 800));
+    o.push(t(R, 114, 'מס׳ ' + tx.ref + (heb ? ' · ' + heb : '') + ' · ' + greg, 15, '#7d8aa3'));
+    o.push('<line x1="' + L + '" y1="146" x2="' + R + '" y2="146" stroke="#e8edf4" stroke-width="2"/>');
+    o.push('<rect x="' + L + '" y="166" width="' + (R - L) + '" height="44" rx="12" fill="#fff4e8"/>');
+    o.push(t(R - 16, 195, 'סטטוס: בוצע חלקית · עקב עומס במערכת', 17, '#c2410c', 700));
+    var rows = [['המעביר', 'מי שישב מול המסך'], ['המקבל', tx.name], ['סכום ההעברה', tx.asked], ['מס זמן (18%)', tx.tax],
+                ['עמלת עסקה', '3 דק׳'], ['סה״כ חויב', tx.total], ['הועבר בפועל', tx.real + ' (הזמן ששהית בדף)'],
+                ['מקור החיוב', tx.src], ['הערה', tx.memo || '—'], ['זמן משוער עד שיבוזבז', '4 שניות']];
+    var y = 258;
+    rows.forEach(function(r, i){
+      o.push(t(R, y, r[0], 17, '#7d8aa3'));
+      o.push(t(L, y, r[1], 17, '#16243f', 700, 'end'));
+      if (i < rows.length - 1) o.push('<line x1="' + L + '" y1="' + (y + 20) + '" x2="' + R + '" y2="' + (y + 20) + '" stroke="#eef2f7" stroke-width="1.5"/>');
+      y += 50;
+    });
+    // stamp
+    var cx = 160, cy = 860;
+    o.push('<g transform="rotate(-14 ' + cx + ' ' + cy + ')" opacity=".85">' +
+           '<circle cx="' + cx + '" cy="' + cy + '" r="74" fill="none" stroke="#d9480f" stroke-width="4"/>' +
+           '<circle cx="' + cx + '" cy="' + cy + '" r="62" fill="none" stroke="#d9480f" stroke-width="2" stroke-dasharray="5 5"/>' +
+           t(cx, cy - 16, 'המינהל', 19, '#d9480f', 800, 'middle') + t(cx, cy + 8, 'הכרונולוגי', 19, '#d9480f', 800, 'middle') +
+           t(cx, cy + 34, '✓ מאושר', 15, '#d9480f', 700, 'middle') + '</g>');
+    // signature
+    o.push(t(R, 838, 'חתימת הפקיד המוסמך:', 15, '#7d8aa3'));
+    o.push('<line x1="430" y1="880" x2="' + R + '" y2="880" stroke="#16243f" stroke-width="1.5"/>');
+    o.push(t(R, 904, 'החתימה תתקבל תוך 3–5 ימי עסקים', 13, '#7d8aa3'));
+    // barcode from the reference number
+    var bx = 430, digits = (tx.ref + '7319').split('');
+    for (var k = 0; k < 44; k++) {
+      var w = 1 + (+digits[k % digits.length] + k) % 4;
+      if (k % 2 === 0) o.push('<rect x="' + bx + '" y="924" width="' + w + '" height="34" fill="#16243f"/>');
+      bx += w + 2;
+    }
+    o.push(t(W / 2, 986, 'biTime בע״מ · בפיקוח המינהל הכרונולוגי · מסמך זה הופק אוטומטית. הזמן שהושקע בקריאתו לא יוחזר.', 12, '#7d8aa3', 0, 'middle'));
+    o.push('</svg>');
+    return o.join('');
+  }
+  function showReceipt(){
+    if (!lastTx) return;
+    $('rcptDoc').innerHTML = receiptSVG(lastTx);
+    openSheet(null);
+    $('rcptModal').classList.add('on');
+  }
+  function closeReceipt(){ $('rcptModal').classList.remove('on'); }
+  function printReceipt(){ showReceipt(); setTimeout(function(){ window.print(); }, 400); }
+  function downloadReceipt(){
+    if (!lastTx) return;
+    var svg = receiptSVG(lastTx), name = 'biTime-אסמכתא-' + lastTx.ref;
+    var save = function(blob, ext){
+      var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name + ext;
+      document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+    };
+    var img = new Image();
+    img.onload = function(){
+      try {
+        var c = document.createElement('canvas'); c.width = 1520; c.height = 2020;
+        var g = c.getContext('2d'); g.drawImage(img, 0, 0, c.width, c.height);
+        c.toBlob(function(b){ b ? save(b, '.png') : save(new Blob([svg], { type: 'image/svg+xml' }), '.svg'); }, 'image/png');
+      } catch(e){ save(new Blob([svg], { type: 'image/svg+xml' }), '.svg'); }
+    };
+    img.onerror = function(){ save(new Blob([svg], { type: 'image/svg+xml' }), '.svg'); };
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+    toast('האסמכתא נשמרה. השמירה ארכה 0.2 שניות, שנוכו מהיתרה.');
+  }
+  $('rcptBtn').addEventListener('click', showReceipt);
+  $('rcptPrint').addEventListener('click', printReceipt);
+  $('rcptDl').addEventListener('click', downloadReceipt);
+  $('rcPrint2').addEventListener('click', function(){ window.print(); });
+  $('rcDl2').addEventListener('click', downloadReceipt);
+  $('rcX').addEventListener('click', closeReceipt);
+  $('rcptModal').addEventListener('click', function(e){ if (e.target === this) closeReceipt(); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && $('rcptModal').classList.contains('on')) closeReceipt(); });
   // live feed (desktop)
   // each list is drawn like a shuffled deck: nothing repeats until the whole list has been used
   function deck(arr){
