@@ -48,7 +48,13 @@ button{font:inherit;cursor:pointer}
 .award{display:flex;gap:12px;align-items:flex-start;margin-top:12px;text-decoration:none;color:#5b4a12;background:linear-gradient(135deg,#fff8e1,#ffefc2);border:1px solid #f3dc8f;border-radius:18px;padding:12px 16px;font-size:13px;line-height:1.55}
 .award b{display:block;font-size:14.5px;color:#3d3000}
 .aw-ic{font-size:26px;line-height:1}
-.award-m{display:block;margin-top:10px;text-align:center;font-size:12px;color:#8a6d00;text-decoration:none}
+.aw-link{background:none;border:0;padding:4px 0;margin-top:12px;color:#9a7b12;font-size:12.5px;text-decoration:underline dotted;text-underline-offset:4px}
+.aw-link:hover{color:#6b5400}
+.award-m{display:block;margin:10px auto 0}
+.aw-top{text-align:center;font-size:56px;line-height:1;margin:2px 0 8px;filter:drop-shadow(0 6px 12px rgba(200,150,0,.35))}
+.aw-body p{font-size:14px;line-height:1.75;color:#3a4a66;margin:0 0 12px}
+.aw-body .sig{text-align:center;font-weight:700;color:var(--ink);font-size:15px;margin:14px 0 16px}
+.cta.gold{background:linear-gradient(90deg,#f6c445,#e29a12);box-shadow:0 10px 24px rgba(226,154,18,.3)}
 @media(min-width:960px){.award-m{display:none}}
 .quote{margin-top:12px;background:#fff;border-radius:18px;padding:14px 16px;font-size:14px;color:#3a4a66;box-shadow:0 4px 14px rgba(11,60,110,.06)}
 .quote small{display:block;color:var(--muted);margin-top:4px}
@@ -186,7 +192,7 @@ button{font:inherit;cursor:pointer}
       <div class="feed-h"><i></i>העברות אחרונות</div>
       <ul id="feed"></ul>
     </div>
-    <a class="award" href="https://mitmachim.top" target="_blank" rel="noopener"><span class="aw-ic">🏆</span><span><b>פרס תורם הזמן של השנה</b>לחברי קהילת מתמחים טופ, שעונים כל יום, בחינם, לשאלות של אנשים שלא הכירו. סך התרומה: לא ניתן לחישוב.</span></a>
+    <button class="aw-link" data-award>🏆 פרס תורם הזמן של השנה</button>
   </section>
 
   <!-- the app -->
@@ -226,7 +232,7 @@ button{font:inherit;cursor:pointer}
         </div>
 
         <button class="cta" id="next">המשך</button>
-        <a class="award-m" href="https://mitmachim.top" target="_blank" rel="noopener">🏆 תורמי הזמן של השנה: חברי קהילת מתמחים טופ</a>
+        <button class="aw-link award-m" data-award>🏆 פרס תורם הזמן של השנה</button>
       </div>
 
       <!-- receipt -->
@@ -295,6 +301,26 @@ button{font:inherit;cursor:pointer}
       </div>
       <button class="cta" id="askGo">יצירת קישור</button>
       <div class="fine" style="margin-top:10px">בקשות זמן נענות בממוצע תוך 3–5 שנים</div>
+    </div>
+
+    <!-- award sheet -->
+    <div class="bs" id="awardSheet" role="dialog" aria-label="פרס תורם הזמן של השנה">
+      <div class="grab"></div>
+      <div class="aw-top">🏆</div>
+      <h3>פרס תורם הזמן של השנה</h3>
+      <div class="lead">מוענק לחברי קהילת מתמחים טופ</div>
+      <div class="aw-body">
+        <p>בכל יום, בלי שאיש ביקש מהם, עוברות שם שעות רבות מאנשים עסוקים אל אנשים שצריכים עזרה: תשובה מפורטת לשאלה שנשאלה כבר עשר פעמים, מדריך שנכתב עד אמצע הלילה, בדיקה של קובץ חשוד, וסבלנות אינסופית למי שעוד לא יודע איך מעתיקים קובץ.</p>
+        <p>זו הקהילה היחידה במאגר שלנו שבה תרומות הזמן עולות על הבקשות. מערכות החישוב שלנו ניסו לסכם את הסכום, ונכשלו.</p>
+      </div>
+      <div class="rows">
+        <div><span>שעות שנתרמו</span><span>לא ניתן לחישוב</span></div>
+        <div><span>תמורה שהתקבלה</span><span>״תודה״, ולפעמים לייק</span></div>
+        <div><span>עמלה שנגבתה</span><span>0</span></div>
+        <div><span>מס זמן</span><span>פטור מלא</span></div>
+      </div>
+      <div class="aw-body"><div class="sig">לכל מי שענה, הסביר, בדק, תיקן ופרגן:<br>תודה. הזמן שלכם לא בוזבז.</div></div>
+      <a class="cta gold" href="https://mitmachim.top" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none">לתרום זמן לקהילה</a>
     </div>
 
     <!-- terms sheet -->
@@ -402,10 +428,11 @@ button{font:inherit;cursor:pointer}
   });
   var openId = null;
   function openSheet(id){
-    ['bs','askSheet','tosSheet'].forEach(function(s){ $(s).classList.toggle('on', s === id); });
+    ['bs','askSheet','tosSheet','awardSheet'].forEach(function(s){ $(s).classList.toggle('on', s === id); });
     $('dim').classList.toggle('on', !!id);
     openId = id;
   }
+  [].forEach.call(document.querySelectorAll('[data-award]'), function(b){ b.addEventListener('click', function(){ openSheet('awardSheet'); }); });
   $('tos').addEventListener('click', function(e){ e.preventDefault(); openSheet('tosSheet'); });
   $('tosOk').addEventListener('click', function(){ openSheet(null); toast('47 דקות נוכו מהיתרה. תודה על הקריאה.'); });
 
