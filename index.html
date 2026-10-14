@@ -176,31 +176,32 @@ button{font:inherit;cursor:pointer}
 /* award modal */
 .modal{position:fixed;inset:0;z-index:50;background:rgba(10,25,50,.55);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;visibility:hidden;transition:opacity .25s,visibility 0s linear .25s}
 .modal.on{opacity:1;visibility:visible;transition:opacity .25s}
-.m-card{position:relative;width:100%;max-width:580px;max-height:calc(100vh - 32px);overflow-y:auto;background:#fff;border-radius:30px;box-shadow:0 40px 100px rgba(0,20,60,.4);transform:translateY(24px) scale(.96);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.m-card{position:relative;width:100%;max-width:580px;max-height:calc(100vh - 32px);overflow-y:auto;background:#fff;border-radius:30px;box-shadow:0 40px 100px rgba(0,20,60,.4);scrollbar-width:none;transform:translateY(24px) scale(.96);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
 .modal.on .m-card{transform:none}
+.m-card::-webkit-scrollbar{display:none}
 .m-x{position:absolute;top:14px;left:14px;z-index:3;width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.7);color:#5b4200;font-size:15px}
-.m-head{position:relative;overflow:hidden;text-align:center;padding:34px 24px 26px;color:#3d2a00;background:radial-gradient(circle at 50% 10%,#fff6d2 0,#f9db6d 45%,#eaa823 100%)}
+.m-head{position:relative;overflow:hidden;text-align:center;padding:24px 24px 20px;color:#3d2a00;background:radial-gradient(circle at 50% 10%,#fff6d2 0,#f9db6d 45%,#eaa823 100%)}
 .m-rays{position:absolute;left:50%;top:30%;width:900px;height:900px;margin:-450px 0 0 -450px;background:repeating-conic-gradient(rgba(255,255,255,.22) 0 8deg,transparent 8deg 16deg);animation:spin 60s linear infinite}
 .spark{position:absolute;font-size:18px;animation:twinkle 2.6s ease-in-out infinite}
 @keyframes twinkle{0%,100%{opacity:.2;transform:scale(.7)}50%{opacity:1;transform:scale(1.1)}}
-.m-trophy{position:relative;font-size:78px;line-height:1;filter:drop-shadow(0 10px 16px rgba(150,90,0,.35));animation:bob 3s ease-in-out infinite}
+.m-trophy{position:relative;font-size:64px;line-height:1;filter:drop-shadow(0 10px 16px rgba(150,90,0,.35));animation:bob 3s ease-in-out infinite}
 @keyframes bob{50%{transform:translateY(-8px)}}
-.m-kicker{position:relative;display:inline-block;margin-top:14px;font-size:12px;font-weight:700;letter-spacing:.3px;background:rgba(255,255,255,.55);border-radius:999px;padding:4px 12px}
-.m-head h2{position:relative;margin:10px 0 6px;font-size:30px;letter-spacing:-.5px}
+.m-kicker{position:relative;display:inline-block;margin-top:10px;font-size:12px;font-weight:700;letter-spacing:.3px;background:rgba(255,255,255,.55);border-radius:999px;padding:4px 12px}
+.m-head h2{position:relative;margin:8px 0 4px;font-size:28px;letter-spacing:-.5px}
 .m-to{position:relative;font-size:16px}
-.m-body{padding:22px 26px 26px}
-.m-body p{font-size:14.5px;line-height:1.75;color:#3a4a66;margin:0 0 16px;text-align:center}
-.m-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.m-body{padding:16px 24px 20px}
+.m-body p{font-size:14.5px;line-height:1.75;color:#3a4a66;margin:0 0 12px;text-align:center}
+.m-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
 @media(max-width:480px){.m-grid{grid-template-columns:repeat(2,1fr)}.m-body{padding:18px 16px 20px}.m-head h2{font-size:25px}}
-.tile{background:linear-gradient(180deg,#fffdf6,#fff6e0);border:1px solid #f4e2ad;border-radius:18px;padding:14px 8px 12px;text-align:center;transition:transform .15s}
+.tile{background:linear-gradient(180deg,#fffdf6,#fff6e0);border:1px solid #f4e2ad;border-radius:18px;padding:10px 8px 9px;text-align:center;transition:transform .15s}
 .tile:hover{transform:translateY(-3px)}
-.tile .i{font-size:30px;line-height:1}
-.tile b{display:block;font-size:14px;margin-top:8px;color:#3d2a00}
+.tile .i{font-size:26px;line-height:1}
+.tile b{display:block;font-size:14px;margin-top:6px;color:#3d2a00}
 .tile span{display:block;font-size:12px;color:#8f7535;margin-top:2px}
-.m-stats{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:18px}
-.m-stats .chip{background:var(--soft);border-radius:999px;padding:7px 12px;font-size:12.5px;color:#4a5876}
+.m-stats{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:12px}
+.m-stats .chip{background:var(--soft);border-radius:999px;padding:6px 11px;font-size:12.5px;color:#4a5876}
 .m-stats .chip b{color:var(--ink)}
-.m-sig{text-align:center;font-size:14px;color:#4a5876;line-height:1.7;margin-bottom:18px}
+.m-sig{text-align:center;font-size:14px;color:#4a5876;line-height:1.6;margin-bottom:14px}
 .m-sig b{display:block;font-size:19px;color:var(--ink)}
 .m-foot{display:flex;align-items:center;gap:14px}
 .m-foot .cta{flex:1;display:block;text-align:center;text-decoration:none}
@@ -249,7 +250,7 @@ button{font:inherit;cursor:pointer}
           <div class="avatar" id="av">?</div>
           <div class="req" id="req">העברת זמן אל</div>
           <div class="name" id="toName">מי שאין לו זמן</div>
-          <div class="sub">יתרת זמן: 00:00 · משתמש מאז 2019</div>
+          <div class="sub">יתרת זמן: 00:00 · משתמש מאז <span id="since">2019</span></div>
         </div>
 
         <div class="amt"><span class="num" id="num">60</span><span class="unit" id="unitShort">דק׳</span></div>
@@ -421,6 +422,8 @@ button{font:inherit;cursor:pointer}
   } catch(e){}
   $('toName').textContent = name;
   $('av').textContent = name.trim().charAt(0) || '?';
+  for (var hsh = 0, q = 0; q < name.length; q++) hsh = (hsh * 31 + name.charCodeAt(q)) >>> 0;
+  $('since').textContent = 2012 + hsh % 12;
   if (isReq) { $('req').textContent = 'בקשת העברת זמן מאת'; document.title = name + ' מבקש זמן · זמן־ביט'; }
 
   var val = '60', unit = 'm', all = false;
