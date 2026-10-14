@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="theme-color" content="#0ab6cf">
+<meta name="theme-color" content="#00353b">
 <title>biTime · העברת זמן</title>
 <meta name="description" content="העברות זמן מיידיות לכל אחד, בלי עמלות (כמעט).">
 <meta property="og:title" content="קיבלת בקשה להעברת זמן">
@@ -240,6 +240,35 @@ button{font:inherit;cursor:pointer}
   .m-thanks{font-size:15px;margin-bottom:12px}
   .m-thanks small{font-size:12.5px}
 }
+
+/* ---------- dark brand theme ---------- */
+:root{--dk1:#00454e;--dk2:#00353b;--dk3:#002a30;--cy:#38ecf5;--cy2:#13d0d8}
+.app{background:linear-gradient(165deg,var(--dk1),var(--dk2) 55%,var(--dk3))}
+.hdr .logo img{height:28px}
+@media(min-width:960px){
+  body{background:radial-gradient(1100px 700px at 80% 0%,#00525c 0,transparent 60%),radial-gradient(900px 600px at 0% 100%,#004049 0,transparent 60%),var(--dk3)}
+  .app{box-shadow:0 0 0 10px #0d1c20,0 40px 90px rgba(0,0,0,.45)}
+  .hero{color:#eaf6f7}
+  .hero .logo img{height:46px}
+  .hero h1{color:#fff}
+  .hero h1 span{background:linear-gradient(90deg,var(--cy),var(--cy2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p.lead{color:#a8c9cd}
+  .feat .ic{background:rgba(255,255,255,.07);box-shadow:none}
+  .feat b{color:#fff}
+  .feat span{color:#87aeb3}
+  .stats{border-top-color:rgba(255,255,255,.12)}
+  .stats b{color:#fff}
+  .stats span{color:#87aeb3}
+  .feed{background:rgba(255,255,255,.06);box-shadow:none}
+  .feed-h{color:#87aeb3}
+  .feed li{border-top-color:rgba(255,255,255,.08)}
+  .feed .ft b{color:#fff}
+  .feed .ft small{color:#87aeb3}
+  .feed .fm{color:var(--cy)}
+  .feed .fm small{color:#87aeb3}
+  .aw-link{color:#e9c45c}
+  .aw-link:hover{color:#ffd970}
+}
 </style>
 </head>
 <body>
@@ -247,7 +276,7 @@ button{font:inherit;cursor:pointer}
 
   <!-- desktop landing column -->
   <section class="hero">
-    <div class="mark"><span class="logo"><img src="logo-d.svg" alt="biTime"></span></div>
+    <div class="mark"><span class="logo"><img src="logo.svg" alt="biTime"></span></div>
     <h1>העברת זמן,<br><span>בלחיצה אחת.</span></h1>
     <p class="lead">יש לך זמן פנוי? יש מי שאין לו. עם biTime מעבירים דקות, שעות ואפילו ימים שלמים, לכל אחד ובלי פרטי בנק.</p>
     <div class="feats">
@@ -270,7 +299,7 @@ button{font:inherit;cursor:pointer}
   <!-- the app -->
   <div class="app">
     <div class="hdr">
-      <div class="mark"><span class="logo"><img src="logo-w.svg" alt="biTime"></span></div>
+      <div class="mark"><span class="logo"><img src="logo.svg" alt="biTime"></span></div>
       <div class="hbtns">
         <button class="pill" id="askBtn">＋ בקשת זמן</button>
         <div class="clock" title="זמן בדף">⏱ <b id="live">00:00</b></div>
