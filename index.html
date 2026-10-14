@@ -250,6 +250,9 @@ a.logo{display:inline-block}
 .hdr .logo img{height:26px}
 .hero .logo{background:#0f6573;border-radius:16px;padding:10px 16px}
 .hero .logo img{height:42px}
+.share-msg{background:var(--soft);border-radius:14px;padding:12px 14px;font-size:14px;line-height:1.6;color:var(--ink);margin-bottom:12px;white-space:pre-wrap;word-break:break-word}
+.share-mail{display:block;text-align:center;text-decoration:none;margin-top:8px}
+.share-url{display:block;direction:ltr;unicode-bidi:isolate;text-align:left;margin-top:6px;font-size:12.5px;color:var(--g3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 </style>
 </head>
 <body>
@@ -388,6 +391,17 @@ a.logo{display:inline-block}
       </div>
       <button class="cta" id="askGo">יצירת קישור</button>
       <div class="fine" style="margin-top:10px">בקשות זמן נענות בממוצע תוך 3–5 שנים</div>
+    </div>
+
+    <!-- share sheet (desktop) -->
+    <div class="bs" id="shareSheet" role="dialog" aria-label="שיתוף אישור">
+      <div class="grab"></div>
+      <h3>שיתוף אישור</h3>
+      <div class="lead">ההודעה שתישלח:</div>
+      <div class="share-msg" id="shareMsg"></div>
+      <button class="cta" id="shareCopy">העתקת ההודעה</button>
+      <a class="cta ghost share-mail" id="shareMail" href="#">שליחה במייל</a>
+      <div class="fine" style="margin-top:10px">שיתוף האישור אינו מנכה זמן נוסף, מלבד הזמן שלקח לקרוא שורה זו.</div>
     </div>
 
     <!-- terms sheet -->
@@ -695,7 +709,7 @@ a.logo{display:inline-block}
   });
   var openId = null;
   function openSheet(id){
-    ['bs','askSheet','tosSheet'].forEach(function(s){ $(s).classList.toggle('on', s === id); });
+    ['bs','askSheet','tosSheet','shareSheet'].forEach(function(s){ $(s).classList.toggle('on', s === id); });
     $('dim').classList.toggle('on', !!id);
     openId = id;
   }
@@ -813,9 +827,28 @@ a.logo{display:inline-block}
     var sp = special(tx.name), shortOnTime = isReq && (!sp || sp.cls === 'neg');
     var txt = 'העברתי ' + tx.asked + ' אל ' + tx.name + ' ב־biTime (בפועל הועברו ' + tx.real + '). ' +
               (isReq ? (shortOnTime ? 'עדיין בגירעון, אפשר לעזור כאן:' : 'אפשר להצטרף כאן:') : 'גם אתם יכולים להעביר זמן:');
-    if (navigator.share) { navigator.share({title:'biTime', text:txt, url:url}).catch(function(){}); }
-    else { try { navigator.clipboard.writeText(txt + ' ' + url); toast('הקישור הועתק. ההעתקה ארכה 0.4 שניות, שנוכו מהיתרה.'); } catch(e){} }
+    // phones: the device's own share sheet; computers: our sheet (the desktop OS one shows only the link)
+    var touch = window.matchMedia && matchMedia('(pointer: coarse)').matches;
+    if (touch && navigator.share) { navigator.share({ title: 'biTime', text: txt, url: url }).catch(function(){}); return; }
+    var full = txt + String.fromCharCode(10) + url;
+    var box = $('shareMsg'); box.textContent = txt;
+    var u = document.createElement('span'); u.className = 'share-url';
+    try { u.textContent = decodeURI(url).replace(/^https?:[/][/]/, ''); } catch(e){ u.textContent = url; }
+    box.appendChild(u);
+    $('shareMail').href = 'mailto:?subject=' + encodeURIComponent('העברת זמן ב־biTime') + '&body=' + encodeURIComponent(full);
+    shareText = full;
+    openSheet('shareSheet');
   });
+  var shareText = '';
+  $('shareCopy').addEventListener('click', function(){
+    var done = function(){ openSheet(null); toast('ההודעה הועתקה. ההעתקה ארכה 0.4 שניות, שנוכו מהיתרה.'); };
+    try { navigator.clipboard.writeText(shareText).then(done, function(){ fallbackCopy(shareText); done(); }); }
+    catch(e){ fallbackCopy(shareText); done(); }
+  });
+  function fallbackCopy(t){
+    var ta = document.createElement('textarea'); ta.value = t; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch(e){} ta.remove();
+  }
   // live feed (desktop)
   // each list is drawn like a shuffled deck: nothing repeats until the whole list has been used
   function deck(arr){
