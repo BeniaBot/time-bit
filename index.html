@@ -360,7 +360,13 @@ button{font:inherit;cursor:pointer}
     var h = Math.floor(m/60), r = Math.round(m%60);
     return h + ' שע׳' + (r ? ' ו־' + r + ' דק׳' : '');
   }
-  function asked(){ return all ? 'כל מה שהתפנה' : (+val) + ' ' + U[unit][1]; }
+  function asked(){
+    if (all) return 'כל מה שהתפנה';
+    var n = +val;
+    if (n === 1) return {m:'דקה אחת', h:'שעה אחת', d:'יום אחד'}[unit];
+    if (n === 2 && unit !== 'm') return {h:'שעתיים', d:'יומיים'}[unit];
+    return n + ' ' + U[unit][1];
+  }
 
   var tt;
   function toast(m){ var o=document.querySelector('.toast'); if(o) o.remove(); var d=document.createElement('div'); d.className='toast'; d.textContent=m; document.querySelector('.app').appendChild(d); clearTimeout(tt); tt=setTimeout(function(){ d.remove(); }, 3200); }
