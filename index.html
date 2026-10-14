@@ -45,6 +45,11 @@ button{font:inherit;cursor:pointer}
 .stats{display:flex;gap:28px;padding-top:16px;border-top:1px solid #d6e0ec}
 .stats b{display:block;font-size:24px;font-variant-numeric:tabular-nums}
 .stats span{color:var(--muted);font-size:12.5px}
+.award{display:flex;gap:12px;align-items:flex-start;margin-top:12px;text-decoration:none;color:#5b4a12;background:linear-gradient(135deg,#fff8e1,#ffefc2);border:1px solid #f3dc8f;border-radius:18px;padding:12px 16px;font-size:13px;line-height:1.55}
+.award b{display:block;font-size:14.5px;color:#3d3000}
+.aw-ic{font-size:26px;line-height:1}
+.award-m{display:block;margin-top:10px;text-align:center;font-size:12px;color:#8a6d00;text-decoration:none}
+@media(min-width:960px){.award-m{display:none}}
 .quote{margin-top:12px;background:#fff;border-radius:18px;padding:14px 16px;font-size:14px;color:#3a4a66;box-shadow:0 4px 14px rgba(11,60,110,.06)}
 .quote small{display:block;color:var(--muted);margin-top:4px}
 
@@ -170,18 +175,18 @@ button{font:inherit;cursor:pointer}
     <div class="feats">
       <div class="feat"><div class="ic">⚡</div><div><b>העברה תוך 0.3 שניות</b><span>שנלקחות מהזמן שלך</span></div></div>
       <div class="feat"><div class="ic">🔒</div><div><b>הצפנת 24 שעות</b><span>הסטנדרט המחמיר בענף</span></div></div>
-      <div class="feat"><div class="ic">🏛️</div><div><b>בפיקוח רשות שוק הזמן</b><span>רישיון מס׳ 23:59:59</span></div></div>
+      <div class="feat"><div class="ic">🏛️</div><div><b>בפיקוח המינהל הכרונולוגי</b><span>רישיון מס׳ 23:59:59</span></div></div>
     </div>
     <div class="stats">
       <div><b>1,284,902</b><span>שעות הועברו החודש</span></div>
       <div><b>0</b><span>הוחזרו</span></div>
-      <div><b>4.9★</b><span>דירוג (נכתב בזמן עבודה)</span></div>
+      <div><b>4.9★</b><span>דירוג, רובו נכתב בשעות העבודה</span></div>
     </div>
     <div class="feed">
       <div class="feed-h"><i></i>העברות אחרונות</div>
       <ul id="feed"></ul>
     </div>
-    <div class="quote">״העברתי לחבר שעה, ומאז הוא לא מוצא זמן להחזיר לי.״<small>משתמש מאומת, מודיעין עילית</small></div>
+    <a class="award" href="https://mitmachim.top" target="_blank" rel="noopener"><span class="aw-ic">🏆</span><span><b>פרס תורם הזמן של השנה</b>לחברי קהילת מתמחים טופ, שעונים כל יום, בחינם, לשאלות של אנשים שלא הכירו. סך התרומה: לא ניתן לחישוב.</span></a>
   </section>
 
   <!-- the app -->
@@ -201,7 +206,7 @@ button{font:inherit;cursor:pointer}
           <div class="avatar" id="av">?</div>
           <div class="req" id="req">העברת זמן אל</div>
           <div class="name" id="toName">מי שאין לו זמן</div>
-          <div class="sub">זמין: לגמרי · פעיל מ־2019</div>
+          <div class="sub">יתרת זמן: 00:00 · משתמש מאז 2019</div>
         </div>
 
         <div class="amt"><span class="num" id="num">60</span><span class="unit" id="unitShort">דק׳</span></div>
@@ -221,6 +226,7 @@ button{font:inherit;cursor:pointer}
         </div>
 
         <button class="cta" id="next">המשך</button>
+        <a class="award-m" href="https://mitmachim.top" target="_blank" rel="noopener">🏆 תורמי הזמן של השנה: חברי קהילת מתמחים טופ</a>
       </div>
 
       <!-- receipt -->
@@ -230,9 +236,9 @@ button{font:inherit;cursor:pointer}
         <div class="to" id="rTo"></div>
         <div class="rows">
           <div><span>סכום ההעברה</span><span id="rAsked"></span></div>
-          <div><span>חויב מ</span><span id="rSrc"></span></div>
+          <div><span>מקור החיוב</span><span id="rSrc"></span></div>
           <div><span>הועבר בפועל</span><span id="rReal"></span></div>
-          <div><span>צפי בזבוז אצל המקבל</span><span>4 שניות</span></div>
+          <div><span>זמן משוער עד שיבוזבז</span><span>4 שניות</span></div>
           <div><span>מס׳ אסמכתא</span><span id="ref"></span></div>
         </div>
         <div class="note" id="twist"></div>
@@ -240,7 +246,7 @@ button{font:inherit;cursor:pointer}
         <button class="cta ghost" id="again">העברה נוספת</button>
       </div>
 
-      <div class="fine" style="margin-top:14px">© זמן־ביט בע״מ · בפיקוח רשות שוק הזמן · <a href="#" id="tos">תנאי שימוש</a></div>
+      <div class="fine" style="margin-top:14px">© זמן־ביט בע״מ · בפיקוח המינהל הכרונולוגי · <a href="#" id="tos">תנאי שימוש</a></div>
     </div></div>
 
     <!-- step 2: confirm sheet -->
@@ -259,15 +265,15 @@ button{font:inherit;cursor:pointer}
       <div class="quick" id="quick">
         <button>בשביל הפיתוח 💻</button><button>שיהיה לך ⏳</button><button>תחזיר כשתוכל</button>
       </div>
-      <div class="field"><span>לחייב מ</span>
+      <div class="field"><span>מקור החיוב</span>
         <select id="src">
-          <option>הזמן הפנוי</option>
-          <option>זמן העבודה (הבוס לא יודע)</option>
-          <option>הזמן שאני גולל בפורום</option>
-          <option>הזמן שאני מחכה שהקוד יתקמפל</option>
+          <option>זמן פנוי</option>
+          <option>שעות העבודה (הבוס לא יודע)</option>
+          <option>גלילה בפורום</option>
+          <option>המתנה לקימפול</option>
           <option>ה"עוד 5 דקות" של הבוקר</option>
           <option>המתנה למוקד שירות (יתרה בלתי מוגבלת)</option>
-          <option>זמן השינה</option>
+          <option>שעות השינה</option>
         </select>
       </div>
       <div class="promo">🎁 מבצע השבוע: העבר שעה וקבל במתנה 10 דקות שכבר עברו</div>
@@ -376,7 +382,7 @@ button{font:inherit;cursor:pointer}
     else {
       if (all){ all=false; val=''; }
       if (val.length < 4) val = (val === '0' ? '' : val) + b.textContent;
-      else toast('חרגת ממסגרת האשראי. לא ניתן להעביר יותר זמן ממה שבזבזת השנה.');
+      else toast('חריגה ממסגרת האשראי: לא ניתן להעביר יותר זמן ממה שבזבזת השנה.');
     }
     render();
   }
@@ -403,7 +409,7 @@ button{font:inherit;cursor:pointer}
     if (!$('askOut').classList.contains('hidden')) {
       link.select();
       try { navigator.clipboard.writeText(link.value); } catch(e){ try { document.execCommand('copy'); } catch(_){} }
-      toast('הקישור הועתק. אפשר להדביק בפורום.');
+      toast('הקישור הועתק. אפשר לשלוח.');
       return;
     }
     var nick = $('askName').value.trim();
@@ -442,9 +448,9 @@ button{font:inherit;cursor:pointer}
     'ממיר "עוד דקה אני מסיים" לזמן אמיתי, פי 20...',
     'מנכה מס זמן במקור...',
     'בודק שהזמן לא בוזבז כבר...',
-    'הזמן נמצא בבזבוז. מנסה שוב...',
+    'נמצא שהזמן כבר בוזבז. מנסה שוב...',
     'מריץ git rebase על השבוע האחרון...',
-    'מעביר שניות אחת־אחת...',
+    'מעביר את השניות אחת־אחת...',
     'ממתין לאישור בנק הזמן (3–5 ימי עסקים)...',
     'עוקף את ימי העסקים...'
   ];
@@ -488,7 +494,7 @@ button{font:inherit;cursor:pointer}
   var who = ['מ.','י.ש.','א.ל.','ש.ק.','ד.ב.','ח.ר.','נ.ג.','ב.מ.','צ.פ.','ר.א.'];
   var where = ['בני ברק','אלעד','ביתר','ירושלים','מודיעין עילית','בית שמש','רכסים','צפת'];
   var what = ['על הפגישה שיכלה להיות מייל','החזר על שיחה ״קצרה״','בשביל הפרויקט ש״ייקח שבוע״','מה שנשאר מההמתנה בקופת חולים',
-              'על העזרה בהתקנת המדפסת','חוב ישן מ־2019','כי ביקשת יפה','על ה״רק תסתכל רגע על הקוד״','דקות שנחסכו בפקק','לא שואלים'];
+              'על העזרה בהתקנת המדפסת','חוב ישן מ־2019','כי ביקשת יפה','תודה על המדריך','על תשובה מפורטת בפורום','על ה״רק תסתכל רגע על הקוד״','על ההסבר איך מעתיקים קובץ','לא שואלים'];
   var amts = ['5 דק׳','12 דק׳','20 דק׳','45 דק׳','1 שע׳','2 שע׳','3 דק׳','1 יום','30 שנ׳','90 דק׳'];
   var cols = ['#ff8a65','#4fc3f7','#81c784','#ba68c8','#ffb74d','#4db6ac','#f06292','#7986cb'];
   function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
