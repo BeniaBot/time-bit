@@ -77,6 +77,12 @@ button{font:inherit;cursor:pointer}
 .who .req{color:var(--muted);font-size:13px;margin-top:8px}
 .who .name{font-weight:700;font-size:20px;line-height:1.2}
 .who .sub{color:var(--muted);font-size:12.5px;margin-top:2px}
+.name-in{margin-top:4px;border:0;border-bottom:2px solid var(--line);background:transparent;font:inherit;font-weight:700;font-size:19px;text-align:center;color:var(--ink);padding:3px 8px;width:230px;max-width:100%;outline:none;border-radius:0}
+.name-in:focus{border-color:var(--g2)}
+.name-in::placeholder{color:#b3bfd0;font-weight:500}
+.sugg{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+.sugg button{border:1px solid var(--line);background:#fff;border-radius:999px;font-size:12px;padding:4px 10px;color:var(--ink)}
+.sugg button:hover{border-color:var(--g2)}
 
 /* amount */
 .amt{text-align:center;margin:14px 0 2px;display:flex;justify-content:center;align-items:baseline;gap:8px;direction:rtl}
@@ -264,8 +270,10 @@ button{font:inherit;cursor:pointer}
         <div class="who">
           <div class="avatar" id="av">?</div>
           <div class="req" id="req">העברת זמן אל</div>
-          <div class="name" id="toName">מי שאין לו זמן</div>
-          <div class="sub">בגירעון של <span id="debt">4</span> שעות · משתמש מאז <span id="since">2019</span></div>
+          <div class="name" id="toName"></div>
+          <input class="name-in hidden" id="toInput" maxlength="30" placeholder="למי להעביר?" aria-label="שם הנמען">
+          <div class="sugg hidden" id="sugg"><button>הבוס</button><button>החבר שתמיד ממהר</button><button>קהילת מתמחים טופ</button></div>
+          <div class="sub" id="whoSub">בגירעון של <span id="debt">4</span> שעות · משתמש מאז <span id="since">2019</span></div>
         </div>
 
         <div class="amt"><span class="num" id="num">60</span><span class="unit" id="unitShort">דק׳</span></div>
@@ -421,18 +429,37 @@ button{font:inherit;cursor:pointer}
   function secs(){ return Math.floor((Date.now()-t0)/1000); }
   setInterval(function(){ $('live').textContent = fmt(secs()); }, 250);
 
-  var name = 'מי שאין לו זמן', isReq = false, reqMin = 0;
+  var name = '', isReq = false, reqMin = 0;
   try {
     var qs = new URLSearchParams(location.search);
     var to = qs.get('to');
     if (to) { name = to.replace(/[-_]/g,' ').slice(0,40); isReq = true; }
     reqMin = Math.max(0, Math.min(9999*1440, parseInt(qs.get('t'),10) || 0));
   } catch(e){}
-  $('toName').textContent = name;
-  $('av').textContent = name.trim().charAt(0) || '?';
-  for (var hsh = 0, q = 0; q < name.length; q++) hsh = (hsh * 31 + name.charCodeAt(q)) >>> 0;
-  $('since').textContent = 2012 + hsh % 12;
-  $('debt').textContent = 3 + (hsh >>> 4) % 9;
+  // recipient card: from the request link, or typed in on the home page
+  function updateWho(){
+    $('av').textContent = name.trim().charAt(0) || '＋';
+    $('whoSub').classList.toggle('hidden', !name);
+    for (var hsh = 0, q = 0; q < name.length; q++) hsh = (hsh * 31 + name.charCodeAt(q)) >>> 0;
+    $('since').textContent = 2012 + hsh % 12;
+    $('debt').textContent = 3 + (hsh >>> 4) % 9;
+    // the community gets its own line: they are the ones giving time, not short of it
+    var giver = /מתמחים/.test(name);
+    $('whoSub').firstChild.textContent = giver ? '🏆 תורמי הזמן של השנה · משתמש מאז ' : 'בגירעון של ';
+    $('debt').style.display = giver ? 'none' : '';
+    $('debt').nextSibling.textContent = giver ? '' : ' שעות · משתמש מאז ';
+  }
+  if (isReq) $('toName').textContent = name;
+  else {
+    $('toName').classList.add('hidden');
+    $('toInput').classList.remove('hidden'); $('sugg').classList.remove('hidden');
+    $('toInput').addEventListener('input', function(){ name = this.value.trim(); updateWho(); });
+    $('sugg').addEventListener('click', function(e){
+      var b = e.target.closest('button'); if (!b) return;
+      $('toInput').value = name = b.textContent; updateWho();
+    });
+  }
+  updateWho();
   if (isReq) { $('req').textContent = 'בקשת העברת זמן מאת'; document.title = name + ' מבקש זמן · זמן־ביט'; }
 
   var val = '60', unit = 'm', all = false;
@@ -537,6 +564,7 @@ button{font:inherit;cursor:pointer}
   });
 
   $('next').addEventListener('click', function(){
+    if (!name) { toast('למי להעביר? צריך לבחור נמען.'); $('toInput').focus(); return; }
     var m = minutes();
     $('bsLead').textContent = 'אל ' + name;
     $('cAmt').textContent = all ? 'כל מה שהתפנה' : fmtMin(m);
