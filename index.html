@@ -14,7 +14,7 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='26' fill='%230ab6cf'/%3E%3Ctext x='50' y='76' font-size='74' font-family='Arial' font-weight='900' fill='white' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='26' fill='%2300353b'/%3E%3Cpath d='M44 20 V62 C44 76 52 82 62 82 C68 82 73 79 76 74 M30 42 H68' fill='none' stroke='%23ff8a3d' stroke-width='12' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Rubik:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -39,7 +39,7 @@ button{font:inherit;cursor:pointer}
   .hero{display:block;max-width:440px}
 }
 .hero .mark{margin-bottom:22px}
-.hero .logo{background:none;padding:0;box-shadow:none}
+.hero .logo{padding:10px 16px;border-radius:16px}
 .hero h1{font-size:42px;line-height:1.1;margin:0 0 12px;letter-spacing:-1px}
 .hero h1 span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 .hero p.lead{font-size:16.5px;color:#4a5876;line-height:1.6;margin:0 0 20px}
@@ -64,9 +64,9 @@ button{font:inherit;cursor:pointer}
 }
 .hdr{color:#fff;padding:18px 20px 96px;display:flex;align-items:center;justify-content:space-between}
 .mark{display:flex;align-items:center}
-.logo{direction:ltr;unicode-bidi:isolate;display:inline-block;font-family:Fredoka,Rubik,system-ui,sans-serif;font-weight:700;font-size:21px;line-height:1;letter-spacing:-.3px;color:var(--g3);background:#fff;border-radius:12px;padding:6px 11px;box-shadow:0 4px 12px rgba(0,40,90,.12)}
-.logo svg{display:block;height:25px;width:auto}
-.hero .logo svg{height:40px}
+.logo{direction:ltr;unicode-bidi:isolate;display:inline-block;font-family:Fredoka,Rubik,system-ui,sans-serif;font-weight:700;font-size:21px;line-height:1;letter-spacing:-.3px;color:var(--g3);background:#00353b;border-radius:12px;padding:6px 11px;box-shadow:0 4px 12px rgba(0,40,90,.12)}
+.logo img{display:block;height:24px;width:auto}
+.hero .logo img{height:42px}
 .logo b{font-weight:700;letter-spacing:0;color:#ff7a7a;background:linear-gradient(160deg,#ffb36b,#ff5f8f);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .clock{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.18);border-radius:999px;padding:6px 12px;font-size:13px;font-variant-numeric:tabular-nums}
 .clock b{font-weight:700;min-width:38px;text-align:center}
@@ -247,7 +247,7 @@ button{font:inherit;cursor:pointer}
 
   <!-- desktop landing column -->
   <section class="hero">
-    <div class="mark"><span class="logo"><svg viewBox="0 10 690 222" role="img" aria-label="biTime"><defs><linearGradient id="tg1" gradientUnits="userSpaceOnUse" x1="200" y1="50" x2="320" y2="210"><stop offset="0" stop-color="#ffb36b"/><stop offset="1" stop-color="#ff5f8f"/></linearGradient></defs><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="26"><g stroke="#0b7fd0"><path d="M40 38 V145"/><circle cx="95" cy="145" r="55"/><path d="M150 102 V145"/><path d="M150 50 h0"/></g><path stroke="url(#tg1)" d="M200 102 H292 M246 52 V150 C246 184 264 200 288 200 C303 200 313 193 320 182"/><g stroke="#0b7fd0"><path d="M356 50 h0 M356 102 V200"/><path d="M398 200 V131 A31 31 0 0 1 460 131 V200 M460 131 A31 31 0 0 1 522 131 V200"/><path d="M562 150 H660 A49 49 0 1 0 646 185"/></g></g></svg></span></div>
+    <div class="mark"><span class="logo"><img src="logo.svg" alt="biTime"></span></div>
     <h1>העברת זמן,<br><span>בלחיצה אחת.</span></h1>
     <p class="lead">יש לך זמן פנוי? יש מי שאין לו. עם biTime מעבירים דקות, שעות ואפילו ימים שלמים, לכל אחד ובלי פרטי בנק.</p>
     <div class="feats">
@@ -270,7 +270,7 @@ button{font:inherit;cursor:pointer}
   <!-- the app -->
   <div class="app">
     <div class="hdr">
-      <div class="mark"><span class="logo"><svg viewBox="0 10 690 222" role="img" aria-label="biTime"><defs><linearGradient id="tg2" gradientUnits="userSpaceOnUse" x1="200" y1="50" x2="320" y2="210"><stop offset="0" stop-color="#ffb36b"/><stop offset="1" stop-color="#ff5f8f"/></linearGradient></defs><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="26"><g stroke="#0b7fd0"><path d="M40 38 V145"/><circle cx="95" cy="145" r="55"/><path d="M150 102 V145"/><path d="M150 50 h0"/></g><path stroke="url(#tg2)" d="M200 102 H292 M246 52 V150 C246 184 264 200 288 200 C303 200 313 193 320 182"/><g stroke="#0b7fd0"><path d="M356 50 h0 M356 102 V200"/><path d="M398 200 V131 A31 31 0 0 1 460 131 V200 M460 131 A31 31 0 0 1 522 131 V200"/><path d="M562 150 H660 A49 49 0 1 0 646 185"/></g></g></svg></span></div>
+      <div class="mark"><span class="logo"><img src="logo.svg" alt="biTime"></span></div>
       <div class="hbtns">
         <button class="pill" id="askBtn">＋ בקשת זמן</button>
         <div class="clock" title="זמן בדף">⏱ <b id="live">00:00</b></div>
