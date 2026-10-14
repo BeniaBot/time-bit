@@ -782,6 +782,7 @@ a.logo{display:inline-block}
     $('rAsked').textContent = asked();
     $('rSrc').textContent = $('src').value;
     $('rReal').textContent = fmt(s);
+    lastTx = { asked: asked(), name: name, real: fmt(s) };
     $('ref').textContent = String(Date.now()).slice(-8);
     rain();
     $('twist').innerHTML = '<b>הודעה על ביצוע חלקי:</b> עקב עומס במערכת הועברו בפועל ' + fmt(s) +
@@ -803,8 +804,15 @@ a.logo{display:inline-block}
   $('again').addEventListener('click', function(){
     $('receipt').classList.add('hidden'); $('form').classList.remove('hidden');
   });
+  // the share text says what was sent (and what really went through); a request link keeps collecting
+  // for the same person, a home-page transfer invites others to the home page
+  var lastTx = null;
   $('share').addEventListener('click', function(){
-    var url = location.href, txt = 'העברתי זמן ב־biTime. גם לך מגיע:';
+    var tx = lastTx || { asked: asked(), name: name, real: fmt(secs()) };
+    var url = isReq ? location.href : location.origin + location.pathname;
+    var sp = special(tx.name), shortOnTime = isReq && (!sp || sp.cls === 'neg');
+    var txt = 'העברתי ' + tx.asked + ' אל ' + tx.name + ' ב־biTime (בפועל הועברו ' + tx.real + '). ' +
+              (isReq ? (shortOnTime ? 'עדיין בגירעון, אפשר לעזור כאן:' : 'אפשר להצטרף כאן:') : 'גם אתם יכולים להעביר זמן:');
     if (navigator.share) { navigator.share({title:'biTime', text:txt, url:url}).catch(function(){}); }
     else { try { navigator.clipboard.writeText(txt + ' ' + url); toast('הקישור הועתק. ההעתקה ארכה 0.4 שניות, שנוכו מהיתרה.'); } catch(e){} }
   });
