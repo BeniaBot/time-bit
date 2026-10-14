@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#0ab6cf">
+<title>זמן־ביט · העברת זמן</title>
+<meta name="description" content="העברות זמן מיידיות לכל אחד, בלי עמלות (כמעט).">
+<meta property="og:title" content="קיבלת בקשה להעברת זמן">
+<meta property="og:description" content="לחץ כדי להעביר זמן בזמן־ביט. מהיר, מאובטח, סופי.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='26' fill='%230ab6cf'/%3E%3Ctext x='50' y='70' font-size='58' text-anchor='middle'%3E⏳%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --g1:#13d0d8; --g2:#0aa6cf; --g3:#0b7fd0;
+  --grad:linear-gradient(160deg,var(--g1),var(--g2) 45%,var(--g3));
+  --ink:#16243f; --muted:#7d8aa3; --line:#e8edf4; --soft:#f2f6fb; --ok:#19c37d;
+  --bg:#eef3f8;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:Rubik,system-ui,sans-serif;min-height:100vh}
+button{font:inherit;cursor:pointer}
+
+/* ---------- page layout ---------- */
+.page{min-height:100vh;display:flex;justify-content:center}
+.hero{display:none}
+@media(min-width:960px){
+  body{background:radial-gradient(1200px 700px at 85% 10%,#d9f6fb 0,transparent 60%),radial-gradient(900px 600px at 10% 90%,#dbe9fb 0,transparent 60%),var(--bg)}
+  .page{align-items:center;gap:80px;padding:32px}
+  .hero{display:block;max-width:440px}
+}
+.hero .mark{color:var(--ink);font-size:26px;margin-bottom:34px}
+.hero .mark i{background:var(--grad);color:#fff}
+.hero h1{font-size:46px;line-height:1.1;margin:0 0 16px;letter-spacing:-1px}
+.hero h1 span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lead{font-size:18px;color:#4a5876;line-height:1.6;margin:0 0 30px}
+.feats{display:grid;gap:14px;margin-bottom:34px}
+.feat{display:flex;gap:14px;align-items:flex-start}
+.feat .ic{width:42px;height:42px;border-radius:14px;background:#fff;display:grid;place-items:center;font-size:20px;flex:none;box-shadow:0 4px 14px rgba(11,60,110,.08)}
+.feat b{display:block;font-size:15.5px}
+.feat span{color:var(--muted);font-size:13.5px}
+.stats{display:flex;gap:28px;padding-top:24px;border-top:1px solid #d6e0ec}
+.stats b{display:block;font-size:24px;font-variant-numeric:tabular-nums}
+.stats span{color:var(--muted);font-size:12.5px}
+.quote{margin-top:26px;background:#fff;border-radius:18px;padding:14px 16px;font-size:14px;color:#3a4a66;box-shadow:0 4px 14px rgba(11,60,110,.06)}
+.quote small{display:block;color:var(--muted);margin-top:4px}
+
+/* ---------- phone ---------- */
+.app{width:100%;max-width:420px;min-height:100vh;background:var(--grad);position:relative;display:flex;flex-direction:column;overflow:hidden}
+@media(min-width:460px){
+  .page{padding-top:24px;padding-bottom:24px}
+  .app{min-height:0;height:min(860px,calc(100vh - 48px));border-radius:40px;box-shadow:0 0 0 10px #16243f,0 40px 90px rgba(11,60,110,.35)}
+}
+.hdr{color:#fff;padding:18px 20px 96px;display:flex;align-items:center;justify-content:space-between}
+.mark{font-weight:800;font-size:22px;letter-spacing:-.5px;display:flex;align-items:center;gap:6px}
+.mark i{font-style:normal;background:#fff;color:var(--g2);border-radius:10px;padding:1px 8px;font-size:15px}
+.clock{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.18);border-radius:999px;padding:6px 12px;font-size:13px;font-variant-numeric:tabular-nums}
+.clock b{font-weight:700;min-width:38px;text-align:center}
+
+.sheet{background:#fff;flex:1;border-radius:30px 30px 0 0;margin-top:-50px;padding:0 20px 18px;position:relative;display:flex;flex-direction:column;overflow-y:auto}
+
+/* contact */
+.who{display:flex;flex-direction:column;align-items:center;margin-top:-40px}
+.avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#ffb36b,#ff6f91);color:#fff;font-weight:800;font-size:32px;display:grid;place-items:center;border:5px solid #fff;box-shadow:0 8px 20px rgba(0,0,0,.12);flex:none}
+.who .req{color:var(--muted);font-size:13px;margin-top:8px}
+.who .name{font-weight:700;font-size:20px;line-height:1.2}
+.who .sub{color:var(--muted);font-size:12.5px;margin-top:2px}
+
+/* amount */
+.amt{text-align:center;margin:14px 0 2px;display:flex;justify-content:center;align-items:baseline;gap:8px;direction:rtl}
+.amt .num{font-size:60px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.amt .unit{font-size:22px;font-weight:700;color:var(--g2)}
+.bal{text-align:center;color:var(--muted);font-size:12.5px;margin-bottom:12px}
+.seg{display:flex;background:var(--soft);border-radius:14px;padding:4px;margin:0 auto 6px;width:100%;max-width:280px}
+.seg button{flex:1;border:0;background:transparent;font-size:14px;color:var(--muted);padding:7px 0;border-radius:11px}
+.seg button[aria-pressed="true"]{background:#fff;color:var(--ink);font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin:4px 10px 10px;direction:ltr;flex:1;align-content:center}
+.pad button{border:0;background:transparent;font-size:26px;font-weight:500;color:var(--ink);height:54px;border-radius:16px;transition:background .1s}
+.pad button:active{background:var(--soft)}
+.pad .small{font-size:15px;color:var(--g3);font-weight:700}
+
+.cta{width:100%;border:0;border-radius:999px;background:linear-gradient(90deg,var(--g1),var(--g3));color:#fff;font-weight:700;font-size:18px;padding:15px;box-shadow:0 10px 24px rgba(11,127,208,.3);transition:transform .1s,opacity .2s}
+.cta:active{transform:scale(.985)}
+.cta:disabled{opacity:.4;box-shadow:none}
+.ghost{background:#fff;color:var(--g3);border:2px solid var(--line);box-shadow:none}
+.fine{color:var(--muted);font-size:11.5px;text-align:center;line-height:1.7}
+.fine a{color:inherit}
+
+/* ---------- confirm bottom sheet ---------- */
+.dim{position:absolute;inset:0;background:rgba(10,25,50,.45);opacity:0;pointer-events:none;transition:opacity .25s;z-index:4}
+.dim.on{opacity:1;pointer-events:auto}
+.bs{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:28px 28px 0 0;padding:10px 20px 20px;z-index:5;transform:translateY(105%);transition:transform .32s cubic-bezier(.2,.8,.2,1);max-height:92%;overflow-y:auto}
+.bs.on{transform:none}
+.grab{width:42px;height:5px;border-radius:9px;background:#d5dde8;margin:0 auto 14px}
+.bs h3{margin:0 0 4px;font-size:19px;text-align:center}
+.bs .lead{color:var(--muted);font-size:13.5px;text-align:center;margin-bottom:14px}
+.rows{background:var(--soft);border-radius:18px;padding:2px 16px;margin-bottom:12px}
+.rows div{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
+.rows div:last-child{border:0}
+.rows span:first-child{color:var(--muted)}
+.rows span:last-child{font-weight:700;text-align:left;font-variant-numeric:tabular-nums}
+.rows .total span{color:var(--ink)!important;font-size:15px}
+.field{display:flex;align-items:center;gap:10px;background:var(--soft);border-radius:16px;padding:11px 14px;margin-bottom:8px}
+.field span{color:var(--muted);font-size:13px;white-space:nowrap}
+.field input,.field select{flex:1;border:0;background:transparent;font:inherit;font-size:15px;color:var(--ink);outline:none;min-width:0}
+.quick{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 12px}
+.quick button{border:1px solid var(--line);background:#fff;border-radius:999px;font-size:12.5px;padding:5px 11px;color:var(--ink)}
+.promo{background:#fff6e0;color:#8a5a00;border-radius:12px;font-size:12.5px;text-align:center;padding:8px 10px;margin:4px 0 14px}
+
+/* ---------- overlay ---------- */
+.ov{position:absolute;inset:0;background:var(--grad);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;z-index:8}
+.ring{width:96px;height:96px;border-radius:50%;border:5px solid rgba(255,255,255,.25);border-top-color:#fff;animation:spin 1s linear infinite;display:grid;place-items:center}
+.ring b{animation:spin 1s linear infinite reverse;font-size:38px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ov .step{margin-top:26px;font-size:16px;font-weight:500;min-height:3em;max-width:280px}
+.dots{display:flex;gap:6px;margin-top:6px}
+.dots i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.35);transition:background .2s}
+.dots i.on{background:#fff}
+
+/* ---------- receipt ---------- */
+.rc{text-align:center;padding-top:18px}
+.check{width:84px;height:84px;border-radius:50%;background:var(--ok);color:#fff;font-size:44px;display:grid;place-items:center;margin:0 auto 12px;box-shadow:0 10px 24px rgba(25,195,125,.35);animation:pop .4s ease-out}
+@keyframes pop{from{transform:scale(.4);opacity:0}}
+.rc h2{margin:0;font-size:24px}
+.rc .to{color:var(--muted);font-size:14px;margin:4px 0 16px}
+.rc .rows{text-align:right}
+.note{text-align:right;font-size:13.5px;line-height:1.65;border:1px dashed #b9c6d8;border-radius:16px;padding:12px 14px;margin-bottom:14px;color:#3a4a66}
+.rc .cta + .cta{margin-top:8px}
+.toast{position:absolute;left:16px;right:16px;bottom:24px;background:#16243f;color:#fff;border-radius:14px;padding:12px 14px;font-size:13.5px;text-align:center;z-index:9;animation:pop .25s ease-out}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- desktop landing column -->
+  <section class="hero">
+    <div class="mark">זמן<i>ביט</i></div>
+    <h1>העברת זמן,<br><span>בלחיצה אחת.</span></h1>
+    <p class="lead">יש לך זמן פנוי? יש מי שאין לו. זמן־ביט מעבירה דקות, שעות וימים שלמים לכל אחד, מיידית וללא צורך בפרטי בנק.</p>
+    <div class="feats">
+      <div class="feat"><div class="ic">⚡</div><div><b>העברה תוך 0.3 שניות</b><span>שנלקחות מהזמן שלך</span></div></div>
+      <div class="feat"><div class="ic">🔒</div><div><b>הצפנת 24 שעות</b><span>הסטנדרט המחמיר בענף</span></div></div>
+      <div class="feat"><div class="ic">🏛️</div><div><b>בפיקוח רשות שוק הזמן</b><span>רישיון מס׳ 23:59:59</span></div></div>
+    </div>
+    <div class="stats">
+      <div><b>1,284,902</b><span>שעות הועברו החודש</span></div>
+      <div><b>0</b><span>הוחזרו</span></div>
+      <div><b>4.9★</b><span>דירוג (נכתב בזמן עבודה)</span></div>
+    </div>
+    <div class="quote">״העברתי לחבר שעה, ומאז הוא לא מוצא זמן להחזיר לי.״<small>משתמש מאומת, מודיעין עילית</small></div>
+  </section>
+
+  <!-- the app -->
+  <div class="app">
+    <div class="hdr">
+      <div class="mark">זמן<i>ביט</i></div>
+      <div class="clock" title="זמן בדף">⏱ <b id="live">00:00</b></div>
+    </div>
+
+    <div class="sheet">
+      <!-- step 1: amount -->
+      <div id="form" style="display:flex;flex-direction:column;flex:1">
+        <div class="who">
+          <div class="avatar" id="av">?</div>
+          <div class="req" id="req">העברת זמן אל</div>
+          <div class="name" id="toName">מי שאין לו זמן</div>
+          <div class="sub">זמין: לגמרי · פעיל מ־2019</div>
+        </div>
+
+        <div class="amt"><span class="num" id="num">60</span><span class="unit" id="unitShort">דק׳</span></div>
+        <div class="bal">יתרת זמן פנוי: <b>גבוהה באופן חשוד</b></div>
+
+        <div class="seg" id="seg">
+          <button data-u="m" aria-pressed="true">דקות</button>
+          <button data-u="h" aria-pressed="false">שעות</button>
+          <button data-u="d" aria-pressed="false">ימים</button>
+        </div>
+
+        <div class="pad" id="pad">
+          <button>1</button><button>2</button><button>3</button>
+          <button>4</button><button>5</button><button>6</button>
+          <button>7</button><button>8</button><button>9</button>
+          <button data-k="all" class="small">הכול</button><button>0</button><button data-k="del" class="small" aria-label="מחיקה">⌫</button>
+        </div>
+
+        <button class="cta" id="next">המשך</button>
+      </div>
+
+      <!-- receipt -->
+      <div id="receipt" class="rc hidden">
+        <div class="check">✓</div>
+        <h2>הזמן הועבר!</h2>
+        <div class="to" id="rTo"></div>
+        <div class="rows">
+          <div><span>סכום ההעברה</span><span id="rAsked"></span></div>
+          <div><span>חויב מ</span><span id="rSrc"></span></div>
+          <div><span>הועבר בפועל</span><span id="rReal"></span></div>
+          <div><span>צפי בזבוז אצל המקבל</span><span>4 שניות</span></div>
+          <div><span>מס׳ אסמכתא</span><span id="ref"></span></div>
+        </div>
+        <div class="note" id="twist"></div>
+        <button class="cta" id="share">שיתוף אישור</button>
+        <button class="cta ghost" id="again">העברה נוספת</button>
+      </div>
+
+      <div class="fine" style="margin-top:14px">© זמן־ביט בע״מ · בפיקוח רשות שוק הזמן · <a href="#" id="tos">תנאי שימוש</a></div>
+    </div>
+
+    <!-- step 2: confirm sheet -->
+    <div class="dim" id="dim"></div>
+    <div class="bs" id="bs" role="dialog" aria-label="אישור העברה">
+      <div class="grab"></div>
+      <h3>אישור העברה</h3>
+      <div class="lead" id="bsLead"></div>
+      <div class="rows">
+        <div><span>סכום</span><span id="cAmt"></span></div>
+        <div><span>מס זמן (18%)</span><span id="cTax"></span></div>
+        <div><span>עמלת עסקה</span><span>3 דק׳</span></div>
+        <div class="total"><span>סה״כ יחויב</span><span id="cTot"></span></div>
+      </div>
+      <div class="field"><span>הערה</span><input id="memo" maxlength="40" placeholder="על מה ההעברה?"></div>
+      <div class="quick" id="quick">
+        <button>בשביל הפיתוח 💻</button><button>שיהיה לך ⏳</button><button>תחזיר כשתוכל</button>
+      </div>
+      <div class="field"><span>לחייב מ</span>
+        <select id="src">
+          <option>הזמן הפנוי</option>
+          <option>זמן העבודה (הבוס לא יודע)</option>
+          <option>הזמן שאני גולל בפורום</option>
+          <option>הזמן שאני מחכה שהקוד יתקמפל</option>
+          <option>ה"עוד 5 דקות" של הבוקר</option>
+          <option>המתנה למוקד שירות (יתרה בלתי מוגבלת)</option>
+          <option>זמן השינה</option>
+        </select>
+      </div>
+      <div class="promo">🎁 מבצע השבוע: העבר שעה וקבל במתנה 10 דקות שכבר עברו</div>
+      <button class="cta" id="go">אישור והעברה</button>
+      <div class="fine" style="margin-top:10px">🔒 הצפנת 24 שעות · העברה מיידית, סופית ובלתי הפיכה</div>
+    </div>
+
+    <!-- processing overlay -->
+    <div class="ov hidden" id="ov">
+      <div class="ring"><b>⏳</b></div>
+      <div class="step" id="step"></div>
+      <div class="dots" id="dots"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var t0 = Date.now();
+  var $ = function(id){ return document.getElementById(id); };
+  function fmt(s){ var h=Math.floor(s/3600), m=Math.floor(s%3600/60), r=s%60; return (h?h+':':'')+(m<10?'0':'')+m+':'+(r<10?'0':'')+r; }
+  function secs(){ return Math.floor((Date.now()-t0)/1000); }
+  setInterval(function(){ $('live').textContent = fmt(secs()); }, 250);
+
+  var name = 'מי שאין לו זמן', isReq = false;
+  try {
+    var to = new URLSearchParams(location.search).get('to');
+    if (to) { name = to.replace(/[-_]/g,' ').slice(0,40); isReq = true; }
+  } catch(e){}
+  $('toName').textContent = name;
+  $('av').textContent = name.trim().charAt(0) || '?';
+  if (isReq) $('req').textContent = 'בקשת העברת זמן מאת';
+
+  var val = '60', unit = 'm', all = false;
+  var U = { m:['דק׳','דקות'], h:['שע׳','שעות'], d:['ימים','ימים'] };
+  function minutes(){ return all ? Infinity : (+val||0) * (unit==='m'?1:unit==='h'?60:1440); }
+  function fmtMin(m){
+    if (m === Infinity) return '∞';
+    m = Math.round(m*10)/10;
+    if (m < 60) return m + ' דק׳';
+    var h = Math.floor(m/60), r = Math.round(m%60);
+    return h + ' שע׳' + (r ? ' ו־' + r + ' דק׳' : '');
+  }
+  function asked(){ return all ? 'כל מה שהתפנה' : (+val) + ' ' + U[unit][1]; }
+
+  var tt;
+  function toast(m){ var o=document.querySelector('.toast'); if(o) o.remove(); var d=document.createElement('div'); d.className='toast'; d.textContent=m; document.querySelector('.app').appendChild(d); clearTimeout(tt); tt=setTimeout(function(){ d.remove(); }, 3200); }
+
+  function render(){
+    $('num').textContent = all ? '∞' : (val || '0');
+    $('unitShort').textContent = all ? '' : U[unit][0];
+    $('next').disabled = !all && (+val === 0);
+  }
+  $('pad').addEventListener('click', function(e){
+    var b = e.target.closest('button'); if(!b) return;
+    var k = b.dataset.k;
+    if (k === 'all'){ all = true; }
+    else if (k === 'del'){ all = false; val = val.slice(0,-1); }
+    else {
+      if (all){ all=false; val=''; }
+      if (val.length < 4) val = (val === '0' ? '' : val) + b.textContent;
+      else toast('חרגת ממסגרת האשראי. לא ניתן להעביר יותר זמן ממה שבזבזת השנה.');
+    }
+    render();
+  });
+  $('seg').addEventListener('click', function(e){
+    var b = e.target.closest('button'); if(!b) return;
+    [].forEach.call(this.children, function(c){ c.setAttribute('aria-pressed', c===b); });
+    unit = b.dataset.u; render();
+  });
+  $('quick').addEventListener('click', function(e){
+    var b = e.target.closest('button'); if(b) $('memo').value = b.textContent;
+  });
+  $('tos').addEventListener('click', function(e){
+    e.preventDefault();
+    alert('תנאי השימוש זמינים לקריאה מלאה.\nזמן קריאה משוער: 47 דקות.\nהזמן ינוכה מהיתרה שלך עם הלחיצה על "אישור".');
+  });
+
+  function openSheet(on){ $('bs').classList.toggle('on', on); $('dim').classList.toggle('on', on); }
+  $('next').addEventListener('click', function(){
+    var m = minutes();
+    $('bsLead').textContent = 'אל ' + name;
+    $('cAmt').textContent = all ? 'כל מה שהתפנה' : fmtMin(m);
+    $('cTax').textContent = all ? '∞ × 0.18' : fmtMin(m*0.18);
+    $('cTot').textContent = all ? 'כל מה שהתפנה, ועוד קצת' : fmtMin(m*1.18 + 3);
+    openSheet(true);
+  });
+  $('dim').addEventListener('click', function(){ openSheet(false); });
+
+  var steps = [
+    'מאמת את השעון הביולוגי של המעביר...',
+    'ממיר שעות לדקות לפי השער היציג...',
+    'ממיר "עוד דקה אני מסיים" לזמן אמיתי (פי 20)...',
+    'מנכה מס זמן במקור...',
+    'בודק שהזמן לא בוזבז כבר...',
+    'הזמן נמצא בבזבוז. מנסה שוב...',
+    'מריץ git rebase על השבוע האחרון...',
+    'מעביר שניות אחת־אחת...',
+    'ממתין לאישור בנק הזמן (3–5 ימי עסקים)...',
+    'עוקף את ימי העסקים...'
+  ];
+  var dots = $('dots');
+  steps.forEach(function(){ dots.appendChild(document.createElement('i')); });
+
+  $('go').addEventListener('click', function(){
+    openSheet(false);
+    $('ov').classList.remove('hidden');
+    var i = 0;
+    (function tick(){
+      $('step').textContent = steps[i];
+      [].forEach.call(dots.children, function(d,j){ d.className = j<=i ? 'on' : ''; });
+      i++;
+      if (i < steps.length) setTimeout(tick, 1100); else setTimeout(done, 1100);
+    })();
+  });
+
+  function done(){
+    $('ov').classList.add('hidden');
+    $('form').classList.add('hidden'); $('receipt').classList.remove('hidden');
+    var s = secs();
+    $('rTo').textContent = 'אל ' + name + ($('memo').value ? ' · "' + $('memo').value + '"' : '');
+    $('rAsked').textContent = asked();
+    $('rSrc').textContent = $('src').value;
+    $('rReal').textContent = fmt(s);
+    $('ref').textContent = String(Date.now()).slice(-8);
+    $('twist').innerHTML = '<b>הודעה על ביצוע חלקי:</b> עקב עומס במערכת הועבר בפועל סך של ' + fmt(s) +
+      ', שהוא הזמן ששהית בדף זה. הסכום נוכה מחייך ואינו ניתן להחזרה, כמו כל זמן אחר.<br>תודה שבחרת בזמן־ביט.';
+  }
+
+  $('again').addEventListener('click', function(){
+    $('receipt').classList.add('hidden'); $('form').classList.remove('hidden');
+  });
+  $('share').addEventListener('click', function(){
+    var url = location.href, txt = 'העברתי זמן בזמן־ביט. גם לך מגיע:';
+    if (navigator.share) { navigator.share({title:'זמן־ביט', text:txt, url:url}).catch(function(){}); }
+    else { try { navigator.clipboard.writeText(txt + ' ' + url); toast('הקישור הועתק. ההעתקה ארכה 0.4 שניות, שנוכו מהיתרה.'); } catch(e){} }
+  });
+  render();
+})();
+</script>
+</body>
+</html>
