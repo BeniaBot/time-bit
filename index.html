@@ -32,24 +32,24 @@ button{font:inherit;cursor:pointer}
   .page{align-items:center;gap:80px;padding:32px}
   .hero{display:block;max-width:440px}
 }
-.hero .mark{color:var(--ink);font-size:26px;margin-bottom:34px}
+.hero .mark{color:var(--ink);font-size:24px;margin-bottom:22px}
 .hero .mark i{background:var(--grad);color:#fff}
-.hero h1{font-size:46px;line-height:1.1;margin:0 0 16px;letter-spacing:-1px}
+.hero h1{font-size:42px;line-height:1.1;margin:0 0 12px;letter-spacing:-1px}
 .hero h1 span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
-.hero p.lead{font-size:18px;color:#4a5876;line-height:1.6;margin:0 0 30px}
-.feats{display:grid;gap:14px;margin-bottom:34px}
+.hero p.lead{font-size:16.5px;color:#4a5876;line-height:1.6;margin:0 0 20px}
+.feats{display:grid;gap:10px;margin-bottom:20px}
 .feat{display:flex;gap:14px;align-items:flex-start}
 .feat .ic{width:42px;height:42px;border-radius:14px;background:#fff;display:grid;place-items:center;font-size:20px;flex:none;box-shadow:0 4px 14px rgba(11,60,110,.08)}
 .feat b{display:block;font-size:15.5px}
 .feat span{color:var(--muted);font-size:13.5px}
-.stats{display:flex;gap:28px;padding-top:24px;border-top:1px solid #d6e0ec}
+.stats{display:flex;gap:28px;padding-top:16px;border-top:1px solid #d6e0ec}
 .stats b{display:block;font-size:24px;font-variant-numeric:tabular-nums}
 .stats span{color:var(--muted);font-size:12.5px}
-.quote{margin-top:26px;background:#fff;border-radius:18px;padding:14px 16px;font-size:14px;color:#3a4a66;box-shadow:0 4px 14px rgba(11,60,110,.06)}
+.quote{margin-top:12px;background:#fff;border-radius:18px;padding:14px 16px;font-size:14px;color:#3a4a66;box-shadow:0 4px 14px rgba(11,60,110,.06)}
 .quote small{display:block;color:var(--muted);margin-top:4px}
 
 /* ---------- phone ---------- */
-.app{width:100%;max-width:420px;min-height:100vh;background:var(--grad);position:relative;display:flex;flex-direction:column;overflow:hidden}
+.app{width:100%;max-width:420px;min-height:100vh;background:var(--grad);position:relative;display:flex;flex-direction:column;overflow:hidden;overflow:clip}
 @media(min-width:460px){
   .page{padding-top:24px;padding-bottom:24px}
   .app{min-height:0;height:min(860px,calc(100vh - 48px));border-radius:40px;box-shadow:0 0 0 10px #16243f,0 40px 90px rgba(11,60,110,.35)}
@@ -94,8 +94,8 @@ button{font:inherit;cursor:pointer}
 /* ---------- confirm bottom sheet ---------- */
 .dim{position:absolute;inset:0;background:rgba(10,25,50,.45);opacity:0;pointer-events:none;transition:opacity .25s;z-index:4}
 .dim.on{opacity:1;pointer-events:auto}
-.bs{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:28px 28px 0 0;padding:10px 20px 20px;z-index:5;transform:translateY(105%);transition:transform .32s cubic-bezier(.2,.8,.2,1);max-height:92%;overflow-y:auto}
-.bs.on{transform:none}
+.bs{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:28px 28px 0 0;padding:10px 20px 20px;z-index:5;transform:translateY(105%);visibility:hidden;transition:transform .32s cubic-bezier(.2,.8,.2,1),visibility 0s linear .32s;max-height:92%;overflow-y:auto}
+.bs.on{transform:none;visibility:visible;transition:transform .32s cubic-bezier(.2,.8,.2,1)}
 .grab{width:42px;height:5px;border-radius:9px;background:#d5dde8;margin:0 auto 14px}
 .bs h3{margin:0 0 4px;font-size:19px;text-align:center}
 .bs .lead{color:var(--muted);font-size:13.5px;text-align:center;margin-bottom:14px}
@@ -145,11 +145,11 @@ button{font:inherit;cursor:pointer}
 .linkbox input{font-size:13px;color:var(--g3);text-align:left}
 
 /* live feed (desktop) */
-.feed{margin-top:26px;background:#fff;border-radius:18px;padding:14px 16px 6px;box-shadow:0 4px 14px rgba(11,60,110,.06)}
+.feed{margin-top:18px;background:#fff;border-radius:18px;padding:14px 16px 6px;box-shadow:0 4px 14px rgba(11,60,110,.06)}
 .feed-h{font-size:13px;font-weight:700;color:var(--muted);display:flex;align-items:center;gap:8px;margin-bottom:6px}
 .feed-h i{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 4px rgba(25,195,125,.18);animation:blink 1.6s infinite}
 @keyframes blink{50%{opacity:.35}}
-.feed ul{list-style:none;margin:0;padding:0;height:138px;overflow:hidden}
+.feed ul{list-style:none;margin:0;padding:0;height:132px;overflow:hidden}
 .feed li{display:flex;gap:10px;align-items:center;padding:7px 0;border-top:1px solid var(--line);font-size:13px;animation:slide .45s ease-out}
 .feed li:first-child{border-top:0}
 @keyframes slide{from{opacity:0;transform:translateY(-10px)}}
