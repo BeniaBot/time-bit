@@ -60,10 +60,11 @@ button{font:inherit;cursor:pointer}
 .clock{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.18);border-radius:999px;padding:6px 12px;font-size:13px;font-variant-numeric:tabular-nums}
 .clock b{font-weight:700;min-width:38px;text-align:center}
 
-.sheet{background:#fff;flex:1;border-radius:30px 30px 0 0;margin-top:-50px;padding:0 20px 18px;position:relative;display:flex;flex-direction:column;overflow-y:auto}
+.sheet{flex:1;margin-top:-90px;position:relative;display:flex;flex-direction:column;overflow-y:auto;min-height:0}
+.card{background:#fff;border-radius:30px 30px 0 0;margin-top:44px;flex:1;padding:0 20px 18px;display:flex;flex-direction:column}
 
 /* contact */
-.who{display:flex;flex-direction:column;align-items:center;margin-top:-40px}
+.who{display:flex;flex-direction:column;align-items:center;margin-top:-44px}
 .avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#ffb36b,#ff6f91);color:#fff;font-weight:800;font-size:32px;display:grid;place-items:center;border:5px solid #fff;box-shadow:0 8px 20px rgba(0,0,0,.12);flex:none}
 .who .req{color:var(--muted);font-size:13px;margin-top:8px}
 .who .name{font-weight:700;font-size:20px;line-height:1.2}
@@ -162,7 +163,7 @@ button{font:inherit;cursor:pointer}
       <div class="clock" title="זמן בדף">⏱ <b id="live">00:00</b></div>
     </div>
 
-    <div class="sheet">
+    <div class="sheet"><div class="card">
       <!-- step 1: amount -->
       <div id="form" style="display:flex;flex-direction:column;flex:1">
         <div class="who">
@@ -209,7 +210,7 @@ button{font:inherit;cursor:pointer}
       </div>
 
       <div class="fine" style="margin-top:14px">© זמן־ביט בע״מ · בפיקוח רשות שוק הזמן · <a href="#" id="tos">תנאי שימוש</a></div>
-    </div>
+    </div></div>
 
     <!-- step 2: confirm sheet -->
     <div class="dim" id="dim"></div>
