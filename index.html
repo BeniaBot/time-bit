@@ -496,33 +496,33 @@ button{font:inherit;cursor:pointer}
     }
     return prev[n];
   }
-  function popular(){
-    var cur = DB.filter(function(e){ return e.c; }), out = [];
-    for (var i = 0; i < 7 && cur.length; i++) out.push(cur.splice(Math.floor(Math.random() * cur.length), 1)[0]);
-    return out;
-  }
+  // Suggestions must be visibly related to what was typed:
+  // word-prefix matches first, then a 3+ letter run inside a word, then only small typos (1 letter, 2 in long words).
   function search(q){
     var nq = norm(q);
-    if (!nq) return { list: popular(), mode: 'popular' };
+    if (!nq) return { list: [], mode: 'empty' };
     var qw = nq.split(' '), hits = [];
     DB.forEach(function(e){
       var s = 0;
       if (e.k === nq) s = 1000;
       else if (e.k.indexOf(nq) === 0) s = 900;
       else if (qw.every(function(w){ return e.w.some(function(x){ return x.indexOf(w) === 0; }); })) s = 700;
-      else if (e.k.indexOf(nq) > 0) s = 500;
+      else if (nq.length >= 3 && e.k.indexOf(nq) > 0) s = 500;
       if (s) hits.push([s + (e.c ? 60 : 0) - e.k.length * .5, e]);
     });
     if (hits.length) return { list: hits.sort(function(a, b){ return b[0] - a[0]; }).slice(0, 8).map(function(x){ return x[1]; }), mode: 'match' };
-    // nothing contains the text: suggest the closest spellings instead
+    if (nq.length < 3 || nq.length > 14) return { list: [], mode: 'none' };
+    var limit = nq.length >= 7 ? 2 : 1;
     DB.forEach(function(e){
-      var d = lev(nq, e.k.slice(0, nq.length));
-      e.w.forEach(function(x){ d = Math.min(d, lev(nq, x.slice(0, nq.length)), lev(nq, x)); });
-      hits.push([d - (e.c ? .3 : 0) + e.k.length * .01, e]);
+      var d = 99;
+      e.w.forEach(function(x){
+        if (Math.abs(x.length - nq.length) <= limit) d = Math.min(d, lev(nq, x));
+        if (x.length > nq.length) d = Math.min(d, lev(nq, x.slice(0, nq.length)));
+      });
+      if (d <= limit) hits.push([d + e.k.length * .01 - (e.c ? .2 : 0), e]);
     });
-    hits.sort(function(a, b){ return a[0] - b[0]; });
-    var best = hits.length ? hits[0][0] : 0;
-    return { list: hits.filter(function(x){ return x[0] <= best + 1; }).slice(0, 6).map(function(x){ return x[1]; }), mode: 'fuzzy' };
+    if (!hits.length) return { list: [], mode: 'none' };
+    return { list: hits.sort(function(a, b){ return a[0] - b[0]; }).slice(0, 5).map(function(x){ return x[1]; }), mode: 'fuzzy' };
   }
 
   var chosen = null, acList = [], acOn = -1;
@@ -537,10 +537,10 @@ button{font:inherit;cursor:pointer}
   }
   function renderAc(res){
     var ul = $('ac'), nq = norm($('toInput').value);
-    ul.textContent = ''; acList = res.list; acOn = res.mode === 'popular' ? -1 : 0;
-    if (res.mode !== 'match') {
+    ul.textContent = ''; acList = res.list; acOn = 0;
+    if (res.mode === 'fuzzy' || res.mode === 'none') {
       var hint = document.createElement('li'); hint.className = 'hint'; hint.setAttribute('aria-hidden', 'true');
-      hint.textContent = res.mode === 'fuzzy' ? 'לא נמצא בדיוק. אולי התכוונתם ל:' : 'הצעות';
+      hint.textContent = res.mode === 'fuzzy' ? 'אולי התכוונתם ל:' : 'לא נמצא נמען בשם הזה';
       ul.appendChild(hint);
     }
     acList.forEach(function(e, i){
@@ -559,7 +559,8 @@ button{font:inherit;cursor:pointer}
       ul.appendChild(li);
     });
     markOn();
-    ul.classList.toggle('hidden', !acList.length);
+    var open = res.mode !== 'empty';
+    ul.classList.toggle('hidden', !open);
     $('toInput').setAttribute('aria-expanded', acList.length ? 'true' : 'false');
   }
   function markOn(){
@@ -584,7 +585,7 @@ button{font:inherit;cursor:pointer}
     var inp = $('toInput');
     showWho(null);
     inp.addEventListener('input', function(){ chosen = null; name = ''; showWho(null); renderAc(search(this.value)); });
-    inp.addEventListener('focus', function(){ if (chosen) this.select(); renderAc(search(chosen ? '' : this.value)); });
+    inp.addEventListener('focus', function(){ if (chosen) { this.select(); return; } renderAc(search(this.value)); });
     inp.addEventListener('blur', function(){ setTimeout(closeAc, 120); });
     inp.addEventListener('keydown', function(ev){
       if ($('ac').classList.contains('hidden')) { if (ev.key === 'ArrowDown') renderAc(search(this.value)); return; }
