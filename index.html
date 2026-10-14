@@ -477,7 +477,10 @@ button{font:inherit;cursor:pointer}
   var DB = [], seenK = {};
   function addEntry(e, curated){
     var k = norm(e.n || ''); if (!k || seenK[k]) return; seenK[k] = 1;
-    DB.push({ n: e.n, h: e.h | 0, y: e.y | 0 || 2020, c: curated, k: k, w: k.split(' ') });
+    // words for prefix matching; a leading ה (the definite article) is optional: "שכנ" finds "השכן"
+    var w = k.split(' '), extra = [];
+    w.forEach(function(x){ if (x.length > 2 && x.charAt(0) === 'ה') extra.push(x.slice(1)); });
+    DB.push({ n: e.n, h: e.h | 0, y: e.y | 0 || 2020, c: curated, k: k, w: w.concat(extra) });
   }
   try { var SRC = window.BT_DB || {}; Object.keys(SRC).forEach(function(cat){ (SRC[cat] || []).forEach(function(e){ addEntry(e, true); }); }); } catch(e){}
   (function contacts(){
@@ -493,6 +496,19 @@ button{font:inherit;cursor:pointer}
       addEntry({ n: n, h: hrs, y: 2009 + (h >>> 11) % 18 }, false);
     }); });
   })();
+
+  // forum nicknames (nicks.js, ~85k): loaded after the page so they never slow the first paint
+  function addNicks(list){
+    for (var i = 0; i < list.length; i++) {
+      var n = list[i], h = hashOf(n), r = h % 100;
+      addEntry({ n: n, h: r < 46 ? -(1 + (h >>> 7) % 38) : r < 86 ? 1 + (h >>> 7) % 55 : 0, y: 2009 + (h >>> 11) % 18 }, false);
+    }
+  }
+  window.addEventListener('load', function(){
+    var sc = document.createElement('script'); sc.src = 'nicks.js'; sc.async = true;
+    sc.onload = function(){ try { addNicks(window.BT_NICKS || []); window.BT_NICKS = null; } catch(e){} };
+    document.body.appendChild(sc);
+  });
 
   // edit distance where swapping two neighbouring letters (מושיי / מוישי) counts as one typo
   function lev(a, b){
@@ -518,7 +534,7 @@ button{font:inherit;cursor:pointer}
       else if (e.k.indexOf(nq) === 0) s = 900;
       else if (qw.every(function(w){ return e.w.some(function(x){ return x.indexOf(w) === 0; }); })) s = 700;
       else if (nq.length >= 3 && e.k.indexOf(nq) > 0) s = 500;
-      if (s) hits.push([s + (e.c ? 60 : 0) - e.k.length * .5, e]);
+      if (s) hits.push([s + (e.c ? 210 : 0) - e.k.length * .5, e]);
     });
     if (hits.length) return { list: hits.sort(function(a, b){ return b[0] - a[0]; }).slice(0, 8).map(function(x){ return x[1]; }), mode: 'match' };
     if (nq.length < 3 || nq.length > 14) return { list: [], mode: 'none' };
@@ -526,6 +542,7 @@ button{font:inherit;cursor:pointer}
     DB.forEach(function(e){
       var d = 99;
       e.w.forEach(function(x){
+        if (x[0] !== nq[0] && x[1] !== nq[1]) return;   // a typo rarely hits both of the first two letters
         if (Math.abs(x.length - nq.length) <= limit) d = Math.min(d, lev(nq, x));
         if (x.length > nq.length) d = Math.min(d, lev(nq, x.slice(0, nq.length)));
       });
