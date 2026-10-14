@@ -475,6 +475,9 @@ a.logo{display:inline-block}
   function balLong(h){ return h < 0 ? 'בגירעון של ' + hoursWord(h) : h > 0 ? 'ביתרה של ' + hoursWord(h) : 'יתרה מאוזנת בדיוק'; }
   function balShort(h){ var a = Math.abs(h).toLocaleString('he-IL'); return h < 0 ? 'גירעון ' + a + ' ש׳' : h > 0 ? 'יתרה ' + a + ' ש׳' : 'מאוזן'; }
   function balClass(h){ return h < 0 ? 'neg' : h > 0 ? 'pos' : 'zero'; }
+  // a few recipients get a word instead of a number
+  var SPECIAL = { 'מתכנת חובב': 'גירעון היסטרי' };
+  function special(n){ return SPECIAL[norm(n)] || ''; }
   function hue(s){ return 'hsl(' + (hashOf(s) % 360) + ',62%,60%)'; }
   function initial(s){ return (s.replace(/[^\u05d0-\u05eaA-Za-z0-9]/g, '').charAt(0)) || '?'; }
 
@@ -563,7 +566,7 @@ a.logo{display:inline-block}
     sub.textContent = '';
     sub.classList.toggle('hidden', !e);
     if (!e) return;
-    var b = document.createElement('span'); b.className = balClass(e.h); b.textContent = balLong(e.h);
+    var b = document.createElement('span'); var sp = special(e.n); b.className = sp ? 'neg' : balClass(e.h); b.textContent = sp || balLong(e.h);
     sub.appendChild(b); sub.appendChild(document.createTextNode(' · משתמש מאז ' + e.y));
   }
   function renderAc(res){
@@ -584,7 +587,7 @@ a.logo{display:inline-block}
         var mk = document.createElement('mark'); mk.textContent = e.n.slice(at, at + nq.length); nm.appendChild(mk);
         nm.appendChild(document.createTextNode(e.n.slice(at + nq.length)));
       } else nm.textContent = e.n;
-      var bl = document.createElement('div'); bl.className = 'ab ' + balClass(e.h); bl.textContent = balShort(e.h);
+      var bl = document.createElement('div'); var sp = special(e.n); bl.className = 'ab ' + (sp ? 'neg' : balClass(e.h)); bl.textContent = sp || balShort(e.h);
       li.appendChild(a); li.appendChild(nm); li.appendChild(bl);
       li.addEventListener('mousedown', function(ev){ ev.preventDefault(); pick(e); });
       ul.appendChild(li);
