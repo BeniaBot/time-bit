@@ -8,6 +8,12 @@
 <meta name="description" content="העברות זמן מיידיות לכל אחד, בלי עמלות (כמעט).">
 <meta property="og:title" content="קיבלת בקשה להעברת זמן">
 <meta property="og:description" content="לחץ כדי להעביר זמן בזמן־ביט. מהיר, מאובטח, סופי.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://beniabot.github.io/time-bit/">
+<meta property="og:image" content="https://beniabot.github.io/time-bit/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='26' fill='%230ab6cf'/%3E%3Ctext x='50' y='70' font-size='58' text-anchor='middle'%3E⏳%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,9 +51,6 @@ button{font:inherit;cursor:pointer}
 .stats{display:flex;gap:28px;padding-top:16px;border-top:1px solid #d6e0ec}
 .stats b{display:block;font-size:24px;font-variant-numeric:tabular-nums}
 .stats span{color:var(--muted);font-size:12.5px}
-.award{display:flex;gap:12px;align-items:flex-start;margin-top:12px;text-decoration:none;color:#5b4a12;background:linear-gradient(135deg,#fff8e1,#ffefc2);border:1px solid #f3dc8f;border-radius:18px;padding:12px 16px;font-size:13px;line-height:1.55}
-.award b{display:block;font-size:14.5px;color:#3d3000}
-.aw-ic{font-size:26px;line-height:1}
 .aw-link{background:none;border:0;padding:4px 0;margin-top:12px;color:#9a7b12;font-size:12.5px;text-decoration:underline dotted;text-underline-offset:4px}
 .aw-link:hover{color:#6b5400}
 .award-m{display:block;margin:10px auto 0}
@@ -56,8 +59,6 @@ button{font:inherit;cursor:pointer}
 .aw-body .sig{text-align:center;font-weight:700;color:var(--ink);font-size:15px;margin:14px 0 16px}
 .cta.gold{background:linear-gradient(90deg,#f6c445,#e29a12);box-shadow:0 10px 24px rgba(226,154,18,.3)}
 @media(min-width:960px){.award-m{display:none}}
-.quote{margin-top:12px;background:#fff;border-radius:18px;padding:14px 16px;font-size:14px;color:#3a4a66;box-shadow:0 4px 14px rgba(11,60,110,.06)}
-.quote small{display:block;color:var(--muted);margin-top:4px}
 
 /* ---------- phone ---------- */
 .app{width:100%;max-width:420px;min-height:100vh;background:var(--grad);position:relative;display:flex;flex-direction:column;overflow:hidden;overflow:clip}
@@ -132,6 +133,9 @@ button{font:inherit;cursor:pointer}
 .dots{display:flex;gap:6px;margin-top:6px}
 .dots i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.35);transition:background .2s}
 .dots i.on{background:#fff}
+.ov-note{position:absolute;bottom:28px;left:20px;right:20px;font-size:12.5px;opacity:.75}
+.rain{position:absolute;top:-40px;font-size:22px;z-index:7;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(var(--d)) rotate(var(--r));opacity:0}}
 
 /* ---------- receipt ---------- */
 .rc{text-align:center;padding-top:18px}
@@ -167,7 +171,40 @@ button{font:inherit;cursor:pointer}
 .feed .fa{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:13px;flex:none}
 .feed .ft{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .feed .ft small{color:var(--muted)}
-.feed .fm{font-weight:700;font-variant-numeric:tabular-nums;color:var(--g3)}
+.feed .fm{font-weight:700;font-variant-numeric:tabular-nums;color:var(--g3);text-align:left;line-height:1.2;flex:none}
+.feed .fm small{display:block;font-weight:400;font-size:11px;color:var(--muted)}
+/* award modal */
+.modal{position:fixed;inset:0;z-index:50;background:rgba(10,25,50,.55);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;visibility:hidden;transition:opacity .25s,visibility 0s linear .25s}
+.modal.on{opacity:1;visibility:visible;transition:opacity .25s}
+.m-card{position:relative;width:100%;max-width:580px;max-height:calc(100vh - 32px);overflow-y:auto;background:#fff;border-radius:30px;box-shadow:0 40px 100px rgba(0,20,60,.4);transform:translateY(24px) scale(.96);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.modal.on .m-card{transform:none}
+.m-x{position:absolute;top:14px;left:14px;z-index:3;width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.7);color:#5b4200;font-size:15px}
+.m-head{position:relative;overflow:hidden;text-align:center;padding:34px 24px 26px;color:#3d2a00;background:radial-gradient(circle at 50% 10%,#fff6d2 0,#f9db6d 45%,#eaa823 100%)}
+.m-rays{position:absolute;left:50%;top:30%;width:900px;height:900px;margin:-450px 0 0 -450px;background:repeating-conic-gradient(rgba(255,255,255,.22) 0 8deg,transparent 8deg 16deg);animation:spin 60s linear infinite}
+.spark{position:absolute;font-size:18px;animation:twinkle 2.6s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:.2;transform:scale(.7)}50%{opacity:1;transform:scale(1.1)}}
+.m-trophy{position:relative;font-size:78px;line-height:1;filter:drop-shadow(0 10px 16px rgba(150,90,0,.35));animation:bob 3s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-8px)}}
+.m-kicker{position:relative;display:inline-block;margin-top:14px;font-size:12px;font-weight:700;letter-spacing:.3px;background:rgba(255,255,255,.55);border-radius:999px;padding:4px 12px}
+.m-head h2{position:relative;margin:10px 0 6px;font-size:30px;letter-spacing:-.5px}
+.m-to{position:relative;font-size:16px}
+.m-body{padding:22px 26px 26px}
+.m-body p{font-size:14.5px;line-height:1.75;color:#3a4a66;margin:0 0 16px;text-align:center}
+.m-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+@media(max-width:480px){.m-grid{grid-template-columns:repeat(2,1fr)}.m-body{padding:18px 16px 20px}.m-head h2{font-size:25px}}
+.tile{background:linear-gradient(180deg,#fffdf6,#fff6e0);border:1px solid #f4e2ad;border-radius:18px;padding:14px 8px 12px;text-align:center;transition:transform .15s}
+.tile:hover{transform:translateY(-3px)}
+.tile .i{font-size:30px;line-height:1}
+.tile b{display:block;font-size:14px;margin-top:8px;color:#3d2a00}
+.tile span{display:block;font-size:12px;color:#8f7535;margin-top:2px}
+.m-stats{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:18px}
+.m-stats .chip{background:var(--soft);border-radius:999px;padding:7px 12px;font-size:12.5px;color:#4a5876}
+.m-stats .chip b{color:var(--ink)}
+.m-sig{text-align:center;font-size:14px;color:#4a5876;line-height:1.7;margin-bottom:18px}
+.m-sig b{display:block;font-size:19px;color:var(--ink)}
+.m-foot{display:flex;align-items:center;gap:14px}
+.m-foot .cta{flex:1;display:block;text-align:center;text-decoration:none}
+.seal{width:76px;height:76px;flex:none;border-radius:50%;display:grid;place-items:center;text-align:center;font-size:10.5px;font-weight:800;line-height:1.25;color:#8a5a00;background:radial-gradient(circle,#fff3c8 0 52%,#f0c14b 53% 100%);border:3px dashed #d99a17;transform:rotate(-12deg);box-shadow:0 6px 14px rgba(200,140,0,.25)}
 </style>
 </head>
 <body>
@@ -303,26 +340,6 @@ button{font:inherit;cursor:pointer}
       <div class="fine" style="margin-top:10px">בקשות זמן נענות בממוצע תוך 3–5 שנים</div>
     </div>
 
-    <!-- award sheet -->
-    <div class="bs" id="awardSheet" role="dialog" aria-label="פרס תורם הזמן של השנה">
-      <div class="grab"></div>
-      <div class="aw-top">🏆</div>
-      <h3>פרס תורם הזמן של השנה</h3>
-      <div class="lead">מוענק לחברי קהילת מתמחים טופ</div>
-      <div class="aw-body">
-        <p>בכל יום, בלי שאיש ביקש מהם, עוברות שם שעות רבות מאנשים עסוקים אל אנשים שצריכים עזרה: תשובה מפורטת לשאלה שנשאלה כבר עשר פעמים, מדריך שנכתב עד אמצע הלילה, בדיקה של קובץ חשוד, וסבלנות אינסופית למי שעוד לא יודע איך מעתיקים קובץ.</p>
-        <p>זו הקהילה היחידה במאגר שלנו שבה תרומות הזמן עולות על הבקשות. מערכות החישוב שלנו ניסו לסכם את הסכום, ונכשלו.</p>
-      </div>
-      <div class="rows">
-        <div><span>שעות שנתרמו</span><span>לא ניתן לחישוב</span></div>
-        <div><span>תמורה שהתקבלה</span><span>״תודה״, ולפעמים לייק</span></div>
-        <div><span>עמלה שנגבתה</span><span>0</span></div>
-        <div><span>מס זמן</span><span>פטור מלא</span></div>
-      </div>
-      <div class="aw-body"><div class="sig">לכל מי שענה, הסביר, בדק, תיקן ופרגן:<br>תודה. הזמן שלכם לא בוזבז.</div></div>
-      <a class="cta gold" href="https://mitmachim.top" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none">לתרום זמן לקהילה</a>
-    </div>
-
     <!-- terms sheet -->
     <div class="bs" id="tosSheet" role="dialog" aria-label="תנאי שימוש">
       <div class="grab"></div>
@@ -343,8 +360,46 @@ button{font:inherit;cursor:pointer}
     <!-- processing overlay -->
     <div class="ov hidden" id="ov">
       <div class="ring"><b>⏳</b></div>
-      <div class="step" id="step"></div>
+      <div class="step" id="step" aria-live="polite"></div>
       <div class="dots" id="dots"></div>
+      <div class="ov-note">נא לא לסגור את הדף. הזמן כבר בתנועה.</div>
+    </div>
+  </div>
+</div>
+
+<!-- award modal -->
+<div class="modal" id="award" role="dialog" aria-modal="true" aria-labelledby="awT">
+  <div class="m-card">
+    <button class="m-x" id="awX" aria-label="סגירה">✕</button>
+    <div class="m-head">
+      <div class="m-rays"></div>
+      <span class="spark" style="top:22%;right:16%">✨</span><span class="spark" style="top:58%;left:12%;animation-delay:.8s">⭐</span><span class="spark" style="top:16%;left:20%;animation-delay:1.5s">✨</span><span class="spark" style="bottom:18%;right:10%;animation-delay:2.1s">🌟</span>
+      <div class="m-trophy">🏆</div>
+      <div class="m-kicker">תעודת הוקרה · המינהל הכרונולוגי</div>
+      <h2 id="awT">פרס תורם הזמן של השנה</h2>
+      <div class="m-to">מוענק בזאת לחברי קהילת <b>מתמחים טופ</b></div>
+    </div>
+    <div class="m-body">
+      <p>בכל יום, בלי שאיש ביקש מהם, עוברות שם שעות רבות מאנשים עסוקים אל אנשים שצריכים עזרה. זו הקהילה היחידה במאגר שלנו שבה תרומות הזמן עולות על הבקשות. מערכות החישוב שלנו ניסו לסכם את הסכום, ונכשלו.</p>
+      <div class="m-grid">
+        <div class="tile"><div class="i">💬</div><b>תשובות מפורטות</b><span>גם לשאלה העשירית</span></div>
+        <div class="tile"><div class="i">📚</div><b>מדריכים</b><span>שנכתבו עד אמצע הלילה</span></div>
+        <div class="tile"><div class="i">🛡️</div><b>בדיקת קבצים</b><span>לפני שמישהו לוחץ</span></div>
+        <div class="tile"><div class="i">🛠️</div><b>תיקונים</b><span>עד שזה עובד גם אצלך</span></div>
+        <div class="tile"><div class="i">🧩</div><b>קוד פתוח</b><span>בחינם, לכולם</span></div>
+        <div class="tile"><div class="i">🤝</div><b>סבלנות</b><span>למי שעוד לומד</span></div>
+      </div>
+      <div class="m-stats">
+        <span class="chip">⏳ שעות שנתרמו: <b>לא ניתן לחישוב</b></span>
+        <span class="chip">💸 עמלות: <b>0</b></span>
+        <span class="chip">🧾 מס זמן: <b>פטור מלא</b></span>
+        <span class="chip">🙏 תמורה: <b>״תודה״, ולפעמים לייק</b></span>
+      </div>
+      <div class="m-sig">לכל מי שענה, הסביר, בדק, תיקן ופרגן:<b>תודה. הזמן שלכם לא בוזבז.</b></div>
+      <div class="m-foot">
+        <div class="seal"><span>המינהל<br>הכרונולוגי</span></div>
+        <a class="cta gold" href="https://mitmachim.top" target="_blank" rel="noopener">לתרום זמן לקהילה</a>
+      </div>
     </div>
   </div>
 </div>
@@ -366,7 +421,7 @@ button{font:inherit;cursor:pointer}
   } catch(e){}
   $('toName').textContent = name;
   $('av').textContent = name.trim().charAt(0) || '?';
-  if (isReq) $('req').textContent = 'בקשת העברת זמן מאת';
+  if (isReq) { $('req').textContent = 'בקשת העברת זמן מאת'; document.title = name + ' מבקש זמן · זמן־ביט'; }
 
   var val = '60', unit = 'm', all = false;
   if (reqMin) {
@@ -428,11 +483,14 @@ button{font:inherit;cursor:pointer}
   });
   var openId = null;
   function openSheet(id){
-    ['bs','askSheet','tosSheet','awardSheet'].forEach(function(s){ $(s).classList.toggle('on', s === id); });
+    ['bs','askSheet','tosSheet'].forEach(function(s){ $(s).classList.toggle('on', s === id); });
     $('dim').classList.toggle('on', !!id);
     openId = id;
   }
-  [].forEach.call(document.querySelectorAll('[data-award]'), function(b){ b.addEventListener('click', function(){ openSheet('awardSheet'); }); });
+  function award(on){ $('award').classList.toggle('on', on); if (on) setTimeout(function(){ $('awX').focus(); }, 50); }
+  [].forEach.call(document.querySelectorAll('[data-award]'), function(b){ b.addEventListener('click', function(){ award(true); }); });
+  $('awX').addEventListener('click', function(){ award(false); });
+  $('award').addEventListener('click', function(e){ if (e.target === this) award(false); });
   $('tos').addEventListener('click', function(e){ e.preventDefault(); openSheet('tosSheet'); });
   $('tosOk').addEventListener('click', function(){ openSheet(null); toast('47 דקות נוכו מהיתרה. תודה על הקריאה.'); });
 
@@ -454,6 +512,7 @@ button{font:inherit;cursor:pointer}
   });
 
   document.addEventListener('keydown', function(e){
+    if ($('award').classList.contains('on')) { if (e.key === 'Escape') award(false); return; }
     if (e.target.matches('input,select,textarea')) { if (e.key === 'Escape') openSheet(null); return; }
     if (e.key === 'Escape') { openSheet(null); return; }
     if (!$('ov').classList.contains('hidden') || !$('receipt').classList.contains('hidden')) return;
@@ -511,10 +570,23 @@ button{font:inherit;cursor:pointer}
     $('rSrc').textContent = $('src').value;
     $('rReal').textContent = fmt(s);
     $('ref').textContent = String(Date.now()).slice(-8);
+    rain();
     $('twist').innerHTML = '<b>הודעה על ביצוע חלקי:</b> עקב עומס במערכת הועבר בפועל סך של ' + fmt(s) +
       ', שהוא הזמן ששהית בדף זה. הסכום נוכה מחייך ואינו ניתן להחזרה, כמו כל זמן אחר.<br>תודה שבחרת בזמן־ביט.';
   }
 
+  function rain(){
+    var app = document.querySelector('.app'), H = app.clientHeight + 80, icons = ['⏱','⏳','🕰️','⌛'];
+    for (var i = 0; i < 26; i++) {
+      var s = document.createElement('span');
+      s.className = 'rain'; s.textContent = icons[i % icons.length];
+      s.style.left = (Math.random()*92) + '%';
+      s.style.setProperty('--d', H + 'px'); s.style.setProperty('--r', (Math.random()*540 - 270) + 'deg');
+      s.style.animationDuration = (1.6 + Math.random()*1.4) + 's'; s.style.animationDelay = (Math.random()*0.5) + 's';
+      app.appendChild(s);
+      setTimeout(function(el){ return function(){ el.remove(); }; }(s), 3600);
+    }
+  }
   $('again').addEventListener('click', function(){
     $('receipt').classList.add('hidden'); $('form').classList.remove('hidden');
   });
@@ -531,20 +603,33 @@ button{font:inherit;cursor:pointer}
   var amts = ['5 דק׳','12 דק׳','20 דק׳','45 דק׳','1 שע׳','2 שע׳','3 דק׳','1 יום','30 שנ׳','90 דק׳'];
   var cols = ['#ff8a65','#4fc3f7','#81c784','#ba68c8','#ffb74d','#4db6ac','#f06292','#7986cb'];
   function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
-  function addFeed(){
+  function ago(ms){ var s = Math.round((Date.now()-ms)/1000); return s < 3 ? 'עכשיו' : s < 60 ? 'לפני ' + s + ' שנ׳' : 'לפני ' + Math.floor(s/60) + ' דק׳'; }
+  function addFeed(backSec, quiet){
     var ul = $('feed'); if (!ul) return;
     var w = pick(who), li = document.createElement('li');
-    li.innerHTML = '<div class="fa"></div><div class="ft"></div><div class="fm"></div>';
+    li.dataset.t = Date.now() - (backSec||0)*1000;
+    li.innerHTML = '<div class="fa"></div><div class="ft"></div><div class="fm"><span></span><small></small></div>';
     li.children[0].style.background = pick(cols); li.children[0].textContent = w.charAt(0);
     li.children[1].innerHTML = '<b></b> <small></small>';
     li.children[1].firstChild.textContent = w + ' מ' + pick(where);
     li.children[1].lastChild.textContent = '· ' + pick(what);
-    li.children[2].textContent = pick(amts);
+    li.children[2].firstChild.textContent = pick(amts);
+    li.children[2].lastChild.textContent = ago(+li.dataset.t);
+    if (quiet) { li.style.animation = 'none'; ul.appendChild(li); return; }
+    // slide the existing rows down smoothly instead of jumping
+    var old = [].slice.call(ul.children);
     ul.insertBefore(li, ul.firstChild);
+    var h = li.offsetHeight;
+    old.forEach(function(r){ r.style.transition = 'none'; r.style.transform = 'translateY(-' + h + 'px)'; });
+    ul.offsetHeight;
+    old.forEach(function(r){ r.style.transition = 'transform .45s cubic-bezier(.2,.8,.2,1)'; r.style.transform = ''; });
     while (ul.children.length > 5) ul.removeChild(ul.lastChild);
   }
-  for (var f = 0; f < 4; f++) addFeed();
-  (function loop(){ setTimeout(function(){ addFeed(); loop(); }, 2200 + Math.random()*2600); })();
+  [4, 11, 19, 34].forEach(function(s){ addFeed(s, true); });
+  setInterval(function(){
+    [].forEach.call(document.querySelectorAll('#feed li'), function(li){ li.children[2].lastChild.textContent = ago(+li.dataset.t); });
+  }, 1000);
+  (function loop(){ setTimeout(function(){ addFeed(); loop(); }, 2600 + Math.random()*2600); })();
 
   render();
 })();
