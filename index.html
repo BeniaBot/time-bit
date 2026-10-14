@@ -4,17 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="theme-color" content="#0ab6cf">
-<title>זמן־ביט · העברת זמן</title>
+<title>biTime · העברת זמן</title>
 <meta name="description" content="העברות זמן מיידיות לכל אחד, בלי עמלות (כמעט).">
 <meta property="og:title" content="קיבלת בקשה להעברת זמן">
-<meta property="og:description" content="לחץ כדי להעביר זמן בזמן־ביט. מהיר, מאובטח, סופי.">
+<meta property="og:description" content="לחץ כדי להעביר זמן ב־biTime. מהיר, מאובטח, סופי.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://beniabot.github.io/time-bit/">
 <meta property="og:image" content="https://beniabot.github.io/time-bit/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='26' fill='%230ab6cf'/%3E%3Ctext x='50' y='70' font-size='58' text-anchor='middle'%3E⏳%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='26' fill='%230ab6cf'/%3E%3Ctext x='50' y='76' font-size='74' font-family='Arial' font-weight='900' fill='white' text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -38,8 +38,8 @@ button{font:inherit;cursor:pointer}
   .page{align-items:center;gap:80px;padding:32px}
   .hero{display:block;max-width:440px}
 }
-.hero .mark{color:var(--ink);font-size:24px;margin-bottom:22px}
-.hero .mark i{background:var(--grad);color:#fff}
+.hero .mark{margin-bottom:22px}
+.hero .logo{font-size:34px;background:none;padding:0;box-shadow:none}
 .hero h1{font-size:42px;line-height:1.1;margin:0 0 12px;letter-spacing:-1px}
 .hero h1 span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 .hero p.lead{font-size:16.5px;color:#4a5876;line-height:1.6;margin:0 0 20px}
@@ -63,8 +63,9 @@ button{font:inherit;cursor:pointer}
   .app{min-height:0;height:min(860px,calc(100vh - 48px));border-radius:40px;box-shadow:0 0 0 10px #16243f,0 40px 90px rgba(11,60,110,.35)}
 }
 .hdr{color:#fff;padding:18px 20px 96px;display:flex;align-items:center;justify-content:space-between}
-.mark{font-weight:800;font-size:22px;letter-spacing:-.5px;display:flex;align-items:center;gap:6px}
-.mark i{font-style:normal;background:#fff;color:var(--g2);border-radius:10px;padding:1px 8px;font-size:15px}
+.mark{display:flex;align-items:center}
+.logo{direction:ltr;unicode-bidi:isolate;display:inline-block;font-family:Rubik,system-ui,sans-serif;font-weight:800;font-size:21px;line-height:1;letter-spacing:-1px;color:var(--g3);background:#fff;border-radius:12px;padding:4px 10px 6px;box-shadow:0 4px 12px rgba(0,40,90,.12)}
+.logo b{font-weight:800;letter-spacing:-.5px;color:#ff7a7a;background:linear-gradient(160deg,#ffb36b,#ff5f8f);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .clock{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.18);border-radius:999px;padding:6px 12px;font-size:13px;font-variant-numeric:tabular-nums}
 .clock b{font-weight:700;min-width:38px;text-align:center}
 
@@ -234,9 +235,9 @@ button{font:inherit;cursor:pointer}
 
   <!-- desktop landing column -->
   <section class="hero">
-    <div class="mark">זמן<i>ביט</i></div>
+    <div class="mark"><span class="logo" aria-label="biTime">bi<b>T</b>ime</span></div>
     <h1>העברת זמן,<br><span>בלחיצה אחת.</span></h1>
-    <p class="lead">יש לך זמן פנוי? יש מי שאין לו. עם זמן־ביט מעבירים דקות, שעות ואפילו ימים שלמים, לכל אחד ובלי פרטי בנק.</p>
+    <p class="lead">יש לך זמן פנוי? יש מי שאין לו. עם biTime מעבירים דקות, שעות ואפילו ימים שלמים, לכל אחד ובלי פרטי בנק.</p>
     <div class="feats">
       <div class="feat"><div class="ic">⚡</div><div><b>העברה תוך 0.3 שניות</b><span>שנלקחות מהזמן שלך</span></div></div>
       <div class="feat"><div class="ic">🔒</div><div><b>הצפנה מסביב לשעון</b><span>הסטנדרט המחמיר בענף</span></div></div>
@@ -257,7 +258,7 @@ button{font:inherit;cursor:pointer}
   <!-- the app -->
   <div class="app">
     <div class="hdr">
-      <div class="mark">זמן<i>ביט</i></div>
+      <div class="mark"><span class="logo" aria-label="biTime">bi<b>T</b>ime</span></div>
       <div class="hbtns">
         <button class="pill" id="askBtn">＋ בקשת זמן</button>
         <div class="clock" title="זמן בדף">⏱ <b id="live">00:00</b></div>
@@ -313,7 +314,7 @@ button{font:inherit;cursor:pointer}
         <button class="cta ghost" id="again">העברה נוספת</button>
       </div>
 
-      <div class="fine" style="margin-top:14px">© זמן־ביט בע״מ · בפיקוח המינהל הכרונולוגי · <a href="#" id="tos">תנאי שימוש</a></div>
+      <div class="fine" style="margin-top:14px">© biTime בע״מ · בפיקוח המינהל הכרונולוגי · <a href="#" id="tos">תנאי שימוש</a></div>
     </div></div>
 
     <!-- step 2: confirm sheet -->
@@ -460,7 +461,7 @@ button{font:inherit;cursor:pointer}
     });
   }
   updateWho();
-  if (isReq) { $('req').textContent = 'בקשת העברת זמן מאת'; document.title = name + ' מבקש זמן · זמן־ביט'; }
+  if (isReq) { $('req').textContent = 'בקשת העברת זמן מאת'; document.title = name + ' מבקש זמן · biTime'; }
 
   var val = '60', unit = 'm', all = false;
   if (reqMin) {
@@ -612,7 +613,7 @@ button{font:inherit;cursor:pointer}
     $('ref').textContent = String(Date.now()).slice(-8);
     rain();
     $('twist').innerHTML = '<b>הודעה על ביצוע חלקי:</b> עקב עומס במערכת הועברו בפועל ' + fmt(s) +
-      ' בלבד, הזמן ששהית בדף זה. הסכום נוכה מחייך ולא ניתן להחזרה, כמו כל זמן אחר.<br>תודה שבחרת בזמן־ביט.';
+      ' בלבד, הזמן ששהית בדף זה. הסכום נוכה מחייך ולא ניתן להחזרה, כמו כל זמן אחר.<br>תודה שבחרת ב־biTime.';
   }
 
   function rain(){
@@ -631,8 +632,8 @@ button{font:inherit;cursor:pointer}
     $('receipt').classList.add('hidden'); $('form').classList.remove('hidden');
   });
   $('share').addEventListener('click', function(){
-    var url = location.href, txt = 'העברתי זמן בזמן־ביט. גם לך מגיע:';
-    if (navigator.share) { navigator.share({title:'זמן־ביט', text:txt, url:url}).catch(function(){}); }
+    var url = location.href, txt = 'העברתי זמן ב־biTime. גם לך מגיע:';
+    if (navigator.share) { navigator.share({title:'biTime', text:txt, url:url}).catch(function(){}); }
     else { try { navigator.clipboard.writeText(txt + ' ' + url); toast('הקישור הועתק. ההעתקה ארכה 0.4 שניות, שנוכו מהיתרה.'); } catch(e){} }
   });
   // live feed (desktop)
