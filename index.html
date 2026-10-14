@@ -672,11 +672,13 @@ button{font:inherit;cursor:pointer}
     old.forEach(function(r){ r.style.transition = 'transform .45s cubic-bezier(.2,.8,.2,1)'; r.style.transform = ''; });
     while (ul.children.length > 5) ul.removeChild(ul.lastChild);
   }
-  [4, 11, 19, 34].forEach(function(s){ addFeed(s, true); });
+  (function(){ var s = rnd(1, 6); for (var n = 0; n < 4; n++) { addFeed(s, true); s += rnd(3, 25); } })();
   setInterval(function(){
     [].forEach.call(document.querySelectorAll('#feed li'), function(li){ li.children[2].lastChild.textContent = ago(+li.dataset.t); });
   }, 1000);
-  (function loop(){ setTimeout(function(){ addFeed(); loop(); }, 2600 + Math.random()*2600); })();
+  // uneven rhythm: occasional bursts, usually a few seconds, sometimes a long lull
+  function gap(){ var r = Math.random(); return r < .22 ? rnd(600, 1500) : r < .78 ? rnd(2500, 6000) : rnd(7000, 14000); }
+  (function loop(){ setTimeout(function(){ addFeed(); loop(); }, gap()); })();
 
   render();
 })();
