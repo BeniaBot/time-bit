@@ -265,7 +265,7 @@ button{font:inherit;cursor:pointer}
           <div class="avatar" id="av">?</div>
           <div class="req" id="req">העברת זמן אל</div>
           <div class="name" id="toName">מי שאין לו זמן</div>
-          <div class="sub">יתרת זמן: 00:00 · משתמש מאז <span id="since">2019</span></div>
+          <div class="sub">בגירעון של <span id="debt">4</span> שעות · משתמש מאז <span id="since">2019</span></div>
         </div>
 
         <div class="amt"><span class="num" id="num">60</span><span class="unit" id="unitShort">דק׳</span></div>
@@ -432,6 +432,7 @@ button{font:inherit;cursor:pointer}
   $('av').textContent = name.trim().charAt(0) || '?';
   for (var hsh = 0, q = 0; q < name.length; q++) hsh = (hsh * 31 + name.charCodeAt(q)) >>> 0;
   $('since').textContent = 2012 + hsh % 12;
+  $('debt').textContent = 3 + (hsh >>> 4) % 9;
   if (isReq) { $('req').textContent = 'בקשת העברת זמן מאת'; document.title = name + ' מבקש זמן · זמן־ביט'; }
 
   var val = '60', unit = 'm', all = false;
