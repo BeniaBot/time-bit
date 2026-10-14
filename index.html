@@ -133,6 +133,30 @@ button{font:inherit;cursor:pointer}
 .rc .cta + .cta{margin-top:8px}
 .toast{position:absolute;left:16px;right:16px;bottom:24px;background:#16243f;color:#fff;border-radius:14px;padding:12px 14px;font-size:13.5px;text-align:center;z-index:9;animation:pop .25s ease-out}
 .hidden{display:none!important}
+
+/* header buttons */
+.hbtns{display:flex;align-items:center;gap:8px}
+.pill{border:0;background:#fff;color:var(--g3);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:700;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+
+/* terms + request */
+.tos{margin:0 0 16px;padding:0 20px 0 0;font-size:14px;line-height:1.6;color:#3a4a66}
+.tos li{margin-bottom:8px}
+.tos li::marker{color:var(--g2);font-weight:700}
+.linkbox input{font-size:13px;color:var(--g3);text-align:left}
+
+/* live feed (desktop) */
+.feed{margin-top:26px;background:#fff;border-radius:18px;padding:14px 16px 6px;box-shadow:0 4px 14px rgba(11,60,110,.06)}
+.feed-h{font-size:13px;font-weight:700;color:var(--muted);display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.feed-h i{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 4px rgba(25,195,125,.18);animation:blink 1.6s infinite}
+@keyframes blink{50%{opacity:.35}}
+.feed ul{list-style:none;margin:0;padding:0;height:138px;overflow:hidden}
+.feed li{display:flex;gap:10px;align-items:center;padding:7px 0;border-top:1px solid var(--line);font-size:13px;animation:slide .45s ease-out}
+.feed li:first-child{border-top:0}
+@keyframes slide{from{opacity:0;transform:translateY(-10px)}}
+.feed .fa{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:13px;flex:none}
+.feed .ft{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.feed .ft small{color:var(--muted)}
+.feed .fm{font-weight:700;font-variant-numeric:tabular-nums;color:var(--g3)}
 </style>
 </head>
 <body>
@@ -153,6 +177,10 @@ button{font:inherit;cursor:pointer}
       <div><b>0</b><span>הוחזרו</span></div>
       <div><b>4.9★</b><span>דירוג (נכתב בזמן עבודה)</span></div>
     </div>
+    <div class="feed">
+      <div class="feed-h"><i></i>העברות אחרונות</div>
+      <ul id="feed"></ul>
+    </div>
     <div class="quote">״העברתי לחבר שעה, ומאז הוא לא מוצא זמן להחזיר לי.״<small>משתמש מאומת, מודיעין עילית</small></div>
   </section>
 
@@ -160,7 +188,10 @@ button{font:inherit;cursor:pointer}
   <div class="app">
     <div class="hdr">
       <div class="mark">זמן<i>ביט</i></div>
-      <div class="clock" title="זמן בדף">⏱ <b id="live">00:00</b></div>
+      <div class="hbtns">
+        <button class="pill" id="askBtn">＋ בקשת זמן</button>
+        <div class="clock" title="זמן בדף">⏱ <b id="live">00:00</b></div>
+      </div>
     </div>
 
     <div class="sheet"><div class="card">
@@ -244,6 +275,39 @@ button{font:inherit;cursor:pointer}
       <div class="fine" style="margin-top:10px">🔒 הצפנת 24 שעות · העברה מיידית, סופית ובלתי הפיכה</div>
     </div>
 
+    <!-- request sheet -->
+    <div class="bs" id="askSheet" role="dialog" aria-label="בקשת זמן">
+      <div class="grab"></div>
+      <h3>בקשת זמן</h3>
+      <div class="lead">שלחו קישור, וחברים יעבירו לכם זמן בלחיצה</div>
+      <div class="field"><span>הניק שלך</span><input id="askName" maxlength="30" placeholder="איך יכירו אותך?"></div>
+      <div class="field"><span>כמה זמן</span><input id="askAmt" type="number" inputmode="numeric" min="1" max="9999" value="60" style="max-width:90px">
+        <select id="askUnit" style="flex:0 0 auto"><option value="1">דקות</option><option value="60">שעות</option><option value="1440">ימים</option></select>
+      </div>
+      <div id="askOut" class="hidden">
+        <div class="field linkbox"><input id="askLink" readonly dir="ltr"></div>
+      </div>
+      <button class="cta" id="askGo">יצירת קישור</button>
+      <div class="fine" style="margin-top:10px">בקשות זמן נענות בממוצע תוך 3–5 שנים</div>
+    </div>
+
+    <!-- terms sheet -->
+    <div class="bs" id="tosSheet" role="dialog" aria-label="תנאי שימוש">
+      <div class="grab"></div>
+      <h3>תנאי שימוש</h3>
+      <div class="lead">זמן קריאה משוער: 47 דקות</div>
+      <ol class="tos">
+        <li>זמן שהועבר לא יוחזר. גם זמן שלא הועבר לא יוחזר.</li>
+        <li>החברה אינה אחראית לזמן שבוזבז בעקבות השימוש בשירות, לרבות קריאת סעיף זה.</li>
+        <li>מס זמן ייגבה במקור. המקור הוא אתה.</li>
+        <li>שעון קיץ ייחשב כהלוואה ויוחזר בחורף, ללא ריבית.</li>
+        <li>לעניין תנאים אלה, ״עוד דקה״ היא 20 דקות לפחות, ו״אני כבר יוצא״ היא 40.</li>
+        <li>העברת זמן לעצמך אפשרית, אך תדווח כדחיינות.</li>
+        <li>המשתמש מצהיר כי קרא את התנאים במלואם. אף אחד לא קרא את התנאים במלואם.</li>
+      </ol>
+      <button class="cta" id="tosOk">קראתי ואני מסכים</button>
+    </div>
+
     <!-- processing overlay -->
     <div class="ov hidden" id="ov">
       <div class="ring"><b>⏳</b></div>
@@ -261,16 +325,26 @@ button{font:inherit;cursor:pointer}
   function secs(){ return Math.floor((Date.now()-t0)/1000); }
   setInterval(function(){ $('live').textContent = fmt(secs()); }, 250);
 
-  var name = 'מי שאין לו זמן', isReq = false;
+  var name = 'מי שאין לו זמן', isReq = false, reqMin = 0;
   try {
-    var to = new URLSearchParams(location.search).get('to');
+    var qs = new URLSearchParams(location.search);
+    var to = qs.get('to');
     if (to) { name = to.replace(/[-_]/g,' ').slice(0,40); isReq = true; }
+    reqMin = Math.max(0, Math.min(9999*1440, parseInt(qs.get('t'),10) || 0));
   } catch(e){}
   $('toName').textContent = name;
   $('av').textContent = name.trim().charAt(0) || '?';
   if (isReq) $('req').textContent = 'בקשת העברת זמן מאת';
 
   var val = '60', unit = 'm', all = false;
+  if (reqMin) {
+    if (reqMin % 1440 === 0) { unit = 'd'; val = String(reqMin/1440); }
+    else if (reqMin % 60 === 0) { unit = 'h'; val = String(reqMin/60); }
+    else { val = String(reqMin); }
+    val = val.slice(0,4);
+    [].forEach.call($('seg').children, function(c){ c.setAttribute('aria-pressed', c.dataset.u === unit); });
+  }
+  function buzz(){ try { navigator.vibrate && navigator.vibrate(8); } catch(e){} }
   var U = { m:['דק׳','דקות'], h:['שע׳','שעות'], d:['ימים','ימים'] };
   function minutes(){ return all ? Infinity : (+val||0) * (unit==='m'?1:unit==='h'?60:1440); }
   function fmtMin(m){
@@ -292,6 +366,10 @@ button{font:inherit;cursor:pointer}
   }
   $('pad').addEventListener('click', function(e){
     var b = e.target.closest('button'); if(!b) return;
+    press(b);
+  });
+  function press(b){
+    buzz();
     var k = b.dataset.k;
     if (k === 'all'){ all = true; }
     else if (k === 'del'){ all = false; val = val.slice(0,-1); }
@@ -301,7 +379,7 @@ button{font:inherit;cursor:pointer}
       else toast('חרגת ממסגרת האשראי. לא ניתן להעביר יותר זמן ממה שבזבזת השנה.');
     }
     render();
-  });
+  }
   $('seg').addEventListener('click', function(e){
     var b = e.target.closest('button'); if(!b) return;
     [].forEach.call(this.children, function(c){ c.setAttribute('aria-pressed', c===b); });
@@ -310,26 +388,58 @@ button{font:inherit;cursor:pointer}
   $('quick').addEventListener('click', function(e){
     var b = e.target.closest('button'); if(b) $('memo').value = b.textContent;
   });
-  $('tos').addEventListener('click', function(e){
-    e.preventDefault();
-    alert('תנאי השימוש זמינים לקריאה מלאה.\nזמן קריאה משוער: 47 דקות.\nהזמן ינוכה מהיתרה שלך עם הלחיצה על "אישור".');
+  var openId = null;
+  function openSheet(id){
+    ['bs','askSheet','tosSheet'].forEach(function(s){ $(s).classList.toggle('on', s === id); });
+    $('dim').classList.toggle('on', !!id);
+    openId = id;
+  }
+  $('tos').addEventListener('click', function(e){ e.preventDefault(); openSheet('tosSheet'); });
+  $('tosOk').addEventListener('click', function(){ openSheet(null); toast('47 דקות נוכו מהיתרה. תודה על הקריאה.'); });
+
+  $('askBtn').addEventListener('click', function(){ $('askOut').classList.add('hidden'); $('askGo').textContent = 'יצירת קישור'; openSheet('askSheet'); });
+  $('askGo').addEventListener('click', function(){
+    var link = $('askLink');
+    if (!$('askOut').classList.contains('hidden')) {
+      link.select();
+      try { navigator.clipboard.writeText(link.value); } catch(e){ try { document.execCommand('copy'); } catch(_){} }
+      toast('הקישור הועתק. אפשר להדביק בפורום.');
+      return;
+    }
+    var nick = $('askName').value.trim();
+    if (!nick) { $('askName').focus(); toast('בלי ניק אי אפשר לדעת למי להעביר.'); return; }
+    var m = Math.max(1, Math.min(9999, parseInt($('askAmt').value,10) || 0)) * (+$('askUnit').value);
+    link.value = location.origin + location.pathname + '?to=' + encodeURIComponent(nick.replace(/\s+/g,'-')) + '&t=' + m;
+    $('askOut').classList.remove('hidden');
+    $('askGo').textContent = 'העתקת הקישור';
   });
 
-  function openSheet(on){ $('bs').classList.toggle('on', on); $('dim').classList.toggle('on', on); }
+  document.addEventListener('keydown', function(e){
+    if (e.target.matches('input,select,textarea')) { if (e.key === 'Escape') openSheet(null); return; }
+    if (e.key === 'Escape') { openSheet(null); return; }
+    if (!$('ov').classList.contains('hidden') || !$('receipt').classList.contains('hidden')) return;
+    if (e.key === 'Enter') { e.preventDefault(); if (openId === 'bs') $('go').click(); else if (!openId && !$('next').disabled) $('next').click(); return; }
+    if (openId) return;
+    var b = null, btns = $('pad').children;
+    if (/^[0-9]$/.test(e.key)) b = [].filter.call(btns, function(x){ return x.textContent === e.key; })[0];
+    else if (e.key === 'Backspace') b = $('pad').querySelector('[data-k=del]');
+    if (b) { e.preventDefault(); press(b); b.style.background = 'var(--soft)'; setTimeout(function(){ b.style.background = ''; }, 120); }
+  });
+
   $('next').addEventListener('click', function(){
     var m = minutes();
     $('bsLead').textContent = 'אל ' + name;
     $('cAmt').textContent = all ? 'כל מה שהתפנה' : fmtMin(m);
     $('cTax').textContent = all ? '∞ × 0.18' : fmtMin(m*0.18);
     $('cTot').textContent = all ? 'כל מה שהתפנה, ועוד קצת' : fmtMin(m*1.18 + 3);
-    openSheet(true);
+    openSheet('bs');
   });
-  $('dim').addEventListener('click', function(){ openSheet(false); });
+  $('dim').addEventListener('click', function(){ openSheet(null); });
 
   var steps = [
     'מאמת את השעון הביולוגי של המעביר...',
     'ממיר שעות לדקות לפי השער היציג...',
-    'ממיר "עוד דקה אני מסיים" לזמן אמיתי (פי 20)...',
+    'ממיר "עוד דקה אני מסיים" לזמן אמיתי, פי 20...',
     'מנכה מס זמן במקור...',
     'בודק שהזמן לא בוזבז כבר...',
     'הזמן נמצא בבזבוז. מנסה שוב...',
@@ -342,7 +452,7 @@ button{font:inherit;cursor:pointer}
   steps.forEach(function(){ dots.appendChild(document.createElement('i')); });
 
   $('go').addEventListener('click', function(){
-    openSheet(false);
+    openSheet(null);
     $('ov').classList.remove('hidden');
     var i = 0;
     (function tick(){
@@ -374,6 +484,29 @@ button{font:inherit;cursor:pointer}
     if (navigator.share) { navigator.share({title:'זמן־ביט', text:txt, url:url}).catch(function(){}); }
     else { try { navigator.clipboard.writeText(txt + ' ' + url); toast('הקישור הועתק. ההעתקה ארכה 0.4 שניות, שנוכו מהיתרה.'); } catch(e){} }
   });
+  // live feed (desktop)
+  var who = ['מ.','י.ש.','א.ל.','ש.ק.','ד.ב.','ח.ר.','נ.ג.','ב.מ.','צ.פ.','ר.א.'];
+  var where = ['בני ברק','אלעד','ביתר','ירושלים','מודיעין עילית','בית שמש','רכסים','צפת'];
+  var what = ['על הפגישה שיכלה להיות מייל','החזר על שיחה ״קצרה״','בשביל הפרויקט ש״ייקח שבוע״','מה שנשאר מההמתנה בקופת חולים',
+              'על העזרה בהתקנת המדפסת','חוב ישן מ־2019','כי ביקשת יפה','על ה״רק תסתכל רגע על הקוד״','דקות שנחסכו בפקק','לא שואלים'];
+  var amts = ['5 דק׳','12 דק׳','20 דק׳','45 דק׳','1 שע׳','2 שע׳','3 דק׳','1 יום','30 שנ׳','90 דק׳'];
+  var cols = ['#ff8a65','#4fc3f7','#81c784','#ba68c8','#ffb74d','#4db6ac','#f06292','#7986cb'];
+  function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+  function addFeed(){
+    var ul = $('feed'); if (!ul) return;
+    var w = pick(who), li = document.createElement('li');
+    li.innerHTML = '<div class="fa"></div><div class="ft"></div><div class="fm"></div>';
+    li.children[0].style.background = pick(cols); li.children[0].textContent = w.charAt(0);
+    li.children[1].innerHTML = '<b></b> <small></small>';
+    li.children[1].firstChild.textContent = w + ' מ' + pick(where);
+    li.children[1].lastChild.textContent = '· ' + pick(what);
+    li.children[2].textContent = pick(amts);
+    ul.insertBefore(li, ul.firstChild);
+    while (ul.children.length > 5) ul.removeChild(ul.lastChild);
+  }
+  for (var f = 0; f < 4; f++) addFeed();
+  (function loop(){ setTimeout(function(){ addFeed(); loop(); }, 2200 + Math.random()*2600); })();
+
   render();
 })();
 </script>
