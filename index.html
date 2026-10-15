@@ -120,6 +120,7 @@ a.logo{display:inline-block}
 .cta:disabled{opacity:.4;box-shadow:none}
 .ghost{background:#fff;color:var(--g3);border:2px solid var(--line);box-shadow:none}
 .fine{color:var(--muted);font-size:11.5px;text-align:center;line-height:1.7}
+.foot{margin-top:14px}
 .fine a{color:inherit}
 
 /* ---------- confirm bottom sheet ---------- */
@@ -280,8 +281,8 @@ a.logo{display:inline-block}
 #next{position:sticky;bottom:10px;z-index:2}
 .field:focus-within{box-shadow:inset 0 0 0 2px var(--g2)}
 .sr-only{position:absolute;top:0;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
-@media(min-width:460px) and (max-height:760px){
-  .hdr{padding-bottom:84px} .avatar{width:64px;height:64px;font-size:26px} .amt .num{font-size:48px} .pad button{height:46px}
+@media(min-width:460px) and (max-height:820px){
+  .hdr{padding-bottom:84px} .avatar{width:64px;height:64px;font-size:26px} .amt .num{font-size:48px} .pad button{height:44px} .foot{margin-top:6px}
 }
 @media(min-width:960px) and (max-height:820px){
   .hero .mark{margin-bottom:12px} .hero h1{font-size:34px;margin-bottom:8px} .hero p.lead{font-size:15px;margin-bottom:12px}
@@ -333,6 +334,12 @@ button.clock:hover{background:rgba(255,255,255,.28)}
 @media(max-width:459px) and (max-height:580px){ .recent{display:none} .pad button{height:40px} }
 @media(max-height:520px){ #next{position:static} }
 @media(max-width:340px){ .hdr{padding-left:14px;padding-right:14px} .hbtns{gap:6px} .pill,button.clock{padding:6px 9px} }
+/* short desktop screens: the same inside the phone frame */
+@media(min-width:460px) and (max-height:700px){
+  .hdr{padding-top:12px;padding-bottom:78px} .avatar{width:56px;height:56px;font-size:23px} .recent{margin-top:6px} .recent .rv{width:32px;height:32px;font-size:13px}
+  .amt{margin-top:8px} .amt .num{font-size:42px} .bal{margin-bottom:8px} .seg button{padding:5px 0} .pad{margin-bottom:6px} .pad button{height:38px}
+}
+@media(min-width:460px) and (max-height:630px){ .recent{display:none} .pad button{height:40px} }
 /* hero testimonial: only where it fits without scrolling the page */
 .quote{display:none;margin-top:12px;background:#fff;border-radius:18px;padding:14px 16px;font-size:14px;color:#3a4a66;box-shadow:0 4px 14px rgba(11,60,110,.06)}
 .quote small{display:block;color:var(--muted);margin-top:4px}
@@ -433,7 +440,7 @@ button.clock:hover{background:rgba(255,255,255,.28)}
         <button class="cancel-tx" id="cancelTx">ביטול העברה</button>
       </div>
 
-      <div class="fine" style="margin-top:14px">© biTime בע״מ · בפיקוח המינהל הכרונולוגי · <a href="#" id="tos">תנאי&nbsp;שימוש</a> · <a href="#" id="support">שירות&nbsp;לקוחות</a></div>
+      <div class="fine foot">© biTime בע״מ · בפיקוח המינהל הכרונולוגי · <a href="#" id="tos">תנאי&nbsp;שימוש</a> · <a href="#" id="support">שירות&nbsp;לקוחות</a></div>
     </div></div>
 
     <!-- step 2: confirm sheet -->
