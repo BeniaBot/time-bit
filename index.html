@@ -2,12 +2,12 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0ab6cf">
 <title>biTime · העברת זמן</title>
 <meta name="description" content="העברות זמן מיידיות לכל אחד, בלי עמלות (כמעט).">
-<meta property="og:title" content="קיבלת בקשה להעברת זמן">
-<meta property="og:description" content="לחץ כדי להעביר זמן ב־biTime. מהיר, מאובטח, סופי.">
+<meta property="og:title" content="biTime · העברת זמן בלחיצה">
+<meta property="og:description" content="העברות זמן מיידיות ב־biTime. מהיר, מאובטח, סופי.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://beniabot.github.io/time-bit/">
 <meta property="og:image" content="https://beniabot.github.io/time-bit/og.png">
@@ -137,7 +137,7 @@ a.logo{display:inline-block}
 .rows .total span{color:var(--ink)!important;font-size:15px}
 .field{display:flex;align-items:center;gap:10px;background:var(--soft);border-radius:16px;padding:11px 14px;margin-bottom:8px}
 .field span{color:var(--muted);font-size:13px;white-space:nowrap}
-.field input,.field select{flex:1;border:0;background:transparent;font:inherit;font-size:15px;color:var(--ink);outline:none;min-width:0}
+.field input,.field select{flex:1;border:0;background:transparent;font:inherit;font-size:16px;color:var(--ink);outline:none;min-width:0}
 .quick{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 12px}
 .quick button{border:1px solid var(--line);background:#fff;border-radius:999px;font-size:12.5px;padding:5px 11px;color:var(--ink)}
 .promo{background:#fff6e0;color:#8a5a00;border-radius:12px;font-size:12.5px;text-align:center;padding:8px 10px;margin:4px 0 14px}
@@ -164,7 +164,7 @@ a.logo{display:inline-block}
 .rc .rows{text-align:right}
 .note{text-align:right;font-size:13.5px;line-height:1.65;border:1px dashed #b9c6d8;border-radius:16px;padding:12px 14px;margin-bottom:14px;color:#3a4a66}
 .rc .cta + .cta{margin-top:8px}
-.toast{position:absolute;left:16px;right:16px;bottom:24px;background:#16243f;color:#fff;border-radius:14px;padding:12px 14px;font-size:13.5px;text-align:center;z-index:9;animation:pop .25s ease-out}
+.toast{position:absolute;left:16px;right:16px;bottom:calc(24px + env(safe-area-inset-bottom));background:#16243f;color:#fff;border-radius:14px;padding:12px 14px;font-size:13.5px;text-align:center;z-index:60;animation:pop .25s ease-out}
 .hidden{display:none!important}
 
 /* header buttons */
@@ -261,14 +261,30 @@ a.logo{display:inline-block}
 .modal.on .rc-card{transform:none}
 .rc-tools{display:flex;gap:8px;margin-bottom:8px}
 .rc-tools .ico-btn{width:42px;min-height:42px}
-#rcptDoc svg{display:block;width:100%;height:auto;border-radius:12px}
+#rcptDoc > svg{display:block;width:100%;height:auto;border-radius:12px}
 @media print{
-  body *{visibility:hidden!important}
-  #rcptModal,#rcptModal .rc-card,#rcptDoc,#rcptDoc *{visibility:visible!important}
-  #rcptModal{position:absolute;inset:0;background:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;padding:0;display:block}
-  #rcptModal .rc-card{box-shadow:none;max-height:none;overflow:visible;transform:none;padding:0;max-width:none}
-  .rc-tools{display:none!important}
-  @page{margin:12mm}
+  body.print-rcpt *{visibility:hidden!important}
+  html,body.print-rcpt{background:#fff!important}
+  body.print-rcpt #rcptModal,body.print-rcpt #rcptModal .rc-card,body.print-rcpt #rcptDoc,body.print-rcpt #rcptDoc *{visibility:visible!important}
+  body.print-rcpt #rcptModal{position:absolute;inset:0;opacity:1!important;background:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;padding:0;display:block}
+  body.print-rcpt #rcptModal .rc-card{box-shadow:none;max-height:none;overflow:visible;transform:none;padding:0;max-width:none}
+  body.print-rcpt .rc-tools{display:none!important}
+  body.print-rcpt #rcptDoc > svg{width:auto;max-width:100%;max-height:100vh;margin:0 auto;border-radius:0}
+  @page{size:A4 portrait;margin:12mm}
+}
+/* ---------- review fixes ---------- */
+@media(max-width:459px){ .app{height:100vh;height:100dvh;min-height:0} body,.page{min-height:100dvh} }
+.bs{padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+#next{position:sticky;bottom:10px;z-index:2}
+.field:focus-within{box-shadow:inset 0 0 0 2px var(--g2)}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+@media(min-width:460px) and (max-height:760px){
+  .hdr{padding-bottom:84px} .avatar{width:64px;height:64px;font-size:26px} .amt .num{font-size:48px} .pad button{height:46px}
+}
+@media(min-width:960px) and (max-height:820px){
+  .hero .mark{margin-bottom:12px} .hero h1{font-size:34px;margin-bottom:8px} .hero p.lead{font-size:15px;margin-bottom:12px}
+  .feats{gap:6px;margin-bottom:12px} .feat .ic{width:34px;height:34px} .stats{padding-top:10px} .stats b{font-size:20px}
+  .feed{margin-top:10px} .feed ul{height:88px}
 }
 </style>
 </head>
@@ -507,7 +523,12 @@ a.logo{display:inline-block}
   try {
     var qs = new URLSearchParams(location.search);
     var to = qs.get('to');
-    if (to) { name = to.replace(/[-_]/g,' ').slice(0,40); isReq = true; }
+    if (to) {
+      name = to.replace(/--/g, '\u0001').replace(/-/g, ' ').replace(/\u0001/g, '-')
+               .replace(/[\u0000-\u001f\u007f]/g, '').replace(/\s+/g, ' ').trim().slice(0, 40);
+      isReq = /[א-תA-Za-z0-9]/.test(name);
+      if (!isReq) name = '';
+    }
     reqMin = Math.max(0, Math.min(9999*1440, parseInt(qs.get('t'),10) || 0));
   } catch(e){}
   // ---- recipients: a fixed directory (db.js + generated contacts); the home page can only pick from it ----
@@ -517,7 +538,7 @@ a.logo{display:inline-block}
     return s.toLowerCase().replace(/[״׳"'`.,!?()\-–־:;\/]/g, ' ')
       .replace(/ך/g,'כ').replace(/ם/g,'מ').replace(/ן/g,'נ').replace(/ף/g,'פ').replace(/ץ/g,'צ');
   }
-  function norm(s){ return normLite(s.replace(/[֑-ׇ]/g, '')).replace(/\s+/g, ' ').trim(); }
+  function norm(s){ return normLite(s.replace(/[\u0591-\u05bd\u05bf-\u05c7]/g, '')).replace(/\s+/g, ' ').trim(); }
   function hoursWord(n){ n = Math.abs(n); return n === 1 ? 'שעה אחת' : n === 2 ? 'שעתיים' : n.toLocaleString('he-IL') + ' שעות'; }
   function balLong(h){ return h < 0 ? 'בגירעון של ' + hoursWord(h) : h > 0 ? 'ביתרה של ' + hoursWord(h) : 'יתרה מאוזנת בדיוק'; }
   function balShort(h){ var a = Math.abs(h).toLocaleString('he-IL'); return h < 0 ? 'גירעון ' + a + ' ש׳' : h > 0 ? 'יתרה ' + a + ' ש׳' : 'מאוזן'; }
@@ -535,11 +556,15 @@ a.logo{display:inline-block}
   function addEntry(e, curated){
     var k = norm(e.n || ''); if (!k || seenK[k]) return; seenK[k] = 1;
     // words for prefix matching; a leading ה (the definite article) is optional: "שכנ" finds "השכן"
-    var w = k.split(' '), extra = [];
+    var j = norm(String(e.n || '').replace(/([א-תA-Za-z])[״׳"'`]+(?=[א-תA-Za-z])/g, '$1'));
+    var w = k.split(' ');
+    if (j !== k) w = w.concat(j.split(' '));
+    var extra = [];
     w.forEach(function(x){ if (x.length > 2 && x.charAt(0) === 'ה') extra.push(x.slice(1)); });
-    DB.push({ n: e.n, h: e.h | 0, y: e.y | 0 || 2020, c: curated, k: k, w: w.concat(extra) });
+    DB.push({ n: e.n, h: e.h | 0, y: e.y | 0 || 2020, c: curated, k: k, j: j, w: w.concat(extra) });
   }
   try { var SRC = window.BT_DB || {}; Object.keys(SRC).forEach(function(cat){ (SRC[cat] || []).forEach(function(e){ addEntry(e, true); }); }); } catch(e){}
+  Object.keys(SPECIAL).forEach(function(k){ addEntry({ n: k, h: 0, y: 2015 }, true); });
   (function contacts(){
     var F = ['משה','יוסף','אברהם','יעקב','שמואל','דוד','אליהו','חיים','שלמה','מנחם','ישראל','אהרן','בנימין','מרדכי','יהודה','אליעזר','שמעון','נחמן',
              'נפתלי','זאב','מאיר','יצחק','ברוך','צבי','אריה','דניאל','יונתן','אפרים','עמרם','גבריאל','רפאל','שלום','עזרא','פנחס','יחזקאל','אלחנן'];
@@ -561,9 +586,13 @@ a.logo{display:inline-block}
       addEntry({ n: n, h: r < 46 ? -(1 + (h >>> 7) % 38) : r < 86 ? 1 + (h >>> 7) % 55 : 0, y: 2009 + (h >>> 11) % 18 }, false);
     }
   }
-  window.addEventListener('load', function(){
+  if (!isReq) window.addEventListener('load', function(){
     var sc = document.createElement('script'); sc.src = 'nicks.js'; sc.async = true;
-    sc.onload = function(){ try { addNicks(window.BT_NICKS || []); window.BT_NICKS = null; } catch(e){} };
+    sc.onload = function(){
+      try { addNicks(window.BT_NICKS || []); window.BT_NICKS = null; } catch(e){}
+      var inp = $('toInput');
+      if (inp && !chosen && document.activeElement === inp && norm(inp.value)) renderAc(search(inp.value));
+    };
     document.body.appendChild(sc);
   });
 
@@ -587,19 +616,20 @@ a.logo{display:inline-block}
     var qw = nq.split(' '), hits = [];
     DB.forEach(function(e){
       var s = 0;
-      if (e.k === nq) s = 1000;
-      else if (e.k.indexOf(nq) === 0) s = 900;
+      if (e.k === nq || e.j === nq) s = 2000;
+      else if (e.k.indexOf(nq) === 0 || e.j.indexOf(nq) === 0) s = 900;
       else if (qw.every(function(w){ return e.w.some(function(x){ return x.indexOf(w) === 0; }); })) s = 700;
       else if (nq.length >= 3 && e.k.indexOf(nq) > 0) s = 500;
       if (s) hits.push([s + (e.c ? 210 : 0) + (SPECIAL[e.k] ? 400 : 0) - e.k.length * .5, e]);
     });
     if (hits.length) return { list: hits.sort(function(a, b){ return b[0] - a[0]; }).slice(0, 8).map(function(x){ return x[1]; }), mode: 'match' };
-    if (nq.length < 3 || nq.length > 14) return { list: [], mode: 'none' };
+    if (nq.length < 3 || nq.length > 24) return { list: [], mode: 'none' };
     var limit = nq.length >= 7 ? 2 : 1;
     DB.forEach(function(e){
       var d = 99;
-      e.w.forEach(function(x){
-        if (x[0] !== nq[0] && x[1] !== nq[1]) return;   // a typo rarely hits both of the first two letters
+      [e.k].concat(e.w).forEach(function(x){
+        // a typo rarely hits both of the first two letters (a swap of the two is still allowed)
+        if (x[0] !== nq[0] && x[1] !== nq[1] && !(x[0] === nq[1] && x[1] === nq[0])) return;
         if (Math.abs(x.length - nq.length) <= limit) d = Math.min(d, lev(nq, x));
         if (x.length > nq.length) d = Math.min(d, lev(nq, x.slice(0, nq.length)));
       });
@@ -628,7 +658,7 @@ a.logo{display:inline-block}
       ul.appendChild(hint);
     }
     acList.forEach(function(e, i){
-      var li = document.createElement('li'); li.setAttribute('role', 'option'); li.dataset.i = i;
+      var li = document.createElement('li'); li.setAttribute('role', 'option'); li.dataset.i = i; li.id = 'ac-o' + i;
       var a = document.createElement('div'); a.className = 'ava'; a.style.background = hue(e.n); a.textContent = initial(e.n);
       var nm = document.createElement('div'); nm.className = 'an';
       var at = res.mode === 'match' && nq ? normLite(e.n).indexOf(nq) : -1;
@@ -650,10 +680,11 @@ a.logo{display:inline-block}
   function markOn(){
     [].forEach.call($('ac').querySelectorAll('li[role=option]'), function(li){
       var on = +li.dataset.i === acOn; li.classList.toggle('on', on); li.setAttribute('aria-selected', on);
-      if (on) li.scrollIntoView({ block: 'nearest' });
+      if (on) { li.scrollIntoView({ block: 'nearest' }); $('toInput').setAttribute('aria-activedescendant', li.id); }
     });
   }
-  function closeAc(){ $('ac').classList.add('hidden'); $('toInput').setAttribute('aria-expanded', 'false'); }
+  function closeAc(){ $('ac').classList.add('hidden'); $('toInput').setAttribute('aria-expanded', 'false'); $('toInput').removeAttribute('aria-activedescendant'); }
+  $('ac').addEventListener('mousedown', function(ev){ ev.preventDefault(); });
   function pick(e){
     chosen = e; name = e.n; $('toInput').value = e.n; closeAc(); showWho(e); $('toInput').blur();
   }
@@ -690,15 +721,15 @@ a.logo{display:inline-block}
     val = val.slice(0,4);
     [].forEach.call($('seg').children, function(c){ c.setAttribute('aria-pressed', c.dataset.u === unit); });
   }
-  function buzz(){ try { navigator.vibrate && navigator.vibrate(8); } catch(e){} }
+  function buzz(){ try { if (navigator.vibrate && (!navigator.userActivation || navigator.userActivation.hasBeenActive)) navigator.vibrate(8); } catch(e){} }
   var U = { m:['דק׳','דקות'], h:['שע׳','שעות'], d:['ימים','ימים'] };
   function minutes(){ return all ? Infinity : (+val||0) * (unit==='m'?1:unit==='h'?60:1440); }
   function fmtMin(m){
     if (m === Infinity) return '∞';
-    m = Math.round(m*10)/10;
-    if (m < 60) return m + ' דק׳';
-    var h = Math.floor(m/60), r = Math.round(m%60);
-    return h + ' שע׳' + (r ? ' ו־' + r + ' דק׳' : '');
+    m = Math.round(m * 10) / 10;
+    if (m < 59.5) return m + ' דק׳';
+    var tm = Math.round(m), h = Math.floor(tm / 60), r = tm % 60;
+    return h.toLocaleString('he-IL') + ' שע׳' + (r ? ' ו־' + r + ' דק׳' : '');
   }
   function asked(){
     if (all) return 'כל מה שהתפנה';
@@ -709,11 +740,19 @@ a.logo{display:inline-block}
   }
 
   var tt;
-  function toast(m){ var o=document.querySelector('.toast'); if(o) o.remove(); var d=document.createElement('div'); d.className='toast'; d.textContent=m; document.querySelector('.app').appendChild(d); clearTimeout(tt); tt=setTimeout(function(){ d.remove(); }, 3200); }
+  var srLive = null;
+  function toast(m){
+    var o = document.querySelector('.toast'); if (o) o.remove();
+    var d = document.createElement('div'); d.className = 'toast'; d.textContent = m;
+    (document.querySelector('.modal.on .rc-card') || document.querySelector('.modal.on .m-card') || document.querySelector('.app')).appendChild(d);
+    if (!srLive) { srLive = document.createElement('div'); srLive.className = 'sr-only'; srLive.setAttribute('role', 'status'); srLive.setAttribute('aria-live', 'polite'); document.body.appendChild(srLive); }
+    srLive.textContent = ''; setTimeout(function(){ srLive.textContent = m; }, 40);
+    clearTimeout(tt); tt = setTimeout(function(){ d.remove(); }, 3200);
+  }
 
   function render(){
     $('num').textContent = all ? '∞' : (val || '0');
-    $('unitShort').textContent = all ? '' : U[unit][0];
+    $('unitShort').textContent = all ? '' : (unit === 'd' && +val === 1 ? 'יום' : U[unit][0]);
     $('next').disabled = !all && (+val === 0);
   }
   $('pad').addEventListener('click', function(e){
@@ -724,7 +763,7 @@ a.logo{display:inline-block}
     buzz();
     var k = b.dataset.k;
     if (k === 'all'){ all = true; }
-    else if (k === 'del'){ all = false; val = val.slice(0,-1); }
+    else if (k === 'del'){ if (all) all = false; else val = val.slice(0,-1); }
     else {
       if (all){ all=false; val=''; }
       if (val.length < 4) val = (val === '0' ? '' : val) + b.textContent;
@@ -740,13 +779,30 @@ a.logo{display:inline-block}
   $('quick').addEventListener('click', function(e){
     var b = e.target.closest('button'); if(b) $('memo').value = b.textContent;
   });
-  var openId = null;
+  var openId = null, sheetOpener = null;
+  [].forEach.call(document.querySelectorAll('.bs'), function(b){
+    b.setAttribute('aria-modal', 'true');
+    var h = b.querySelector('h3'); if (h) h.setAttribute('tabindex', '-1');
+  });
   function openSheet(id){
+    var was = openId;
     ['bs','askSheet','tosSheet','shareSheet'].forEach(function(s){ $(s).classList.toggle('on', s === id); });
     $('dim').classList.toggle('on', !!id);
     openId = id;
+    [document.querySelector('.hdr'), document.querySelector('.sheet')].forEach(function(el){
+      if (!el) return; if (id) el.setAttribute('inert', ''); else el.removeAttribute('inert');
+    });
+    if (id && !was) sheetOpener = document.activeElement;
+    if (id) setTimeout(function(){ var h = $(id).querySelector('h3'); if (h) h.focus({ preventScroll: true }); }, 60);
+    else if (was && sheetOpener && document.contains(sheetOpener) && sheetOpener.offsetParent) { try { sheetOpener.focus({ preventScroll: true }); } catch(e){} }
   }
-  function award(on){ $('award').classList.toggle('on', on); if (on) setTimeout(function(){ $('awX').focus(); }, 50); }
+  var modalOpener = null;
+  function modalBg(on){
+    var pg = document.querySelector('.page'); if (!pg) return;
+    if (on) { modalOpener = document.activeElement; pg.setAttribute('inert', ''); }
+    else { pg.removeAttribute('inert'); if (modalOpener && document.contains(modalOpener) && modalOpener.offsetParent) { try { modalOpener.focus({ preventScroll: true }); } catch(e){} } }
+  }
+  function award(on){ $('award').classList.toggle('on', on); modalBg(on); if (on) setTimeout(function(){ $('awX').focus(); }, 50); }
   [].forEach.call(document.querySelectorAll('[data-award]'), function(b){ b.addEventListener('click', function(){ award(true); }); });
   $('awX').addEventListener('click', function(){ award(false); });
   $('award').addEventListener('click', function(e){ if (e.target === this) award(false); });
@@ -757,26 +813,40 @@ a.logo{display:inline-block}
   $('askGo').addEventListener('click', function(){
     var link = $('askLink');
     if (!$('askOut').classList.contains('hidden')) {
-      link.select();
-      try { navigator.clipboard.writeText(link.value); } catch(e){ try { document.execCommand('copy'); } catch(_){} }
-      toast('הקישור הועתק. אפשר לשלוח.');
+      var ok = function(){ toast('הקישור הועתק. אפשר לשלוח.'); };
+      var fallback = function(){
+        link.select(); var done = false;
+        try { done = document.execCommand('copy'); } catch(_){}
+        toast(done ? 'הקישור הועתק. אפשר לשלוח.' : 'ההעתקה נחסמה. אפשר לסמן את הקישור ולהעתיק ידנית.');
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(link.value).then(ok, fallback); else fallback();
       return;
     }
     var nick = $('askName').value.trim();
     if (!nick) { $('askName').focus(); toast('בלי שם אי אפשר לדעת למי להעביר.'); return; }
     var m = Math.max(1, Math.min(9999, parseInt($('askAmt').value,10) || 0)) * (+$('askUnit').value);
-    link.value = location.origin + location.pathname + '?to=' + encodeURIComponent(nick.replace(/\s+/g,'-')) + '&t=' + m;
+    link.value = location.origin + location.pathname + '?to=' + encodeURIComponent(nick.replace(/-/g,'--').replace(/\s+/g,'-')) + '&t=' + m;
     $('askOut').classList.remove('hidden');
     $('askGo').textContent = 'העתקת הקישור';
   });
+
+  function askDirty(){ $('askOut').classList.add('hidden'); $('askGo').textContent = 'יצירת קישור'; }
+  ['askName', 'askAmt', 'askUnit'].forEach(function(id){ $(id).addEventListener('input', askDirty); $(id).addEventListener('change', askDirty); });
+  // names for controls whose caption is a plain span (a11y-4)
+  [['src', 'מקור החיוב'], ['memo', 'הערה'], ['askName', 'שם או כינוי'], ['askAmt', 'כמה זמן'], ['askUnit', 'יחידת זמן'], ['askLink', 'קישור לבקשה']]
+    .forEach(function(p){ var el = $(p[0]); if (el && !el.getAttribute('aria-label')) el.setAttribute('aria-label', p[1]); });
 
   document.addEventListener('keydown', function(e){
     if ($('award').classList.contains('on')) { if (e.key === 'Escape') award(false); return; }
     if (e.target.matches('input,select,textarea')) { if (e.key === 'Escape') openSheet(null); return; }
     if (e.key === 'Escape') { openSheet(null); return; }
     if (!$('ov').classList.contains('hidden') || !$('receipt').classList.contains('hidden')) return;
-    if (e.key === 'Enter') { e.preventDefault(); if (openId === 'bs') $('go').click(); else if (!openId && !$('next').disabled) $('next').click(); return; }
+    if (e.key === 'Enter') {
+      var tg = e.target;
+      if (tg && tg !== document.body && tg.closest && tg.closest('button,a,select,[role=button],[role=option]') && !tg.closest('#pad') && tg.id !== 'next' && tg.id !== 'go') return;
+      e.preventDefault(); if (openId === 'bs') $('go').click(); else if (!openId && !$('next').disabled) $('next').click(); return; }
     if (openId) return;
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
     var b = null, btns = $('pad').children;
     if (/^[0-9]$/.test(e.key)) b = [].filter.call(btns, function(x){ return x.textContent === e.key; })[0];
     else if (e.key === 'Backspace') b = $('pad').querySelector('[data-k=del]');
@@ -834,7 +904,12 @@ a.logo{display:inline-block}
     lastTx = { asked: asked(), name: name, real: fmt(s), ref: ref, src: $('src').value, memo: $('memo').value.trim(),
                tax: all ? '∞ × 0.18' : fmtMin(m * 0.18), total: all ? 'כל מה שהתפנה, ועוד קצת' : fmtMin(m * 1.18 + 3), at: new Date() };
     rain();
-    $('twist').innerHTML = '<b>הודעה על ביצוע חלקי:</b> עקב עומס במערכת הועברו בפועל ' + fmt(s) +
+    var over = !all && s >= minutes() * 60;
+    lastTx.over = over;
+    var rh = document.querySelector('#receipt h2'); if (rh) { rh.setAttribute('tabindex', '-1'); setTimeout(function(){ rh.focus({ preventScroll: true }); }, 60); }
+    if (over) $('twist').innerHTML = '<b>הודעה על ביצוע עודף:</b> עקב עומס במערכת הועברו בפועל ' + fmt(s) +
+      ', יותר ממה שביקשת: הזמן ששהית בדף זה. גם העודף נוכה מחייך ולא ניתן להחזרה, כמו כל זמן אחר.<br>תודה שבחרת ב־biTime.';
+    else $('twist').innerHTML = '<b>הודעה על ביצוע חלקי:</b> עקב עומס במערכת הועברו בפועל ' + fmt(s) +
       ' בלבד, הזמן ששהית בדף זה. הסכום נוכה מחייך ולא ניתן להחזרה, כמו כל זמן אחר.<br>תודה שבחרת ב־biTime.';
   }
 
@@ -877,7 +952,7 @@ a.logo{display:inline-block}
   // ---- the receipt document (אסמכתא): one SVG used on screen, for printing and for the PNG download ----
   var LOGO = '';
   try { fetch('logo.svg').then(function(r){ return r.text(); }).then(function(t){ LOGO = t; }).catch(function(){}); } catch(e){}
-  function xe(v){ return String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function xe(v){ return String(v).replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g, '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
   // number -> Hebrew numerals with geresh / gershayim (3 -> ג׳, 787 -> תשפ״ז, 15 -> ט״ו)
   function gem(n){
     var out = '', H = ['', 'ק', 'ר', 'ש', 'ת'], T = ['', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע', 'פ', 'צ'], U = ['', 'א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט'];
@@ -909,7 +984,7 @@ a.logo{display:inline-block}
     o.push(t(R, 114, 'מס׳ ' + tx.ref + (heb ? ' · ' + heb : '') + ' · ' + greg, 15, '#7d8aa3'));
     o.push('<line x1="' + L + '" y1="146" x2="' + R + '" y2="146" stroke="#e8edf4" stroke-width="2"/>');
     o.push('<rect x="' + L + '" y="166" width="' + (R - L) + '" height="44" rx="12" fill="#fff4e8"/>');
-    o.push(t(R - 16, 195, 'סטטוס: בוצע חלקית · עקב עומס במערכת', 17, '#c2410c', 700));
+    o.push(t(R - 16, 195, (tx.over ? 'סטטוס: בוצע ביתר' : 'סטטוס: בוצע חלקית') + ' · עקב עומס במערכת', 17, '#c2410c', 700));
     var rows = [['המעביר', 'מי שישב מול המסך'], ['המקבל', tx.name], ['סכום ההעברה', tx.asked], ['מס זמן (18%)', tx.tax],
                 ['עמלת עסקה', '3 דק׳'], ['סה״כ חויב', tx.total], ['הועבר בפועל', tx.real + ' (הזמן ששהית בדף)'],
                 ['מקור החיוב', tx.src], ['הערה', tx.memo || '—'], ['זמן משוער עד שיבוזבז', '4 שניות']];
@@ -946,10 +1021,13 @@ a.logo{display:inline-block}
     if (!lastTx) return;
     $('rcptDoc').innerHTML = receiptSVG(lastTx);
     openSheet(null);
-    $('rcptModal').classList.add('on');
+    $('rcptModal').classList.add('on'); modalBg(true);
+    setTimeout(function(){ $('rcX').focus({ preventScroll: true }); }, 60);
   }
-  function closeReceipt(){ $('rcptModal').classList.remove('on'); }
-  function printReceipt(){ showReceipt(); setTimeout(function(){ window.print(); }, 400); }
+  function closeReceipt(){ if (!$('rcptModal').classList.contains('on')) return; $('rcptModal').classList.remove('on'); modalBg(false); }
+  function doPrint(){ document.body.classList.add('print-rcpt'); try { window.print(); } finally { setTimeout(function(){ document.body.classList.remove('print-rcpt'); }, 500); } }
+  window.addEventListener('afterprint', function(){ document.body.classList.remove('print-rcpt'); });
+  function printReceipt(){ showReceipt(); setTimeout(doPrint, 400); }
   function downloadReceipt(){
     if (!lastTx) return;
     var svg = receiptSVG(lastTx), name = 'biTime-אסמכתא-' + lastTx.ref;
@@ -972,7 +1050,7 @@ a.logo{display:inline-block}
   $('rcptBtn').addEventListener('click', showReceipt);
   $('rcptPrint').addEventListener('click', printReceipt);
   $('rcptDl').addEventListener('click', downloadReceipt);
-  $('rcPrint2').addEventListener('click', function(){ window.print(); });
+  $('rcPrint2').addEventListener('click', doPrint);
   $('rcDl2').addEventListener('click', downloadReceipt);
   $('rcX').addEventListener('click', closeReceipt);
   $('rcptModal').addEventListener('click', function(e){ if (e.target === this) closeReceipt(); });
