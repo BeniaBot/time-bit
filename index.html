@@ -286,6 +286,39 @@ a.logo{display:inline-block}
   .feats{gap:6px;margin-bottom:12px} .feat .ic{width:34px;height:34px} .stats{padding-top:10px} .stats b{font-size:20px}
   .feed{margin-top:10px} .feed ul{height:88px}
 }
+/* ---------- features ---------- */
+button.clock{border:0;color:#fff;font:inherit;font-size:13px;cursor:pointer}
+button.clock:hover{background:rgba(255,255,255,.28)}
+.rate{text-align:center;font-size:12.5px;color:var(--g3);font-weight:500;min-height:1.3em;margin:-2px 0 4px}
+.recent{display:flex;gap:6px;justify-content:center;margin-top:10px;overflow:hidden;max-width:100%}
+.recent button{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;width:60px;cursor:pointer;font:inherit;color:var(--ink);padding:0}
+.recent .rv{width:38px;height:38px;border-radius:50%;color:#fff;font-weight:700;display:grid;place-items:center;font-size:15px;box-shadow:0 3px 8px rgba(0,0,0,.12)}
+.recent small{font-size:11px;max-width:60px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted)}
+.recent button:hover .rv{transform:translateY(-1px)}
+.cancel-tx{display:block;margin:12px auto 0;background:none;border:0;color:var(--muted);font:inherit;font-size:13px;text-decoration:underline dotted;text-underline-offset:3px;cursor:pointer}
+.cancel-tx:disabled{text-decoration:none;cursor:default;color:#c2410c;line-height:1.5}
+.queue{text-align:center;margin:6px 0 8px}
+.queue span{display:block;color:var(--muted);font-size:13px}
+.queue b{display:block;font-size:64px;font-weight:800;line-height:1.1;font-variant-numeric:tabular-nums;color:var(--ink);transition:color .3s}
+.queue b.up{color:#e5484d}
+.q-note{text-align:center;font-size:13.5px;color:var(--g3);min-height:2.6em;margin-bottom:12px;line-height:1.5}
+.acct-bal{text-align:center;margin:4px 0 12px}
+.acct-bal span{display:block;color:var(--muted);font-size:13px}
+.acct-bal b{display:block;font-size:44px;font-weight:800;color:#e5484d;font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate;line-height:1.15}
+.acct-bal small{color:var(--muted);font-size:12px}
+#acRows{max-height:200px;overflow-y:auto}
+#acRows .neg{color:#e5484d}
+#acRows .pos{color:#13a46b}
+.incoming{position:absolute;top:10px;left:10px;right:10px;z-index:7;background:#fff;border-radius:18px;box-shadow:0 14px 34px rgba(0,30,60,.28);padding:10px 12px;display:flex;align-items:center;gap:10px;transform:translateY(-150%);visibility:hidden;transition:transform .35s cubic-bezier(.2,.8,.2,1),visibility 0s linear .35s}
+.incoming.on{transform:none;visibility:visible;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.in-ava{width:38px;height:38px;border-radius:50%;color:#fff;font-weight:700;display:grid;place-items:center;flex:none}
+.in-txt{flex:1;min-width:0;font-size:13px;line-height:1.35}
+.in-txt b{display:block;font-size:13.5px}
+.in-txt span{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.in-btns{display:flex;gap:6px;flex:none}
+.in-btns button{border:0;border-radius:999px;padding:7px 11px;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
+#inYes{background:var(--g2);color:#fff}
+#inNo{background:var(--soft);color:var(--ink)}
 </style>
 </head>
 <body>
@@ -319,7 +352,7 @@ a.logo{display:inline-block}
       <div class="mark"><a class="logo" href="./" title="דף הבית"><img src="logo.svg" alt="biTime"></a></div>
       <div class="hbtns">
         <button class="pill" id="askBtn">＋ בקשת זמן</button>
-        <div class="clock" title="זמן בדף">⏱ <b id="live">00:00</b></div>
+        <button class="clock" id="clockBtn" title="החשבון שלי" aria-label="החשבון שלי">⏱ <b id="live">00:00</b></button>
       </div>
     </div>
 
@@ -334,11 +367,13 @@ a.logo{display:inline-block}
             <input class="name-in" id="toInput" maxlength="40" placeholder="למי להעביר?" aria-label="חיפוש נמען" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="ac">
             <ul class="ac hidden" id="ac" role="listbox" aria-label="נמענים"></ul>
           </div>
+          <div class="recent hidden" id="recent" aria-label="נמענים אחרונים"></div>
           <div class="sub" id="whoSub"></div>
           <a class="other hidden" id="otherLink" href="./">העברה למישהו אחר</a>
         </div>
 
         <div class="amt"><span class="num" id="num">60</span><span class="unit" id="unitShort">דק׳</span></div>
+        <div class="rate" id="rate"></div>
         <div class="bal">היתרה שלך: <b>גבוהה באופן חשוד</b></div>
 
         <div class="seg" id="seg">
@@ -366,6 +401,7 @@ a.logo{display:inline-block}
         <div class="rows">
           <div><span>סכום ההעברה</span><span id="rAsked"></span></div>
           <div><span>מקור החיוב</span><span id="rSrc"></span></div>
+          <div><span>מועד ביצוע</span><span id="rWhen"></span></div>
           <div><span>הועבר בפועל</span><span id="rReal"></span></div>
           <div><span>זמן משוער עד שיבוזבז</span><span>4 שניות</span></div>
           <div><span>מס׳ אסמכתא</span><span id="ref"></span></div>
@@ -373,9 +409,10 @@ a.logo{display:inline-block}
         <div class="note" id="twist"></div>
         <button class="cta" id="share">שיתוף אישור</button>
         <button class="cta ghost" id="again">העברה נוספת</button>
+        <button class="cancel-tx" id="cancelTx">ביטול העברה</button>
       </div>
 
-      <div class="fine" style="margin-top:14px">© biTime בע״מ · בפיקוח המינהל הכרונולוגי · <a href="#" id="tos">תנאי שימוש</a></div>
+      <div class="fine" style="margin-top:14px">© biTime בע״מ · בפיקוח המינהל הכרונולוגי · <a href="#" id="tos">תנאי&nbsp;שימוש</a> · <a href="#" id="support">שירות&nbsp;לקוחות</a></div>
     </div></div>
 
     <!-- step 2: confirm sheet -->
@@ -398,11 +435,20 @@ a.logo{display:inline-block}
         <select id="src">
           <option>זמן פנוי</option>
           <option>שעות העבודה (הבוס לא יודע)</option>
-          <option>גלילה בפורום</option>
+          <option>גלילה בטלפון</option>
           <option>המתנה לקימפול</option>
           <option>ה"עוד 5 דקות" של הבוקר</option>
           <option>המתנה למוקד שירות (יתרה בלתי מוגבלת)</option>
           <option>שעות השינה</option>
+        </select>
+      </div>
+      <div class="field"><span>מועד ביצוע</span>
+        <select id="when">
+          <option>עכשיו</option>
+          <option>מחר</option>
+          <option>אחרי החגים</option>
+          <option>בין הזמנים</option>
+          <option>כשיהיה לי זמן</option>
         </select>
       </div>
       <div class="promo">🎁 מבצע השבוע: העבר שעה וקבל במתנה 10 דקות שכבר עברו</div>
@@ -439,6 +485,35 @@ a.logo{display:inline-block}
         <button class="ico-btn hidden" id="nativeShare" aria-label="שיתוף" title="שיתוף"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.8l7.6-4.4M8.2 13.2l7.6 4.4"/></svg></button>
       </div>
       <div class="fine" style="margin-top:10px">שיתוף האישור אינו מנכה זמן נוסף, מלבד הזמן שלקח לקרוא שורה זו.</div>
+    </div>
+
+    <!-- customer service -->
+    <div class="bs" id="supportSheet" role="dialog" aria-label="שירות לקוחות">
+      <div class="grab"></div>
+      <h3>שירות לקוחות</h3>
+      <div class="lead">כל הנציגים עסוקים כרגע. שיחתך חשובה לנו.</div>
+      <div class="queue"><span>מיקומך בתור</span><b id="qNum">47</b></div>
+      <div class="q-note" id="qNote">🎵 מנגינת ההמתנה מתנגנת ברקע</div>
+      <button class="cta hidden" id="qAgent">העברת 5 דקות לנציג</button>
+      <div class="fine" style="margin-top:10px">השיחה מוקלטת לצורכי שיפור השירות ובזבוז זמן.</div>
+    </div>
+
+    <!-- my account -->
+    <div class="bs" id="acctSheet" role="dialog" aria-label="החשבון שלי">
+      <div class="grab"></div>
+      <h3>החשבון שלי</h3>
+      <div class="acct-bal"><span>יתרת זמן</span><b id="acBal">0:00:00</b><small>היתרה מתעדכנת בזמן אמת. גם עכשיו.</small></div>
+      <div class="lead" style="margin-bottom:6px">תנועות אחרונות</div>
+      <div class="rows" id="acRows"></div>
+      <button class="cta" id="acDeposit">הפקדת זמן</button>
+      <div class="fine" style="margin-top:10px">מסגרת אשראי: עד השינה הבאה</div>
+    </div>
+
+    <!-- incoming request -->
+    <div class="incoming" id="incoming" role="alertdialog" aria-label="בקשת זמן נכנסת">
+      <div class="in-ava" id="inAva"></div>
+      <div class="in-txt"><b id="inTitle"></b><span id="inMemo"></span></div>
+      <div class="in-btns"><button id="inYes">אישור</button><button id="inNo">דחייה</button></div>
     </div>
 
     <!-- terms sheet -->
@@ -519,6 +594,14 @@ a.logo{display:inline-block}
   function secs(){ return Math.floor((Date.now()-t0)/1000); }
   setInterval(function(){ $('live').textContent = fmt(secs()); }, 250);
 
+  // per-browser conveniences only; the page works the same without them
+  function ls(k, d){ try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch(e){ return d; } }
+  function lsSet(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+  var spentBase = +ls('bt_spent', 0) || 0;
+  function spentNow(){ return spentBase + Math.floor((Date.now() - t0) / 1000); }
+  setInterval(function(){ lsSet('bt_spent', spentNow()); }, 5000);
+  window.addEventListener('pagehide', function(){ lsSet('bt_spent', spentNow()); });
+
   var name = '', isReq = false, reqMin = 0;
   try {
     var qs = new URLSearchParams(location.search);
@@ -552,7 +635,8 @@ a.logo{display:inline-block}
   function hue(s){ return 'hsl(' + (hashOf(s) % 360) + ',62%,60%)'; }
   function initial(s){ return (s.replace(/[^\u05d0-\u05eaA-Za-z0-9]/g, '').charAt(0)) || '?'; }
 
-  var DB = [], seenK = {};
+  var DB = [], seenK = {}, DBK = {};
+  function findEntry(n){ return DBK[norm(n)] || null; }
   function addEntry(e, curated){
     var k = norm(e.n || ''); if (!k || seenK[k]) return; seenK[k] = 1;
     // words for prefix matching; a leading ה (the definite article) is optional: "שכנ" finds "השכן"
@@ -561,7 +645,8 @@ a.logo{display:inline-block}
     if (j !== k) w = w.concat(j.split(' '));
     var extra = [];
     w.forEach(function(x){ if (x.length > 2 && x.charAt(0) === 'ה') extra.push(x.slice(1)); });
-    DB.push({ n: e.n, h: e.h | 0, y: e.y | 0 || 2020, c: curated, k: k, j: j, w: w.concat(extra) });
+    var ent = { n: e.n, h: e.h | 0, y: e.y | 0 || 2020, c: curated, k: k, j: j, w: w.concat(extra) };
+    DB.push(ent); DBK[k] = ent;
   }
   try { var SRC = window.BT_DB || {}; Object.keys(SRC).forEach(function(cat){ (SRC[cat] || []).forEach(function(e){ addEntry(e, true); }); }); } catch(e){}
   Object.keys(SPECIAL).forEach(function(k){ addEntry({ n: k, h: 0, y: 2015 }, true); });
@@ -592,6 +677,7 @@ a.logo{display:inline-block}
       try { addNicks(window.BT_NICKS || []); window.BT_NICKS = null; } catch(e){}
       var inp = $('toInput');
       if (inp && !chosen && document.activeElement === inp && norm(inp.value)) renderAc(search(inp.value));
+      renderRecent();
     };
     document.body.appendChild(sc);
   });
@@ -687,6 +773,7 @@ a.logo{display:inline-block}
   $('ac').addEventListener('mousedown', function(ev){ ev.preventDefault(); });
   function pick(e){
     chosen = e; name = e.n; $('toInput').value = e.n; closeAc(); showWho(e); $('toInput').blur();
+    if (typeof renderRecent === 'function') renderRecent();
   }
 
   if (isReq) {
@@ -750,17 +837,34 @@ a.logo{display:inline-block}
     clearTimeout(tt); tt = setTimeout(function(){ d.remove(); }, 3200);
   }
 
+  // "exchange rate" line, like a currency hint under the amount; changes with every key
+  var RATES = [
+    { n: 'פעמים ״עוד 5 דקות״', m: 5 }, { n: 'קימפולים', m: 20 }, { n: 'המתנות למוקד', m: 47 }, { n: 'פגישות ״קצרות״', m: 55 },
+    { n: 'הקשות על נודניק', m: 9 }, { n: 'שיחות ״מה נשמע?״', m: 90 }, { n: 'הורדות של עדכון', m: 34 }, { n: 'כוסות קפה שהתקררו', m: 15 },
+    { n: 'חיפושים אחרי המפתחות', m: 4 }, { n: 'פקקים בכניסה לעיר', m: 38 }, { n: 'נאומים של ״רק כמה מילים״', m: 25 }, { n: 'ניסיונות להדפיס דף אחד', m: 12 }
+  ];
+  var rateDeck = null, curRate = null;
+  function nextRate(){ if (!rateDeck) rateDeck = deck(RATES); curRate = rateDeck(); }
+  function fmtNum(x){ return x < 10 ? String(Math.round(x * 10) / 10) : Math.round(x).toLocaleString('he-IL'); }
+  function updateRate(){
+    if (!curRate) nextRate();
+    var m = minutes(), el = $('rate'); if (!el) return;
+    el.textContent = !m ? '' : '≈ ' + (m === Infinity ? '∞' : fmtNum(m / curRate.m)) + ' ' + curRate.n;
+  }
+  setInterval(function(){ if (!$('form').classList.contains('hidden') && !openId) { nextRate(); updateRate(); } }, 4500);
+
   function render(){
     $('num').textContent = all ? '∞' : (val || '0');
     $('unitShort').textContent = all ? '' : (unit === 'd' && +val === 1 ? 'יום' : U[unit][0]);
     $('next').disabled = !all && (+val === 0);
+    updateRate();
   }
   $('pad').addEventListener('click', function(e){
     var b = e.target.closest('button'); if(!b) return;
     press(b);
   });
   function press(b){
-    buzz();
+    buzz(); nextRate();
     var k = b.dataset.k;
     if (k === 'all'){ all = true; }
     else if (k === 'del'){ if (all) all = false; else val = val.slice(0,-1); }
@@ -774,7 +878,7 @@ a.logo{display:inline-block}
   $('seg').addEventListener('click', function(e){
     var b = e.target.closest('button'); if(!b) return;
     [].forEach.call(this.children, function(c){ c.setAttribute('aria-pressed', c===b); });
-    unit = b.dataset.u; render();
+    unit = b.dataset.u; nextRate(); render();
   });
   $('quick').addEventListener('click', function(e){
     var b = e.target.closest('button'); if(b) $('memo').value = b.textContent;
@@ -786,7 +890,7 @@ a.logo{display:inline-block}
   });
   function openSheet(id){
     var was = openId;
-    ['bs','askSheet','tosSheet','shareSheet'].forEach(function(s){ $(s).classList.toggle('on', s === id); });
+    ['bs','askSheet','tosSheet','shareSheet','supportSheet','acctSheet'].forEach(function(s){ $(s).classList.toggle('on', s === id); });
     $('dim').classList.toggle('on', !!id);
     openId = id;
     [document.querySelector('.hdr'), document.querySelector('.sheet')].forEach(function(el){
@@ -877,19 +981,19 @@ a.logo{display:inline-block}
     'עוקף את ימי העסקים...'
   ];
   var dots = $('dots');
-  steps.forEach(function(){ dots.appendChild(document.createElement('i')); });
-
-  $('go').addEventListener('click', function(){
-    openSheet(null);
+  function runSteps(list, cb){
+    dots.textContent = '';
+    list.forEach(function(){ dots.appendChild(document.createElement('i')); });
     $('ov').classList.remove('hidden');
     var i = 0;
     (function tick(){
-      $('step').textContent = steps[i];
-      [].forEach.call(dots.children, function(d,j){ d.className = j<=i ? 'on' : ''; });
+      $('step').textContent = list[i];
+      [].forEach.call(dots.children, function(d, j){ d.className = j <= i ? 'on' : ''; });
       i++;
-      if (i < steps.length) setTimeout(tick, 1100); else setTimeout(done, 1100);
+      if (i < list.length) setTimeout(tick, 1100); else setTimeout(cb, 1100);
     })();
-  });
+  }
+  $('go').addEventListener('click', function(){ openSheet(null); runSteps(steps, done); });
 
   function done(){
     $('ov').classList.add('hidden');
@@ -901,9 +1005,14 @@ a.logo{display:inline-block}
     $('rReal').textContent = fmt(s);
     var ref = String(Date.now()).slice(-8), m = minutes();
     $('ref').textContent = ref;
-    lastTx = { asked: asked(), name: name, real: fmt(s), ref: ref, src: $('src').value, memo: $('memo').value.trim(),
+    var when = $('when').value;
+    $('rWhen').textContent = when === 'עכשיו' ? 'מיידי' : 'מיידי (תוכנן: ' + when + ')';
+    lastTx = { asked: asked(), name: name, real: fmt(s), ref: ref, src: $('src').value, memo: $('memo').value.trim(), when: when,
                tax: all ? '∞ × 0.18' : fmtMin(m * 0.18), total: all ? 'כל מה שהתפנה, ועוד קצת' : fmtMin(m * 1.18 + 3), at: new Date() };
     rain();
+    var hist = ls('bt_tx', []); hist.unshift({ n: name, a: asked(), r: fmt(s), at: Date.now() }); lsSet('bt_tx', hist.slice(0, 20));
+    if (!isReq) { recent = [name].concat(recent.filter(function(x){ return x !== name; })).slice(0, 8); lsSet('bt_recent', recent); }
+    $('cancelTx').disabled = false; $('cancelTx').textContent = 'ביטול העברה';
     var over = !all && s >= minutes() * 60;
     lastTx.over = over;
     var rh = document.querySelector('#receipt h2'); if (rh) { rh.setAttribute('tabindex', '-1'); setTimeout(function(){ rh.focus({ preventScroll: true }); }, 60); }
@@ -987,7 +1096,7 @@ a.logo{display:inline-block}
     o.push(t(R - 16, 195, (tx.over ? 'סטטוס: בוצע ביתר' : 'סטטוס: בוצע חלקית') + ' · עקב עומס במערכת', 17, '#c2410c', 700));
     var rows = [['המעביר', 'מי שישב מול המסך'], ['המקבל', tx.name], ['סכום ההעברה', tx.asked], ['מס זמן (18%)', tx.tax],
                 ['עמלת עסקה', '3 דק׳'], ['סה״כ חויב', tx.total], ['הועבר בפועל', tx.real + ' (הזמן ששהית בדף)'],
-                ['מקור החיוב', tx.src], ['הערה', tx.memo || '—'], ['זמן משוער עד שיבוזבז', '4 שניות']];
+                ['מקור החיוב', tx.src], ['מועד ביצוע', !tx.when || tx.when === 'עכשיו' ? 'מיידי' : 'תוכנן: ' + tx.when + ' · בפועל: מיידי'], ['הערה', tx.memo || '—'], ['זמן משוער עד שיבוזבז', '4 שניות']];
     var y = 258;
     rows.forEach(function(r, i){
       o.push(t(R, y, r[0], 17, '#7d8aa3'));
@@ -1055,6 +1164,119 @@ a.logo{display:inline-block}
   $('rcX').addEventListener('click', closeReceipt);
   $('rcptModal').addEventListener('click', function(e){ if (e.target === this) closeReceipt(); });
   document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && $('rcptModal').classList.contains('on')) closeReceipt(); });
+  // ---- cancel a transfer: it is always too late ----
+  $('cancelTx').addEventListener('click', function(){
+    var btn = this; if (btn.disabled) return;
+    runSteps(['מאתר את הזמן שהועבר...', 'פונה למקבל בבקשת החזר...', 'המקבל כבר בזבז את הזמן...', 'מנסה לשחזר מגיבוי...', 'אין גיבוי. גם לזמן.'], function(){
+      $('ov').classList.add('hidden');
+      btn.disabled = true; btn.textContent = 'הביטול נכשל: הזמן כבר עבר. נגבתה עמלת ביטול של 2 דק׳.';
+      var hist = ls('bt_tx', []); hist.unshift({ n: 'עמלת ביטול', a: '', r: '2 דק׳', at: Date.now() }); lsSet('bt_tx', hist.slice(0, 20));
+      toast('הביטול נכשל. הזמן כבר עבר.');
+    });
+  });
+
+  // ---- recent recipients (home page) ----
+  var recent = ls('bt_recent', null) || ['אבא', 'סבא רבא', 'הטכנאי 8-16', 'שמשי נודניק', 'השכן מלמעלה'];
+  function renderRecent(){
+    var box = $('recent'); if (!box) return;
+    var show = !isReq && !chosen && !norm($('toInput').value);
+    box.textContent = '';
+    if (show) recent.forEach(function(n){
+      var e = findEntry(n); if (!e || box.children.length >= 5) return;
+      var b = document.createElement('button'); b.type = 'button'; b.title = e.n;
+      var v = document.createElement('span'); v.className = 'rv'; v.style.background = hue(e.n); v.textContent = initial(e.n);
+      var t = document.createElement('small'); t.textContent = e.n;
+      b.appendChild(v); b.appendChild(t);
+      b.addEventListener('click', function(){ pick(e); renderRecent(); });
+      box.appendChild(b);
+    });
+    box.classList.toggle('hidden', !box.children.length);
+  }
+  if (!isReq) { $('toInput').addEventListener('input', renderRecent); renderRecent(); }
+  function setUnit(u){ unit = u; [].forEach.call($('seg').children, function(c){ c.setAttribute('aria-pressed', c.dataset.u === u); }); }
+
+  // ---- customer service: a queue that moves, then jumps back ----
+  var qTimer = null;
+  $('support').addEventListener('click', function(e){
+    e.preventDefault();
+    var q = 47, phase = 0, ticks = 0;
+    $('qNum').textContent = q; $('qNum').className = ''; $('qNote').textContent = '🎵 מנגינת ההמתנה מתנגנת ברקע';
+    $('qAgent').classList.add('hidden');
+    openSheet('supportSheet');
+    clearInterval(qTimer);
+    qTimer = setInterval(function(){
+      if (openId !== 'supportSheet') { clearInterval(qTimer); return; }
+      ticks++;
+      if (phase === 0 && q <= 43) { q = 52; phase = 1; $('qNum').className = 'up'; $('qNote').textContent = 'מיקומך בתור עודכן עקב עדכון מערכת. אנו מודים לך על סבלנותך.'; }
+      else if (phase === 1 && q <= 38) {
+        phase = 2; clearInterval(qTimer);
+        $('qNum').className = ''; $('qNote').textContent = '✓ נציג פנוי. כדי להמשיך, הנציג מבקש העברה של 5 דקות.';
+        if (!isReq) $('qAgent').classList.remove('hidden'); else $('qNote').textContent = '✓ נציג פנוי. הנציג יחזור אליך תוך 24 שעות.';
+        return;
+      } else { q--; if (phase === 1 && ticks % 3 === 0) $('qNum').className = ''; }
+      $('qNum').textContent = q;
+    }, 1800);
+  });
+  $('qAgent').addEventListener('click', function(){
+    var e = findEntry('נציג יחזור אליך'); if (!e) return;
+    pick(e); renderRecent(); all = false; val = '5'; setUnit('m'); render(); openSheet(null);
+    toast('הנציג נבחר כנמען. 5 דקות מחכות לאישור.');
+  });
+
+  // ---- my account: a balance that runs while you look at it ----
+  var acTimer = null, acOpenedAt = 0;
+  function hms(x){ var h = Math.floor(x / 3600), m = Math.floor(x % 3600 / 60), q = x % 60; return h + ':' + (m < 10 ? '0' : '') + m + ':' + (q < 10 ? '0' : '') + q; }
+  function renderAccount(){
+    $('acBal').textContent = '−' + hms(spentNow());
+    var rows = $('acRows'); rows.textContent = '';
+    var add = function(label, value, cls){
+      var d = document.createElement('div'), a = document.createElement('span'), b = document.createElement('span');
+      a.textContent = label; b.textContent = value; if (cls) b.className = cls; d.appendChild(a); d.appendChild(b); rows.appendChild(d);
+    };
+    add('עמלת צפייה ביתרה', '−' + fmt(Math.floor((Date.now() - acOpenedAt) / 1000)), 'neg');
+    ls('bt_tx', []).slice(0, 6).forEach(function(t){ add(t.n === 'עמלת ביטול' ? 'עמלת ביטול העברה' : 'העברה אל ' + t.n, '−' + t.r, 'neg'); });
+    add('הוראת קבע: גלילה בטלפון', '−2:14 ש׳', 'neg');
+    if (ls('bt_tos', 0)) add('חיוב: קריאת תנאי שימוש', '−47 דק׳', 'neg');
+    add('זיכוי מתוכנן: מעבר לשעון חורף', '+1 ש׳', 'pos');
+  }
+  $('clockBtn').addEventListener('click', function(){
+    acOpenedAt = Date.now(); renderAccount(); openSheet('acctSheet');
+    clearInterval(acTimer);
+    acTimer = setInterval(function(){ if (openId !== 'acctSheet') { clearInterval(acTimer); return; } renderAccount(); }, 1000);
+  });
+  $('acDeposit').addEventListener('click', function(){ toast('כדי להפקיד זמן, צאו מהאתר.'); });
+  $('tosOk').addEventListener('click', function(){ lsSet('bt_tos', 1); });
+
+  // ---- an incoming request, once per visit (home page only) ----
+  var inTimer = null, inShown = false;
+  try { inShown = !!sessionStorage.getItem('bt_in'); } catch(e){}
+  function showIncoming(){
+    if (inShown || isReq) return;
+    var busy = openId || !$('ov').classList.contains('hidden') || !$('receipt').classList.contains('hidden') || document.querySelector('.modal.on');
+    if (busy) { setTimeout(showIncoming, 10000); return; }
+    var pool = DB.filter(function(e){ return e.c && e.h < 0 && !SPECIAL[e.k]; });
+    if (!pool.length) return;
+    var e = pool[Math.floor(Math.random() * pool.length)], amt = [5, 10, 15, 20, 30][Math.floor(Math.random() * 5)];
+    inShown = true; try { sessionStorage.setItem('bt_in', '1'); } catch(_){}
+    $('inAva').style.background = hue(e.n); $('inAva').textContent = initial(e.n);
+    $('inTitle').textContent = 'בקשת זמן מ־' + e.n + ' · ' + amt + ' דק׳';
+    $('inMemo').textContent = '״' + what() + '״';
+    var box = $('incoming'); box.classList.add('on');
+    box._e = e; box._amt = amt;
+    clearTimeout(inTimer); inTimer = setTimeout(function(){ box.classList.remove('on'); }, 14000);
+  }
+  if (!isReq) setTimeout(showIncoming, 30000);
+  $('inYes').addEventListener('click', function(){
+    var box = $('incoming'), e = box._e; box.classList.remove('on'); clearTimeout(inTimer); if (!e) return;
+    if (!$('receipt').classList.contains('hidden')) { $('receipt').classList.add('hidden'); $('form').classList.remove('hidden'); }
+    pick(e); renderRecent(); all = false; val = String(box._amt); setUnit('m'); render();
+    toast('הבקשה נטענה. נשאר רק לאשר.');
+  });
+  $('inNo').addEventListener('click', function(){
+    $('incoming').classList.remove('on'); clearTimeout(inTimer);
+    toast('הבקשה נדחתה. הזמן שלקח לדחות נוכה מהיתרה.');
+  });
+
   // live feed (desktop)
   // each list is drawn like a shuffled deck: nothing repeats until the whole list has been used
   function deck(arr){
@@ -1074,7 +1296,7 @@ a.logo{display:inline-block}
     'חיפה','באר שבע','רחובות','חריש','ערד','קריית גת','אופקים','נתיבות','טלזסטון','עמנואל','בית חלקיה','כפר חב״ד','רמת גן',
     'חולון','קריית ספר','תל אביב','עפולה','כרמיאל','אור יהודה','קריית מלאכי','לוד','מגדל העמק']);
   var what = deck(['על הפגישה שיכלה להיות מייל','החזר על שיחה ״קצרה״','בשביל הפרויקט ש״ייקח שבוע״','מה שנשאר מההמתנה בקופת חולים',
-    'על העזרה בהתקנת המדפסת','כי ביקשת יפה','תודה על המדריך','על תשובה מפורטת בפורום','על ה״רק תסתכל רגע על הקוד״',
+    'על העזרה בהתקנת המדפסת','כי ביקשת יפה','תודה על המדריך','על תשובה מפורטת','על ה״רק תסתכל רגע על הקוד״',
     'על ההסבר איך מעתיקים קובץ','לא שואלים','על ההמתנה בתור בדואר','על ה״אני כבר יוצא״ של אתמול','על ההרצאה שהתארכה',
     'על העזרה במעבר הדירה','על ההגדרות בטלפון של סבא','על השיחה עם התמיכה הטכנית','על הפקק בכניסה לעיר',
     'על האוטובוס שלא הגיע','על העדכון שהותקן באמצע העבודה','על ה״עוד חמש דקות״ של הבוקר','מקדמה על השבוע הבא',
