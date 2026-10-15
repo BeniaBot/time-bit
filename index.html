@@ -1224,7 +1224,14 @@ button.clock:hover{background:rgba(255,255,255,.28)}
   });
 
   // ---- recent recipients (home page) ----
-  var recent = ls('bt_recent', null) || ['אבא', 'סבא רבא', 'הטכנאי 8-16', 'שמשי נודניק', 'השכן מלמעלה'];
+  // only people this browser really sent time to; nothing before the first transfer
+  var recent = ls('bt_recent', null) || [];
+  if (!ls('bt_rv', 0)) {   // older saved lists carried sample names at the end: drop them once
+    var SEED = ['אבא', 'סבא רבא', 'הטכנאי 8-16', 'שמשי נודניק', 'השכן מלמעלה'];
+    while (recent.length && SEED.indexOf(recent[recent.length - 1]) >= 0) recent.pop();
+    if (recent.length) lsSet('bt_recent', recent); else try { localStorage.removeItem('bt_recent'); } catch(e){}
+    lsSet('bt_rv', 1);
+  }
   function renderRecent(){
     var box = $('recent'); if (!box) return;
     var show = !isReq && !chosen && !norm($('toInput').value);
