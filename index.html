@@ -1365,13 +1365,23 @@ button.clock:hover{background:rgba(255,255,255,.28)}
     li.children[2].firstChild.textContent = amount();
     li.children[2].lastChild.textContent = ago(+li.dataset.t);
     if (quiet) { li.style.animation = 'none'; ul.appendChild(li); return; }
-    // slide the existing rows down smoothly instead of jumping
+    // the new row slides in from above and the others move down with it (never two rows drawn on top of each other)
     var old = [].slice.call(ul.children);
+    if (document.hidden) {   // background tab: nothing animates there, so just place it
+      old.forEach(function(r){ r.style.transition = 'none'; r.style.transform = ''; });
+      li.style.animation = 'none'; ul.insertBefore(li, ul.firstChild);
+      while (ul.children.length > 5) ul.removeChild(ul.lastChild);
+      return;
+    }
+    var cur = old.map(function(r){ var m = getComputedStyle(r).transform; return m && m !== 'none' ? new DOMMatrix(m).m42 : 0; });   // mid-slide rows continue from where they are
     ul.insertBefore(li, ul.firstChild);
     var h = li.offsetHeight;
-    old.forEach(function(r){ r.style.transition = 'none'; r.style.transform = 'translateY(-' + h + 'px)'; });
+    li.style.animation = 'none'; li.style.opacity = '0';
+    li.style.transition = 'none'; li.style.transform = 'translateY(-' + h + 'px)';
+    old.forEach(function(r, i){ r.style.transition = 'none'; r.style.transform = 'translateY(' + (Math.max(cur[i], -h) - h) + 'px)'; });
     ul.offsetHeight;
-    old.forEach(function(r){ r.style.transition = 'transform .45s cubic-bezier(.2,.8,.2,1)'; r.style.transform = ''; });
+    [li].concat(old).forEach(function(r){ r.style.transition = 'transform .45s cubic-bezier(.2,.8,.2,1), opacity .45s'; r.style.transform = ''; });
+    li.style.opacity = '';
     while (ul.children.length > 5) ul.removeChild(ul.lastChild);
   }
   (function(){ var s = rnd(1, 6); for (var n = 0; n < 4; n++) { addFeed(s, true); s += rnd(3, 25); } })();
