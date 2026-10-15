@@ -1165,6 +1165,8 @@ button.clock:hover{background:rgba(255,255,255,.28)}
   function closeReceipt(){ if (!$('rcptModal').classList.contains('on')) return; $('rcptModal').classList.remove('on'); modalBg(false); }
   function doPrint(){ document.body.classList.add('print-rcpt'); try { window.print(); } finally { setTimeout(function(){ document.body.classList.remove('print-rcpt'); }, 500); } }
   window.addEventListener('afterprint', function(){ document.body.classList.remove('print-rcpt'); });
+  // printing from the browser menu while the receipt is open prints the receipt too
+  window.addEventListener('beforeprint', function(){ if ($('rcptModal').classList.contains('on')) document.body.classList.add('print-rcpt'); });
   function printReceipt(){ showReceipt(); setTimeout(doPrint, 400); }
   function downloadReceipt(){
     if (!lastTx) return;
@@ -1338,7 +1340,7 @@ button.clock:hover{background:rgba(255,255,255,.28)}
     'חיפה','באר שבע','רחובות','חריש','ערד','קריית גת','אופקים','נתיבות','טלזסטון','עמנואל','בית חלקיה','כפר חב״ד','רמת גן',
     'חולון','קריית ספר','תל אביב','עפולה','כרמיאל','אור יהודה','קריית מלאכי','לוד','מגדל העמק']);
   var what = deck(['על הפגישה שיכלה להיות מייל','החזר על שיחה ״קצרה״','בשביל הפרויקט ש״ייקח שבוע״','מה שנשאר מההמתנה בקופת חולים',
-    'על העזרה בהתקנת המדפסת','כי ביקשת יפה','תודה על ההסבר','על תשובה מפורטת','על ה״רק תסתכל רגע״',
+    'על העזרה בהתקנת המדפסת','חוב ישן מ־2019','כי ביקשת יפה','תודה על ההסבר','על תשובה מפורטת','על ה״רק תסתכל רגע״',
     'על ההסבר איך מעתיקים קובץ','לא שואלים','על ההמתנה בתור בדואר','על ה״אני כבר יוצא״ של אתמול','על ההרצאה שהתארכה',
     'על העזרה במעבר הדירה','על ההגדרות בטלפון של סבא','על השיחה עם התמיכה הטכנית','על הפקק בכניסה לעיר',
     'על האוטובוס שלא הגיע','על העדכון שהותקן באמצע העבודה','על ה״עוד חמש דקות״ של הבוקר','מקדמה על השבוע הבא',
