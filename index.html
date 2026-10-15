@@ -309,12 +309,13 @@ button.clock:hover{background:rgba(255,255,255,.28)}
 #acRows{max-height:200px;overflow-y:auto}
 #acRows .neg{color:#e5484d}
 #acRows .pos{color:#13a46b}
-.incoming{position:absolute;top:10px;left:10px;right:10px;z-index:7;background:#fff;border-radius:18px;box-shadow:0 14px 34px rgba(0,30,60,.28);padding:10px 12px;display:flex;align-items:center;gap:10px;transform:translateY(-150%);visibility:hidden;transition:transform .35s cubic-bezier(.2,.8,.2,1),visibility 0s linear .35s}
+.incoming{position:absolute;top:10px;left:10px;right:10px;z-index:3;background:#fff;border-radius:18px;box-shadow:0 14px 34px rgba(0,30,60,.28);padding:10px 12px;display:flex;align-items:center;gap:10px;transform:translateY(-150%);visibility:hidden;transition:transform .35s cubic-bezier(.2,.8,.2,1),visibility 0s linear .35s}
 .incoming.on{transform:none;visibility:visible;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
 .in-ava{width:38px;height:38px;border-radius:50%;color:#fff;font-weight:700;display:grid;place-items:center;flex:none}
 .in-txt{flex:1;min-width:0;font-size:13px;line-height:1.35}
 .in-txt b{display:block;font-size:13.5px}
-.in-txt span{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.in-txt span{color:var(--muted);white-space:normal;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+@media(max-width:459px){ .incoming{flex-wrap:wrap} .in-btns{width:100%;justify-content:flex-end} }
 .in-btns{display:flex;gap:6px;flex:none}
 .in-btns button{border:0;border-radius:999px;padding:7px 11px;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer}
 #inYes{background:var(--g2);color:#fff}
@@ -429,14 +430,14 @@ button.clock:hover{background:rgba(255,255,255,.28)}
       </div>
       <div class="field"><span>הערה</span><input id="memo" maxlength="40" placeholder="על מה ההעברה?"></div>
       <div class="quick" id="quick">
-        <button>בשביל הפיתוח 💻</button><button>שיהיה לך ⏳</button><button>תחזיר כשתוכל</button>
+        <button>על העזרה 🙏</button><button>שיהיה לך ⏳</button><button>תחזיר כשתוכל</button>
       </div>
       <div class="field"><span>מקור החיוב</span>
         <select id="src">
           <option>זמן פנוי</option>
           <option>שעות העבודה (הבוס לא יודע)</option>
           <option>גלילה בטלפון</option>
-          <option>המתנה לקימפול</option>
+          <option>המתנה לעדכון של המחשב</option>
           <option>ה"עוד 5 דקות" של הבוקר</option>
           <option>המתנה למוקד שירות (יתרה בלתי מוגבלת)</option>
           <option>שעות השינה</option>
@@ -493,7 +494,7 @@ button.clock:hover{background:rgba(255,255,255,.28)}
       <h3>שירות לקוחות</h3>
       <div class="lead">כל הנציגים עסוקים כרגע. שיחתך חשובה לנו.</div>
       <div class="queue"><span>מיקומך בתור</span><b id="qNum">47</b></div>
-      <div class="q-note" id="qNote">🎵 מנגינת ההמתנה מתנגנת ברקע</div>
+      <div class="q-note" id="qNote" aria-live="polite">🎵 מנגינת ההמתנה מתנגנת ברקע</div>
       <button class="cta hidden" id="qAgent">העברת 5 דקות לנציג</button>
       <div class="fine" style="margin-top:10px">השיחה מוקלטת לצורכי שיפור השירות ובזבוז זמן.</div>
     </div>
@@ -839,9 +840,12 @@ button.clock:hover{background:rgba(255,255,255,.28)}
 
   // "exchange rate" line, like a currency hint under the amount; changes with every key
   var RATES = [
-    { n: 'פעמים ״עוד 5 דקות״', m: 5 }, { n: 'קימפולים', m: 20 }, { n: 'המתנות למוקד', m: 47 }, { n: 'פגישות ״קצרות״', m: 55 },
-    { n: 'הקשות על נודניק', m: 9 }, { n: 'שיחות ״מה נשמע?״', m: 90 }, { n: 'הורדות של עדכון', m: 34 }, { n: 'כוסות קפה שהתקררו', m: 15 },
-    { n: 'חיפושים אחרי המפתחות', m: 4 }, { n: 'פקקים בכניסה לעיר', m: 38 }, { n: 'נאומים של ״רק כמה מילים״', m: 25 }, { n: 'ניסיונות להדפיס דף אחד', m: 12 }
+    { n: 'פעמים ״עוד 5 דקות״', one: 'פעם אחת ״עוד 5 דקות״', m: 5 }, { n: 'המתנות לאוטובוס', one: 'המתנה אחת לאוטובוס', m: 20 },
+    { n: 'המתנות למוקד', one: 'המתנה אחת למוקד', m: 47 }, { n: 'פגישות ״קצרות״', one: 'פגישה ״קצרה״ אחת', m: 55 },
+    { n: 'הקשות על נודניק', one: 'הקשה אחת על נודניק', m: 9 }, { n: 'שיחות ״מה נשמע?״', one: 'שיחת ״מה נשמע?״ אחת', m: 90 },
+    { n: 'הורדות של עדכון', one: 'הורדה אחת של עדכון', m: 34 }, { n: 'כוסות קפה שהתקררו', one: 'כוס קפה אחת שהתקררה', m: 15 },
+    { n: 'חיפושים אחרי המפתחות', one: 'חיפוש אחד אחרי המפתחות', m: 4 }, { n: 'פקקים בכניסה לעיר', one: 'פקק אחד בכניסה לעיר', m: 38 },
+    { n: 'נאומים של ״רק כמה מילים״', one: 'נאום אחד של ״רק כמה מילים״', m: 25 }, { n: 'ניסיונות להדפיס דף אחד', one: 'ניסיון אחד להדפיס דף', m: 12 }
   ];
   var rateDeck = null, curRate = null;
   function nextRate(){ if (!rateDeck) rateDeck = deck(RATES); curRate = rateDeck(); }
@@ -849,7 +853,11 @@ button.clock:hover{background:rgba(255,255,255,.28)}
   function updateRate(){
     if (!curRate) nextRate();
     var m = minutes(), el = $('rate'); if (!el) return;
-    el.textContent = !m ? '' : '≈ ' + (m === Infinity ? '∞' : fmtNum(m / curRate.m)) + ' ' + curRate.n;
+    if (!m) { el.textContent = ''; return; }
+    if (m === Infinity) { el.textContent = '≈ ∞ ' + curRate.n; return; }
+    for (var tries = 0; tries < 12 && m / curRate.m < 0.05; tries++) nextRate();   // no "≈ 0 ..."
+    var x = fmtNum(m / curRate.m);
+    el.textContent = '≈ ' + (x === '1' ? curRate.one : x + ' ' + curRate.n);
   }
   setInterval(function(){ if (!$('form').classList.contains('hidden') && !openId) { nextRate(); updateRate(); } }, 4500);
 
@@ -896,6 +904,7 @@ button.clock:hover{background:rgba(255,255,255,.28)}
     [document.querySelector('.hdr'), document.querySelector('.sheet')].forEach(function(el){
       if (!el) return; if (id) el.setAttribute('inert', ''); else el.removeAttribute('inert');
     });
+    if (id) hideIncoming();
     if (id && !was) sheetOpener = document.activeElement;
     if (id) setTimeout(function(){ var h = $(id).querySelector('h3'); if (h) h.focus({ preventScroll: true }); }, 60);
     else if (was && sheetOpener && document.contains(sheetOpener) && sheetOpener.offsetParent) { try { sheetOpener.focus({ preventScroll: true }); } catch(e){} }
@@ -903,7 +912,7 @@ button.clock:hover{background:rgba(255,255,255,.28)}
   var modalOpener = null;
   function modalBg(on){
     var pg = document.querySelector('.page'); if (!pg) return;
-    if (on) { modalOpener = document.activeElement; pg.setAttribute('inert', ''); }
+    if (on) { hideIncoming(); modalOpener = document.activeElement; pg.setAttribute('inert', ''); }
     else { pg.removeAttribute('inert'); if (modalOpener && document.contains(modalOpener) && modalOpener.offsetParent) { try { modalOpener.focus({ preventScroll: true }); } catch(e){} } }
   }
   function award(on){ $('award').classList.toggle('on', on); modalBg(on); if (on) setTimeout(function(){ $('awX').focus(); }, 50); }
@@ -937,7 +946,7 @@ button.clock:hover{background:rgba(255,255,255,.28)}
   function askDirty(){ $('askOut').classList.add('hidden'); $('askGo').textContent = 'יצירת קישור'; }
   ['askName', 'askAmt', 'askUnit'].forEach(function(id){ $(id).addEventListener('input', askDirty); $(id).addEventListener('change', askDirty); });
   // names for controls whose caption is a plain span (a11y-4)
-  [['src', 'מקור החיוב'], ['memo', 'הערה'], ['askName', 'שם או כינוי'], ['askAmt', 'כמה זמן'], ['askUnit', 'יחידת זמן'], ['askLink', 'קישור לבקשה']]
+  [['src', 'מקור החיוב'], ['when', 'מועד ביצוע'], ['memo', 'הערה'], ['askName', 'שם או כינוי'], ['askAmt', 'כמה זמן'], ['askUnit', 'יחידת זמן'], ['askLink', 'קישור לבקשה']]
     .forEach(function(p){ var el = $(p[0]); if (el && !el.getAttribute('aria-label')) el.setAttribute('aria-label', p[1]); });
 
   document.addEventListener('keydown', function(e){
@@ -975,13 +984,19 @@ button.clock:hover{background:rgba(255,255,255,.28)}
     'מנכה מס זמן במקור...',
     'בודק שהזמן לא בוזבז כבר...',
     'נמצא שהזמן כבר בוזבז. מנסה שוב...',
-    'מריץ git rebase על השבוע האחרון...',
+    'מגלגל אחורה את השבוע האחרון...',
     'מעביר את השניות אחת־אחת...',
     'ממתין לאישור בנק הזמן (3–5 ימי עסקים)...',
     'עוקף את ימי העסקים...'
   ];
   var dots = $('dots');
+  var stepsOn = false;
   function runSteps(list, cb){
+    if (stepsOn) return; stepsOn = true;
+    hideIncoming();
+    var under = [document.querySelector('.hdr'), document.querySelector('.sheet'), $('incoming')];
+    under.forEach(function(el){ if (el) el.setAttribute('inert', ''); });
+    if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
     dots.textContent = '';
     list.forEach(function(){ dots.appendChild(document.createElement('i')); });
     $('ov').classList.remove('hidden');
@@ -990,7 +1005,8 @@ button.clock:hover{background:rgba(255,255,255,.28)}
       $('step').textContent = list[i];
       [].forEach.call(dots.children, function(d, j){ d.className = j <= i ? 'on' : ''; });
       i++;
-      if (i < list.length) setTimeout(tick, 1100); else setTimeout(cb, 1100);
+      if (i < list.length) setTimeout(tick, 1100);
+      else setTimeout(function(){ under.forEach(function(el){ if (el) el.removeAttribute('inert'); }); stepsOn = false; cb(); }, 1100);
     })();
   }
   $('go').addEventListener('click', function(){ openSheet(null); runSteps(steps, done); });
@@ -1166,10 +1182,12 @@ button.clock:hover{background:rgba(255,255,255,.28)}
   document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && $('rcptModal').classList.contains('on')) closeReceipt(); });
   // ---- cancel a transfer: it is always too late ----
   $('cancelTx').addEventListener('click', function(){
-    var btn = this; if (btn.disabled) return;
+    var btn = this; if (btn.disabled || stepsOn) return;
+    btn.disabled = true;
     runSteps(['מאתר את הזמן שהועבר...', 'פונה למקבל בבקשת החזר...', 'המקבל כבר בזבז את הזמן...', 'מנסה לשחזר מגיבוי...', 'אין גיבוי. גם לזמן.'], function(){
       $('ov').classList.add('hidden');
-      btn.disabled = true; btn.textContent = 'הביטול נכשל: הזמן כבר עבר. נגבתה עמלת ביטול של 2 דק׳.';
+      btn.textContent = 'הביטול נכשל: הזמן כבר עבר. נגבתה עמלת ביטול של 2 דק׳.';
+      setTimeout(function(){ $('again').focus({ preventScroll: true }); }, 60);
       var hist = ls('bt_tx', []); hist.unshift({ n: 'עמלת ביטול', a: '', r: '2 דק׳', at: Date.now() }); lsSet('bt_tx', hist.slice(0, 20));
       toast('הביטול נכשל. הזמן כבר עבר.');
     });
@@ -1219,35 +1237,45 @@ button.clock:hover{background:rgba(255,255,255,.28)}
   });
   $('qAgent').addEventListener('click', function(){
     var e = findEntry('נציג יחזור אליך'); if (!e) return;
-    pick(e); renderRecent(); all = false; val = '5'; setUnit('m'); render(); openSheet(null);
+    toForm(); pick(e); renderRecent(); all = false; val = '5'; setUnit('m'); render(); openSheet(null);
+    setTimeout(function(){ $('next').focus({ preventScroll: true }); }, 80);
     toast('הנציג נבחר כנמען. 5 דקות מחכות לאישור.');
   });
 
   // ---- my account: a balance that runs while you look at it ----
-  var acTimer = null, acOpenedAt = 0;
+  var acTimer = null, acOpenedAt = 0, acFeeEl = null;
   function hms(x){ var h = Math.floor(x / 3600), m = Math.floor(x % 3600 / 60), q = x % 60; return h + ':' + (m < 10 ? '0' : '') + m + ':' + (q < 10 ? '0' : '') + q; }
+  // sign + number as one left-to-right run, then the Hebrew unit (so the minus is not pushed past the number)
+  function sv(sign, num, unit){ return '\u2066' + sign + num + '\u2069' + (unit ? ' ' + unit : ''); }
   function renderAccount(){
     $('acBal').textContent = '−' + hms(spentNow());
     var rows = $('acRows'); rows.textContent = '';
     var add = function(label, value, cls){
       var d = document.createElement('div'), a = document.createElement('span'), b = document.createElement('span');
       a.textContent = label; b.textContent = value; if (cls) b.className = cls; d.appendChild(a); d.appendChild(b); rows.appendChild(d);
+      return b;
     };
-    add('עמלת צפייה ביתרה', '−' + fmt(Math.floor((Date.now() - acOpenedAt) / 1000)), 'neg');
-    ls('bt_tx', []).slice(0, 6).forEach(function(t){ add(t.n === 'עמלת ביטול' ? 'עמלת ביטול העברה' : 'העברה אל ' + t.n, '−' + t.r, 'neg'); });
-    add('הוראת קבע: גלילה בטלפון', '−2:14 ש׳', 'neg');
-    if (ls('bt_tos', 0)) add('חיוב: קריאת תנאי שימוש', '−47 דק׳', 'neg');
-    add('זיכוי מתוכנן: מעבר לשעון חורף', '+1 ש׳', 'pos');
+    acFeeEl = add('עמלת צפייה ביתרה', sv('−', fmt(Math.floor((Date.now() - acOpenedAt) / 1000))), 'neg');
+    ls('bt_tx', []).slice(0, 6).forEach(function(t){ var p = String(t.r).split(' '); add(t.n === 'עמלת ביטול' ? 'עמלת ביטול העברה' : 'העברה אל ' + t.n, sv('−', p[0], p.slice(1).join(' ')), 'neg'); });
+    add('הוראת קבע: גלילה בטלפון', sv('−', '2:14', 'ש׳'), 'neg');
+    if (ls('bt_tos', 0)) add('חיוב: קריאת תנאי שימוש', sv('−', '47', 'דק׳'), 'neg');
+    add('זיכוי מתוכנן: מעבר לשעון חורף', sv('+', '1', 'ש׳'), 'pos');
   }
   $('clockBtn').addEventListener('click', function(){
     acOpenedAt = Date.now(); renderAccount(); openSheet('acctSheet');
     clearInterval(acTimer);
-    acTimer = setInterval(function(){ if (openId !== 'acctSheet') { clearInterval(acTimer); return; } renderAccount(); }, 1000);
+    acTimer = setInterval(function(){
+      if (openId !== 'acctSheet') { clearInterval(acTimer); return; }
+      $('acBal').textContent = '−' + hms(spentNow());
+      if (acFeeEl) acFeeEl.textContent = sv('−', fmt(Math.floor((Date.now() - acOpenedAt) / 1000)));
+    }, 1000);
   });
   $('acDeposit').addEventListener('click', function(){ toast('כדי להפקיד זמן, צאו מהאתר.'); });
   $('tosOk').addEventListener('click', function(){ lsSet('bt_tos', 1); });
 
   // ---- an incoming request, once per visit (home page only) ----
+  function hideIncoming(){ var b = $('incoming'); if (b) b.classList.remove('on'); clearTimeout(inTimer); }
+  function toForm(){ if (!$('receipt').classList.contains('hidden')) { $('receipt').classList.add('hidden'); $('form').classList.remove('hidden'); } }
   var inTimer = null, inShown = false;
   try { inShown = !!sessionStorage.getItem('bt_in'); } catch(e){}
   function showIncoming(){
@@ -1259,16 +1287,17 @@ button.clock:hover{background:rgba(255,255,255,.28)}
     var e = pool[Math.floor(Math.random() * pool.length)], amt = [5, 10, 15, 20, 30][Math.floor(Math.random() * 5)];
     inShown = true; try { sessionStorage.setItem('bt_in', '1'); } catch(_){}
     $('inAva').style.background = hue(e.n); $('inAva').textContent = initial(e.n);
-    $('inTitle').textContent = 'בקשת זמן מ־' + e.n + ' · ' + amt + ' דק׳';
-    $('inMemo').textContent = '״' + what() + '״';
+    $('inTitle').textContent = 'בקשת זמן: ' + e.n + ' · ' + amt + ' דק׳';
+    var wm = what(); $('inMemo').textContent = wm.indexOf('״') >= 0 ? wm : '״' + wm + '״';
     var box = $('incoming'); box.classList.add('on');
     box._e = e; box._amt = amt;
     clearTimeout(inTimer); inTimer = setTimeout(function(){ box.classList.remove('on'); }, 14000);
   }
   if (!isReq) setTimeout(showIncoming, 30000);
   $('inYes').addEventListener('click', function(){
-    var box = $('incoming'), e = box._e; box.classList.remove('on'); clearTimeout(inTimer); if (!e) return;
-    if (!$('receipt').classList.contains('hidden')) { $('receipt').classList.add('hidden'); $('form').classList.remove('hidden'); }
+    var box = $('incoming'), e = box._e; hideIncoming(); if (!e) return;
+    if (openId) openSheet(null);
+    toForm();
     pick(e); renderRecent(); all = false; val = String(box._amt); setUnit('m'); render();
     toast('הבקשה נטענה. נשאר רק לאשר.');
   });
@@ -1296,22 +1325,22 @@ button.clock:hover{background:rgba(255,255,255,.28)}
     'חיפה','באר שבע','רחובות','חריש','ערד','קריית גת','אופקים','נתיבות','טלזסטון','עמנואל','בית חלקיה','כפר חב״ד','רמת גן',
     'חולון','קריית ספר','תל אביב','עפולה','כרמיאל','אור יהודה','קריית מלאכי','לוד','מגדל העמק']);
   var what = deck(['על הפגישה שיכלה להיות מייל','החזר על שיחה ״קצרה״','בשביל הפרויקט ש״ייקח שבוע״','מה שנשאר מההמתנה בקופת חולים',
-    'על העזרה בהתקנת המדפסת','כי ביקשת יפה','תודה על המדריך','על תשובה מפורטת','על ה״רק תסתכל רגע על הקוד״',
+    'על העזרה בהתקנת המדפסת','כי ביקשת יפה','תודה על ההסבר','על תשובה מפורטת','על ה״רק תסתכל רגע״',
     'על ההסבר איך מעתיקים קובץ','לא שואלים','על ההמתנה בתור בדואר','על ה״אני כבר יוצא״ של אתמול','על ההרצאה שהתארכה',
     'על העזרה במעבר הדירה','על ההגדרות בטלפון של סבא','על השיחה עם התמיכה הטכנית','על הפקק בכניסה לעיר',
     'על האוטובוס שלא הגיע','על העדכון שהותקן באמצע העבודה','על ה״עוד חמש דקות״ של הבוקר','מקדמה על השבוע הבא',
-    'על ה״רק קופץ לקנות חלב״','על החיפוש אחרי המפתחות','על הבאג שהתברר כנקודה־פסיק','על הגיבוי שלא נעשה',
-    'על ה״ניסית לכבות ולהדליק?״','על ההסבר מה זה ענן','על הפירמוט של המחשב','על הקוד שעבד בניסיון הראשון',
+    'על ה״רק קופץ לקנות חלב״','על החיפוש אחרי המפתחות','על התקלה שהתבררה כשקע מנותק','על הגיבוי שלא נעשה',
+    'על ה״ניסית לכבות ולהדליק?״','על ההסבר מה זה ענן','על הפירמוט של המחשב','על הטופס שעבר בניסיון הראשון',
     'על ה״זה ייקח דקה״','על סידור הכבלים מאחורי המחשב','על ההמתנה לטעינת הדף','על הסיסמה ששכחתי',
     'על ה״שלחתי לך במייל״','על הישיבה שנגמרה בזמן','על ההמתנה לרופא','על ההסבר לאמא איך פותחים קובץ',
     'על הכנת המצגת','על הטפסים בעירייה','על ה״רגע, איפה שמרתי את זה?״','על הפרויקט שנגמר בדקה ה־90',
     'על התור בבנק','על ה״אני רק עונה להודעה אחת״','על החלפת הסוללה בשעון','על הניסיון להבין את החשבונית',
     'על הקפה שהתקרר','על הלילה שנגמר בשלוש','על ההמתנה לעדכון גרסה','בונוס על סבלנות','על התיקון של הברז',
-    'על ההסבר למה המחשב איטי','על העזרה בשיעורי הבית','על המעלית שעצרה בכל קומה','על הקימפול שלקח עשרים דקות',
-    'בהשאלה, בלי ריבית','מתנה, בלי סיבה','על ה״רק בודק משהו מהר״','על ההתקנה של המדפסת, שוב','על הדרייבר שלא נמצא',
-    'על ה״אצלי זה עובד״','על התרגום של הודעת השגיאה','על הקובץ שנשמר בשם ״סופי סופי 2״','על ההסבר בפעם השלישית',
-    'על הכונן שהתמלא','על ההמתנה בטלפון למוקד','על ה״תוכל לבוא רגע?״','על החיבור לרשת האלחוטית','על ההמתנה לאישור בטופס',
-    'על העזרה בהעברת התמונות','על הוויכוח על רווחים מול טאבים','על המייל שנשלח בלי הקובץ המצורף']);
+    'על ההסבר למה המחשב איטי','על העזרה בשיעורי הבית','על המעלית שעצרה בכל קומה','על העדכון שלקח עשרים דקות',
+    'בהשאלה, בלי ריבית','מתנה, בלי סיבה','על ה״רק בודק משהו מהר״','על ההתקנה של המדפסת, שוב','על המטען שלא נמצא',
+    'על ה״אצלי זה עבד״','על ההסבר של החשבונית','על הקובץ שנשמר בשם ״סופי סופי 2״','על ההסבר בפעם השלישית',
+    'על הטלפון שהתמלא','על ההמתנה בטלפון למוקד','על ה״תוכל לבוא רגע?״','על החיבור לרשת האלחוטית','על ההמתנה לאישור בטופס',
+    'על העזרה בהעברת התמונות','על הוויכוח איפה חונים','על המייל שנשלח בלי הקובץ המצורף']);
   var hues = deck([0,20,35,150,170,190,205,220,245,265,285,310,330,350]);
   function amount(){
     var r = Math.random();
